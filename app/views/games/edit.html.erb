@@ -1,0 +1,20 @@
+<h1>Play Konigsrufen!</h1>
+<%= form_with model: @game, local: true, html: {id: "gameForm"} do |form| %>
+  <div class="container">
+    <div class="row pl-4 pr-4 justify-content-center">
+      <% @runner.players[0].hand.cards.each do |card| %>
+        <div class="col-1 p-0 card-container hand">
+          <input hidden=true id="<%= card.slug %>" name="game[card]" type="checkbox" value="<%= card.slug %>" />
+          <%= card_button(card) %>
+        </div>
+      <% end %>
+    </div>
+    <div class="row pr-4 pr-4 justify-content-end">
+      <% if @runner.current_trick_finished? && !@runner.game_finished? %>
+        <input hidden=true name="game[next_trick]" type="checkbox" value="true" checked />
+        <%= form.submit "next trick" %>
+      <% end %>
+    </div>
+    <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner) %>
+  </div>
+<% end %>

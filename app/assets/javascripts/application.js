@@ -14,3 +14,13 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+//= require jquery3
+//= require popper
+//= require bootstrap-sprockets
+
+function submitCard(cardSlug) {
+  console.log("submitCard", cardSlug)
+  cardSlug.checked = true;
+  document.getElementById("gameForm").submit();
+
+}

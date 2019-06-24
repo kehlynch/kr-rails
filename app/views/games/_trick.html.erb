@@ -1,0 +1,42 @@
+<div class="container pr-4 pl-4 justify-content-center">
+  <% if cards %>
+    <div class="row justify-content-center">
+      <div>
+        <%= render 'player_info', info: players[:n] %>
+        <div class="card-container">
+          <% if cards[:n] %>
+            <%= image_tag("#{cards[:n].slug}.jpg", alt: cards[:n].slug, class: "trickcard n") %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-around">
+      <div>
+        <div class="card-container">
+          <% if cards[:w] %>
+            <%= image_tag("#{cards[:w].slug}.jpg", alt: cards[:w].slug, class: "trickcard w") %>
+          <% end %>
+        </div>
+        <%= render 'player_info', info: players[:w] %>
+      </div>
+      <div>
+        <div class="card-container">
+          <% if cards[:e] %>
+            <%= image_tag("#{cards[:e].slug}.jpg", alt: cards[:e].slug, class: "trickcard e") %>
+          <% end %>
+        </div>
+        <%= render 'player_info', info: players[:e] %>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div>
+        <div class="card-container">
+          <% if cards[:s] %>
+            <%= image_tag("#{cards[:s].slug}.jpg", alt: cards[:s].slug, class: "trickcard s") %>
+          <% end %>
+        </div>
+        <%= render 'player_info', info: players[:s] %>
+      </div>
+    </div>
+  <% end %>
+</div>
