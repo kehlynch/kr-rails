@@ -18,9 +18,7 @@
 //= require popper
 //= require bootstrap-sprockets
 
-function submitCard(cardSlug) {
-  console.log("submitCard", cardSlug)
-  cardSlug.checked = true;
+function submitGame(checkboxId) {
+  checkboxId.checked = true;
   document.getElementById("gameForm").submit();
-
 }

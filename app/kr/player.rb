@@ -2,11 +2,11 @@
 
 class Player
   def self.deserialize(state)
-    position = state['position']
+    id = state['id']
     human = state['human']
     hand = Hand.deserialize(state['hand'])
     points = state['points']
-    Player.new(position, hand, human, points)
+    Player.new(id, hand, human, points)
   end
 
   def self.players(hands)
@@ -16,10 +16,10 @@ class Player
     end
   end
 
-  attr_accessor :position, :hand, :human, :points
+  attr_accessor :id, :hand, :human, :points
 
-  def initialize(position, hand, human = false, points = nil)
-    @position = position
+  def initialize(id, hand, human = false, points = nil)
+    @id = id
     @human = human
     @hand = hand
     @points = points
@@ -30,12 +30,14 @@ class Player
   end
 
   def pick_card(tricks)
-    led_suit = tricks[-1]&.led_suit
     # get random legal card
-    legal_cards(led_suit).sample
+    legal_cards(tricks[-1]).sample
   end
 
-  def legal_cards(led_suit)
+  def legal_cards(trick)
+    return @hand.cards if trick&.winning_player_id == @id
+
+    led_suit = trick&.led_suit
     in_led_suit = @hand.cards.select { |c| c.suit == led_suit }
     return in_led_suit unless in_led_suit == []
 
@@ -46,15 +48,17 @@ class Player
   end
 
   def tag_legal_cards(trick)
-    legal = legal_cards(trick.led_suit)
-    @hand.cards.each do |c|
-      c.legal = trick.finished || legal.include?(c)
+    puts "trick.finished? #{trick.finished}"
+    legal = legal_cards(trick)
+    @hand.cards.map do |c|
+      c.legal = trick.finished || !trick.started || legal.include?(c)
+      puts c.legal
     end
   end
 
   def serialize
     {
-      'position' => @position,
+      'id' => @id,
       'human' => @human,
       'hand' => @hand.serialize,
       'points' => @points

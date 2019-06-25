@@ -15,6 +15,11 @@
         <%= form.submit "next trick" %>
       <% end %>
     </div>
-    <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner) %>
+      <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner) %>
   </div>
+<% end %>
+<%= form_with scope: :game, url: games_path, local: true do |form| %>
+  <p>
+    <%= form.submit "new game" %>
+  </p>
 <% end %>

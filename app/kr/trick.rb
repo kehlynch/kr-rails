@@ -26,8 +26,8 @@ class Trick
     end
   end
 
-  def winning_player_position
-    winning_card.player_position
+  def winning_player_id
+    winning_card&.player_id
   end
 
   def finished
@@ -38,8 +38,8 @@ class Trick
     !@cards.empty?
   end
 
-  def last_player
-    @cards[-1]&.player
+  def last_player_id
+    @cards[-1]&.player_id
   end
 
   def led_suit

@@ -32,8 +32,13 @@ class GamesController < ApplicationController
   def update
     game = find_game
     runner = Runner.resume(game.data)
-    runner.next_trick if game_params['next_trick']
-    runner.play(game_params['card'])
+    if game_params['next_trick']
+      runner.next_trick
+    elsif game_params['card']
+      runner.play(game_params['card'])
+    elsif game_params['contract']
+      runner.contract = game_params['contract']
+    end
     params = { data: runner.serialize }
 
     game.update(params)

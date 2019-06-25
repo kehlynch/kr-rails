@@ -3,47 +3,48 @@
 class Card
   def self.deserialize(state)
     suit, value = state['slug'].split('_')
-    player = state['player']
+    player_id = state['player_id']
     legal = state['legal']
-    Card.new(suit.to_sym, value.to_i, player, legal)
+    Card.new(suit.to_sym, value.to_i, player_id, legal)
   end
 
   def self.calculate_points(cards)
-    cards.map(&:points).in_groups_of(3).reduce(0) do |group, points|
-      total = group.length == 3 ? group.sum - 2 : group.sum - 1
-      points + total
+    cards.map(&:points).sort.reverse.in_groups_of(3).reduce(0) do |acc, group|
+      group.compact!
+      total = group.length > 1 ? group.sum + 1 : group.sum
+      acc + total
     end
   end
 
   attr_reader :suit, :value, :name, :slug
-  attr_accessor :legal
+  attr_accessor :legal, :player_id
 
   TRUMP_POINTS = {
-    1 => 5,
-    21 => 5,
-    22 => 5
+    1 => 4,
+    21 => 4,
+    22 => 4
   }.freeze
 
   NONTRUMP_POINTS = {
-    8 => 5,
-    7 => 4,
-    6 => 3,
-    5 => 2
+    8 => 4,
+    7 => 3,
+    6 => 2,
+    5 => 1
   }.freeze
 
-  def initialize(suit, value, player = nil, legal = true)
+  def initialize(suit, value, player_id = nil, legal = true)
     @value = value
     @suit = suit
     @slug = "#{suit}_#{value}"
-    @player = player
+    @player_id = player_id
     @legal = legal
   end
 
   def points
     if @suit == :trump
-      TRUMP_POINTS[value] || 1
+      TRUMP_POINTS[value] || 0
     else
-      NONTRUMP_POINTS[value] || 1
+      NONTRUMP_POINTS[value] || 0
     end
   end
 
@@ -54,7 +55,7 @@ class Card
   def serialize
     {
       'slug' => slug,
-      'player' => player,
+      'player_id' => player_id,
       'legal' => legal
     }
   end

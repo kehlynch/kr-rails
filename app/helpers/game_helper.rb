@@ -5,8 +5,17 @@ module GameHelper
     image_tag(
       "#{card.slug}.jpg",
       alt: card.slug,
-      class: "card js-submit-card #{card.legal ? '' : 'disabled'}",
-      onclick: card.legal && "submitCard(#{card.slug})"
+      class: "card js-submit-game #{card.legal ? '' : 'disabled'}",
+      onclick: card.legal && "submitGame(#{card.slug})"
+    )
+  end
+
+  def contract_button(contract, label)
+    button_tag(
+      label,
+      alt: contract,
+      class: 'contract-button js-submit-game',
+      onclick: "submitGame(#{contract})"
     )
   end
 
@@ -30,21 +39,34 @@ module GameHelper
     }
   end
 
-  private
-
-  def find_player_card(cards, position)
-    cards.find { |c| c.player == position }
+  def rufer_options
+    # [
+    #   ['Trischaken', :trischaken],
+    #   ['Sechserdreier', :sechserdreier],
+    #   ['Call a king', :call_king]
+    # ]
+    {
+      trischaken: 'Trischaken',
+      sechserdreier: 'Sechserdreier',
+      call_king: 'Call a king'
+    }
   end
 
-  def player_info(position, runner)
-    # player = players.find { |p| p.position == position }
+  private
+
+  def find_player_card(cards, id)
+    cards.find { |c| c.player_id == id }
+  end
+
+  def player_info(id, runner)
+    # player = players.find { |p| p.id == id }
     trick_count = runner.tricks.select(&:finished).select do |t|
-      t.winning_player == position
+      t.winning_player_id == id
     end.length
     {
       trick_count: trick_count,
-      lead: runner.lead_player_position == position,
-      points: runner.players[position].points
+      lead: runner.lead_player_id == id,
+      points: runner.players[id].points
     }
   end
 end
