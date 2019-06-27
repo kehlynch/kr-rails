@@ -9,8 +9,8 @@ class Player
     Player.new(id, hand, human, points)
   end
 
-  def self.players(hands)
-    humans = [0]
+  def self.players(hands, nohuman = false)
+    humans = nohuman ? [] : [0]
     hands.each_with_index.map do |h, i|
       Player.new(i, h, humans.include?(i))
     end
@@ -48,11 +48,9 @@ class Player
   end
 
   def tag_legal_cards(trick)
-    puts "trick.finished? #{trick.finished}"
     legal = legal_cards(trick)
     @hand.cards.map do |c|
       c.legal = trick.finished || !trick.started || legal.include?(c)
-      puts c.legal
     end
   end
 

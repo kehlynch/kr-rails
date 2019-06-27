@@ -1,8 +1,8 @@
 <div class="container">
   <div class="row justify-content-center">
-<% rufer_options.each do |contract, label| %>
-  <input hidden=true id="<%= contract %>" name="game[contract]" type="checkbox" value="<%= contract %>" />
-  <%= contract_button(contract, label) %>
-<% end %>
-</div>
+    <% rufer_options.each do |contract, label| %>
+      <input hidden=true id="<%= contract %>" name="game[pick_contract]" type="checkbox" value="<%= contract %>" />
+      <%= contract_button(contract, label) %>
+    <% end %>
+  </div>
 </div>

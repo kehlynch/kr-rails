@@ -22,9 +22,9 @@ class Hand
   end
 
   def delete(card_slug)
-    p "delete #{card_slug}"
-    p "delete from #{cards}"
     card = @cards.find { |c| c.slug == card_slug }
+    raise 'card not found in hand' unless card
+
     @cards.delete(card)
   end
 

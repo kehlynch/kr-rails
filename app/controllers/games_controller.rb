@@ -31,16 +31,9 @@ class GamesController < ApplicationController
 
   def update
     game = find_game
-    runner = Runner.resume(game.data)
-    if game_params['next_trick']
-      runner.next_trick
-    elsif game_params['card']
-      runner.play(game_params['card'])
-    elsif game_params['contract']
-      runner.contract = game_params['contract']
-    end
-    params = { data: runner.serialize }
-
+    @runner = Runner.resume(game.data)
+    @runner.play(game_params)
+    params = { data: @runner.serialize }
     game.update(params)
     redirect_to edit_game_path(game)
   end
@@ -54,11 +47,16 @@ class GamesController < ApplicationController
 
   private
 
+  def resume_runner
+    Runner.resume(find_game.data)
+  end
+
   def find_game
     Game.find(params[:id])
   end
 
   def game_params
-    params.require(:game).permit(:card, :next_trick)
+    params.require(:game)
+          .permit(:play_card, :next_trick, :pick_contract).to_h.symbolize_keys
   end
 end

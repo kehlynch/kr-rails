@@ -5,8 +5,15 @@
 .card {
   max-width: 100%;
   max-height: 100%;
-  // margin: 2px;
   padding: 2px;
+  .illegal {
+    &:hover {
+      border: 2px solid red;
+    }
+  }
+}
+
+card.pickable, .talon-container{
   &:hover {
     z-index: 1;
     border: 2px solid green;
@@ -14,10 +21,8 @@
   }
 }
 
-.card.disabled {
-  &:hover {
-    border: 2px solid red;
-  }
+.talon-container {
+  display: flex;
 }
 
 .trickcard {
@@ -26,19 +31,11 @@
 
 .card-container {
   height: 6.875rem;
+  width: 3.75rem;
 }
 
 .card-container.hand {
   margin-left: -2rem;
-  // margin-right: 2rem;
-  // border: 2px solid red;
-  // margin: 2px;
-  // border-radius: 5px;
-  // &:hover {
-  //   z-index: 1;
-  //   border: 2px solid red;
-  //   border-radius: 5px;
-  // }
 }
 
 

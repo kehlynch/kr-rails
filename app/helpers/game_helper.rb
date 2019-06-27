@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
 module GameHelper
-  def card_button(card)
-    image_tag(
-      "#{card.slug}.jpg",
-      alt: card.slug,
-      class: "card js-submit-game #{card.legal ? '' : 'disabled'}",
-      onclick: card.legal && "submitGame(#{card.slug})"
+  def hand_card_button(card, pickable)
+    active = pickable && 'pickable'
+    illegal = card.legal && 'illegal'
+    classes = "js-submit-game #{active} #{illegal}"
+    onclick = pickable && card.legal && "submitGame(#{card.slug})"
+    card_button(card, classes, onclick)
+  end
+
+  def talon_button(index)
+    content_tag(
+      :div,
+      alt: "talon #{index}",
+      class: 'row pl=4 pr-4 justify-content-center js-submit-game',
+      onclick: "submitGame(talon_#{index})"
     )
   end
 
@@ -40,19 +48,23 @@ module GameHelper
   end
 
   def rufer_options
-    # [
-    #   ['Trischaken', :trischaken],
-    #   ['Sechserdreier', :sechserdreier],
-    #   ['Call a king', :call_king]
-    # ]
     {
       trischaken: 'Trischaken',
       sechserdreier: 'Sechserdreier',
-      call_king: 'Call a king'
+      rufer: 'Call a king'
     }
   end
 
   private
+
+  def card_button(card, classes = '', onclick = nil)
+    image_tag(
+      "#{card.slug}.jpg",
+      alt: card.slug,
+      class: "card #{classes}",
+      onclick: onclick
+    )
+  end
 
   def find_player_card(cards, id)
     cards.find { |c| c.player_id == id }

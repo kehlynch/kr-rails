@@ -30,6 +30,10 @@ class Trick
     winning_card&.player_id
   end
 
+  def won_player_id
+    finished && winning_player_id
+  end
+
   def finished
     @cards.length == 4
   end
@@ -40,6 +44,12 @@ class Trick
 
   def last_player_id
     @cards[-1]&.player_id
+  end
+
+  def next_player_id
+    return unless started && !finished
+
+    (last_player_id + 1) % 4
   end
 
   def led_suit

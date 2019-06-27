@@ -1,58 +1,68 @@
 # frozen_string_literal: true
 
 class Runner
-  def self.start
+  def self.start(nohuman = false)
     deck = Deck.new
-    tricks = []
-    players = Player.players(deck.hands)
-    Runner.new(deck.talon, tricks, players)
+    opts = {
+      talon: deck.talon,
+      tricks: Tricks.new,
+      players: Player.players(deck.hands, nohuman)
+    }
+    Runner.new(opts)
   end
 
   def self.resume(params)
-    # hands = params['hands'].map { |hand| Hand.deserialize(hand) }
-    talon = Talon.deserialize(params['talon'])
-    tricks = params['tricks'].map { |trick| Trick.deserialize(trick) }
-    players = params['players'].map { |player| Player.deserialize(player) }
-    Runner.new(talon, tricks, players)
+    opts = {
+      talon: Talon.deserialize(params['talon']),
+      tricks: Tricks.deserialize(params['tricks']),
+      players: params['players'].map { |player| Player.deserialize(player) },
+      contract: params['contract']&.to_sym
+    }
+    Runner.new(opts)
   end
 
-  attr_reader :talon, :tricks, :players
+  attr_reader :talon, :tricks, :players, :contract
 
-  def initialize(talon = nil, tricks = nil, players = nil)
-    @talon = talon
-    @tricks = tricks
-    @players = players
+  def initialize(**opts)
+    @talon = opts[:talon]
+    @tricks = opts[:tricks]
+    @players = opts[:players]
+    @contract = opts[:contract]
   end
 
   def serialize
     {
       'talon' => @talon.serialize,
-      'tricks' => @tricks.map(&:serialize),
-      'players' => @players.map(&:serialize)
+      'tricks' => @tricks.serialize,
+      'players' => @players.map(&:serialize),
+      'contract' => @contract
     }
   end
 
-  def next_trick
-    @tricks.append(Trick.new)
-    play
-  end
-
-  def play(card_slug = nil)
-    play_card(card_slug, next_player) if card_slug
-    advance_current_trick
-    @players.each { |p| p.tag_legal_cards(current_trick) }
-
+  def play(**args)
+    play_current_trick(args[:play_card]) if args[:play_card]
+    play if args[:play] # for testing with no human
+    play_next_trick if args[:next_trick]
+    @contract = args[:pick_contract].to_sym if args[:pick_contract]
     return unless game_finished?
 
     calculate_scores
   end
 
   def game_finished?
-    @tricks.length == 12 && @tricks[-1].finished
+    @tricks.finished?
   end
 
   def pick_rufer?
-    @tricks.empty?
+    !@tricks.started? || !@contract
+  end
+
+  def pick_talon?
+    @contract == :rufer
+  end
+
+  def pick_card?
+    !@tricks.empty?
   end
 
   def current_trick
@@ -75,13 +85,20 @@ class Runner
 
   private
 
-  def advance_current_trick
+  def play_current_trick(card_slug = nil)
+    play_card(card_slug, next_player) if card_slug
     current_player = next_player
     until current_player.human || current_trick&.finished || game_finished?
       card = current_player.pick_card(@tricks)
       play_card(card.slug, current_player)
       current_player = next_player
     end
+    @players.each { |p| p.tag_legal_cards(current_trick) }
+  end
+
+  def play_next_trick
+    @tricks.add_trick
+    play_current_trick
   end
 
   def play_card(card_slug, player)
@@ -91,15 +108,12 @@ class Runner
   end
 
   def maybe_start_trick
-    @tricks.append(Trick.new) if !@tricks[-1] || @tricks[-1].finished
+    @tricks.add_trick if !@tricks[-1] || @tricks[-1].finished
   end
 
   def calculate_scores
     @players.each do |p|
-      won_cards = @tricks
-                  .select { |t| t.winning_player_id == p.id }
-                  .map(&:cards)
-                  .flatten
+      won_cards = @tricks.won_cards(p.id)
       p.points = Card.calculate_points(won_cards)
     end
   end
@@ -109,19 +123,8 @@ class Runner
   end
 
   def next_player
-    if !current_trick
-      # first trick lead
-      @players[0]
-    elsif !current_trick.started
-      # lead a new trick
-      # in this scenario previous trick should always exist
-      @players[previous_trick.winning_player_id]
-    else
-      last_player_id = current_trick.last_player_id
-      # p "last_player_postion: #{last_player_position}"
-      next_player_id = (last_player_id + 1) % 4
-      # p "next_player_postion: #{next_player_position}"
-      @players[next_player_id]
-    end
+    player_id =
+      current_trick&.next_player_id || previous_trick&.won_player_id || 0
+    @players[player_id]
   end
 end

@@ -4,8 +4,8 @@
     <div class="row pl-4 pr-4 justify-content-center">
       <% @runner.players[0].hand.cards.each do |card| %>
         <div class="col-1 p-0 card-container hand">
-          <input hidden=true id="<%= card.slug %>" name="game[card]" type="checkbox" value="<%= card.slug %>" />
-          <%= card_button(card) %>
+          <input hidden=true id="<%= card.slug %>" name="game[play_card]" type="checkbox" value="<%= card.slug %>" />
+          <%= hand_card_button(card, @runner.pick_card?) %>
         </div>
       <% end %>
     </div>
@@ -15,7 +15,15 @@
         <%= form.submit "next trick" %>
       <% end %>
     </div>
+    <% unless @runner.tricks.empty? %>
       <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner) %>
+    <% end %>
+    <% if @runner.pick_rufer? %>
+      <%= render 'contract' %>
+    <% end %>
+    <% if @runner.pick_talon? %>
+      <%= render 'talon', talon: @runner.talon %>
+    <% end %>
   </div>
 <% end %>
 <%= form_with scope: :game, url: games_path, local: true do |form| %>
