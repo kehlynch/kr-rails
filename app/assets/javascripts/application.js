@@ -22,3 +22,11 @@ function submitGame(checkboxId) {
   checkboxId.checked = true;
   document.getElementById("gameForm").submit();
 }
+
+function toggleCard(checkbox) {
+  checkbox.checked = !checkbox.checked;
+  checkbox.nextElementSibling.classList.toggle('selected');
+  var selected = document.querySelectorAll('input[type="checkbox"]:checked').length
+  var submitButton = document.getElementById('talon-submit')
+  submitButton.disabled = selected != 3;
+}

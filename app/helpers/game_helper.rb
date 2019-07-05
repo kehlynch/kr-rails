@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
 module GameHelper
-  def hand_card_button(card, pickable)
-    active = pickable ? 'pickable' : ''
+  def hand_card_button(card, runner)
+    # active = pickable ? 'pickable' : ''
     illegal = card.legal ? '' : 'illegal'
-    classes = "js-submit-game #{active} #{illegal}"
-    checkbox_id = "play_card_#{card.slug}"
-    onclick = pickable && card.legal && "submitGame(#{checkbox_id})"
+    classes = "js-submit-game pickable #{illegal}"
+    onclick = card_action(card, runner)
     card_button(card.slug, classes, onclick)
+  end
+
+  def card_action(card, runner)
+    checkbox_id = "play_card_#{card.slug}"
+    if runner.stage == :play_card
+      card.legal && "submitGame(#{checkbox_id})"
+    elsif runner.stage == :resolve_talon
+      card.legal && "toggleCard(#{checkbox_id})"
+    end
   end
 
   def king_card_button(card_slug, hand)
@@ -64,8 +72,6 @@ module GameHelper
     }
   end
 
-  private
-
   def card_button(card_slug, classes = '', onclick = nil)
     image_tag(
       "#{card_slug}.jpg",
@@ -75,15 +81,15 @@ module GameHelper
     )
   end
 
+  private
+
   def find_player_card(cards, id)
     cards.find { |c| c.player_id == id }
   end
 
   def player_info(id, runner)
-    # player = players.find { |p| p.id == id }
-    trick_count = runner.tricks.select(&:finished).select do |t|
-      t.winning_player_id == id
-    end.length
+    trick_count = runner.tricks.won_tricks(id).length
+    
     {
       trick_count: trick_count,
       lead: runner.lead_player_id == id,

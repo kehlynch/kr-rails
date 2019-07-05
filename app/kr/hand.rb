@@ -35,6 +35,10 @@ class Hand
     @cards.delete(card)
   end
 
+  def add(new_cards)
+    @cards += new_cards
+  end
+
   def include?(card_slug)
     find_by_slug(card_slug).present?
   end

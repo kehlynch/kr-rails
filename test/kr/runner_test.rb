@@ -15,7 +15,7 @@ class RunnerTest < ActionDispatch::IntegrationTest
   test 'should play card' do
     runner = Runner.start
     card = runner.players[0].hand.cards[0]
-    runner.play(play_card: card.slug)
+    runner.play(play_card: [card.slug])
 
     assert_equal 1, runner.tricks.length
     assert_equal 4, runner.tricks[0].cards.length
@@ -25,16 +25,14 @@ class RunnerTest < ActionDispatch::IntegrationTest
     runner = Runner.start
     runner.play(pick_contract: 'rufer')
     runner = resume(runner)
-    assert_equal runner.contract, :rufer
-    assert runner.pick_king?
+    assert_equal runner.bidding.contract, :rufer
   end
 
   test 'should set king' do
     runner = Runner.start
     runner.play(pick_king: 'spade_8')
     runner = resume(runner)
-    assert_equal runner.king, :spade_8
-    assert runner.pick_card?
+    assert_equal runner.bidding.king, :spade_8
   end
 
   test 'should play 12 tricks' do
@@ -55,7 +53,7 @@ class RunnerTest < ActionDispatch::IntegrationTest
     state = Runner.start.serialize
     runner = Runner.resume(state)
     card = runner.players[0].hand.cards[0]
-    runner.play(play_card: card.slug)
+    runner.play(play_card: [card.slug])
   end
 
   private

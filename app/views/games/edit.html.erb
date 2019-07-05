@@ -1,30 +1,17 @@
 <h1>Play Konigsrufen!</h1>
 <%= form_with model: @game, local: true, html: {id: "gameForm"} do |form| %>
   <div class="container">
-    <div class="row pl-4 pr-4 justify-content-center">
-      <% @runner.players[0].hand.cards.each do |card| %>
-        <div class="col-1 p-0 card-container hand">
-          <input hidden=true id="play_card_<%= card.slug %>" name="game[play_card]" type="checkbox" value="<%= card.slug %>" />
-          <%= hand_card_button(card, @runner.pick_card?) %>
-        </div>
-      <% end %>
-    </div>
-    <div class="row pr-4 pr-4 justify-content-end">
-      <% if @runner.current_trick_finished? && !@runner.game_finished? %>
-        <input hidden=true name="game[next_trick]" type="checkbox" value="true" checked />
-        <%= form.submit "next trick" %>
-      <% end %>
-    </div>
-    <% if @runner.tricks.started? %>
-      <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner) %>
+    <%= render 'hand', hand: @runner.players[0].hand, form: form %>
+    <% if @runner.stage == :play_card %>
+      <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner), form: form %>
     <% end %>
-    <% if @runner.pick_rufer? %>
+    <% if @runner.stage == :pick_rufer %>
       <%= render 'contract' %>
     <% end %>
-    <% if @runner.pick_king? %>
+    <% if @runner.stage == :pick_king %>
       <%= render 'kings', hand: @runner.players[0].hand %>
     <% end %>
-    <% if @runner.pick_talon? %>
+    <% if [:pick_talon, :resolve_talon].include?(@runner.stage) %>
       <%= render 'talon', talon: @runner.talon %>
     <% end %>
   </div>

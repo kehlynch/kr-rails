@@ -1,0 +1,13 @@
+<div class="row pl-4 pr-4 justify-content-center">
+  <% hand.cards.each do |card| %>
+    <div class="col-1 p-0 card-container hand">
+      <input hidden=true id="play_card_<%= card.slug %>" name="game[<%= @runner.stage %>][]" type="checkbox" value="<%= card.slug %>" />
+      <%= hand_card_button(card, @runner) %>
+    </div>
+  <% end %>
+  <% if @runner.stage == :resolve_talon %>
+    <div>
+      <%= form.submit 'put down cards', disabled: true, id: 'talon-submit' %>
+    </div>
+  <% end %>
+</div>

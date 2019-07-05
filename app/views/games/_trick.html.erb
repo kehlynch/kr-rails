@@ -39,4 +39,10 @@
       </div>
     </div>
   <% end %>
+  <div class="row pr-4 pr-4 justify-content-end">
+    <% if @runner.current_trick_finished? && @runner.stage != :finished %>
+      <input hidden=true name="game[next_trick]" type="checkbox" value="true" checked />
+      <%= form.submit "next trick" %>
+    <% end %>
+  </div>
 </div>
