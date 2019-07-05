@@ -16,18 +16,20 @@ class Runner
       talon: Talon.deserialize(params['talon']),
       tricks: Tricks.deserialize(params['tricks']),
       players: params['players'].map { |player| Player.deserialize(player) },
-      contract: params['contract']&.to_sym
+      contract: params['contract']&.to_sym,
+      king: params['king']&.to_sym
     }
     Runner.new(opts)
   end
 
-  attr_reader :talon, :tricks, :players, :contract
+  attr_reader :talon, :tricks, :players, :contract, :king
 
   def initialize(**opts)
     @talon = opts[:talon]
     @tricks = opts[:tricks]
     @players = opts[:players]
     @contract = opts[:contract]
+    @king = opts[:king]
   end
 
   def serialize
@@ -35,7 +37,8 @@ class Runner
       'talon' => @talon.serialize,
       'tricks' => @tricks.serialize,
       'players' => @players.map(&:serialize),
-      'contract' => @contract
+      'contract' => @contract,
+      'king' => @king
     }
   end
 
@@ -44,6 +47,7 @@ class Runner
     play if args[:play] # for testing with no human
     play_next_trick if args[:next_trick]
     @contract = args[:pick_contract].to_sym if args[:pick_contract]
+    @king = args[:pick_king].to_sym if args[:pick_king]
     return unless game_finished?
 
     calculate_scores
@@ -54,15 +58,19 @@ class Runner
   end
 
   def pick_rufer?
-    !@tricks.started? || !@contract
+    @contract.nil?
+  end
+
+  def pick_king?
+    @contract == :rufer && @king.nil?
   end
 
   def pick_talon?
-    @contract == :rufer
+    @contract == :rufer && @king
   end
 
   def pick_card?
-    @tricks.started?
+    @king.present?
   end
 
   def current_trick

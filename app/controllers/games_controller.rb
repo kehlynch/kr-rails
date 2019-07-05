@@ -57,6 +57,7 @@ class GamesController < ApplicationController
 
   def game_params
     params.require(:game)
-          .permit(:play_card, :next_trick, :pick_contract).to_h.symbolize_keys
+          .permit(:play_card, :next_trick, :pick_contract, :pick_king)
+          .to_h.symbolize_keys
   end
 end

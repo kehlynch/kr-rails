@@ -2,11 +2,20 @@
 
 module GameHelper
   def hand_card_button(card, pickable)
-    active = pickable && 'pickable'
-    illegal = card.legal && 'illegal'
+    active = pickable ? 'pickable' : ''
+    illegal = card.legal ? '' : 'illegal'
     classes = "js-submit-game #{active} #{illegal}"
-    onclick = pickable && card.legal && "submitGame(#{card.slug})"
-    card_button(card, classes, onclick)
+    checkbox_id = "play_card_#{card.slug}"
+    onclick = pickable && card.legal && "submitGame(#{checkbox_id})"
+    card_button(card.slug, classes, onclick)
+  end
+
+  def king_card_button(card_slug, hand)
+    own_king = hand.include?(card_slug) ? 'own_king' : ''
+    classes = "js-submit-game pickable #{own_king}"
+    checkbox_id = "pick_king_#{card_slug}"
+    onclick = "submitGame(#{checkbox_id})"
+    card_button(card_slug, classes, onclick)
   end
 
   def talon_button(index)
@@ -57,10 +66,10 @@ module GameHelper
 
   private
 
-  def card_button(card, classes = '', onclick = nil)
+  def card_button(card_slug, classes = '', onclick = nil)
     image_tag(
-      "#{card.slug}.jpg",
-      alt: card.slug,
+      "#{card_slug}.jpg",
+      alt: card_slug,
       class: "card #{classes}",
       onclick: onclick
     )

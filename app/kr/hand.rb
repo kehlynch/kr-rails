@@ -21,17 +21,28 @@ class Hand
     @player_id = player_id
   end
 
-  def delete(card_slug)
-    card = @cards.find { |c| c.slug == card_slug }
-    raise 'card not found in hand' unless card
-
-    @cards.delete(card)
-  end
-
   def serialize
     {
       'cards' => @cards.map(&:serialize),
       'player_id' => @player_id
     }
   end
+
+  def delete(card_slug)
+    card = find_by_slug(card_slug)
+    raise 'card not found in hand' unless card
+
+    @cards.delete(card)
+  end
+
+  def include?(card_slug)
+    find_by_slug(card_slug).present?
+  end
+
+  private
+
+  def find_by_slug(card_slug)
+    @cards.find { |c| c.slug == card_slug }
+  end
+
 end

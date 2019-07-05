@@ -13,11 +13,18 @@
   }
 }
 
-card.pickable, .talon-container{
+.card.pickable, .talon-container{
   &:hover {
     z-index: 1;
-    border: 2px solid green;
     border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid green;
+  }
+}
+
+.card.own_king {
+  &:hover {
+    border: 2px solid orange;
   }
 }
 
