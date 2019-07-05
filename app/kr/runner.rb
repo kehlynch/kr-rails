@@ -62,7 +62,7 @@ class Runner
   end
 
   def pick_card?
-    !@tricks.empty?
+    @tricks.started?
   end
 
   def current_trick
