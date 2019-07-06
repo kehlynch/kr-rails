@@ -2,17 +2,20 @@
 <%= form_with model: @game, local: true, html: {id: "gameForm"} do |form| %>
   <div class="container">
     <%= render 'hand', hand: @runner.players[0].hand, form: form %>
-    <% if @runner.stage == :play_card %>
-      <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner), form: form %>
-    <% end %>
     <% if @runner.stage == :pick_rufer %>
       <%= render 'contract' %>
     <% end %>
     <% if @runner.stage == :pick_king %>
       <%= render 'kings', hand: @runner.players[0].hand %>
     <% end %>
-    <% if [:pick_talon, :resolve_talon].include?(@runner.stage) %>
+    <% if [:pick_talon].include?(@runner.stage) %>
       <%= render 'talon', talon: @runner.talon %>
+    <% end %>
+    <% if @runner.stage == :play_card %>
+      <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner), form: form %>
+    <% end %>
+    <% if @runner.stage == :finished %>
+      <%= render 'score', players: layout_players(@runner), form: form %>
     <% end %>
   </div>
 <% end %>

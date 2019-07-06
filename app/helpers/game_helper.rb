@@ -2,9 +2,9 @@
 
 module GameHelper
   def hand_card_button(card, runner)
-    # active = pickable ? 'pickable' : ''
+    pickable = [:play_card, :resolve_talon].include?(runner.stage) ? 'pickable' : ''
     illegal = card.legal ? '' : 'illegal'
-    classes = "js-submit-game pickable #{illegal}"
+    classes = "js-submit-game #{pickable} #{illegal}"
     onclick = card_action(card, runner)
     card_button(card.slug, classes, onclick)
   end
@@ -93,7 +93,8 @@ module GameHelper
     {
       trick_count: trick_count,
       lead: runner.lead_player_id == id,
-      points: runner.players[id].points
+      points: runner.players[id].points,
+      winner: runner.winners.include?(id)
     }
   end
 end

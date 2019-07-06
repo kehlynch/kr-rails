@@ -92,6 +92,10 @@ class Runner
     @tricks[-2]
   end
 
+  def winners 
+    [@players.max_by(&:points).id]
+  end
+
   private
 
   def play_current_trick(card_slug = nil)
