@@ -83,6 +83,7 @@ GEM
     crass (1.0.4)
     erubi (1.8.0)
     execjs (2.7.0)
+    ffi (1.11.1)
     ffi (1.11.1-x64-mingw32)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -112,13 +113,17 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
+    msgpack (1.3.0)
     msgpack (1.3.0-x64-mingw32)
     nio4r (2.3.1)
+    nokogiri (1.10.3)
+      mini_portile2 (~> 2.4.0)
     nokogiri (1.10.3-x64-mingw32)
       mini_portile2 (~> 2.4.0)
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
+    pg (1.1.4)
     pg (1.1.4-x64-mingw32)
     popper_js (1.14.5)
     public_suffix (3.1.1)
@@ -217,7 +222,6 @@ GEM
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.6.0)
-    wdm (0.1.1)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -230,6 +234,7 @@ GEM
       nokogiri (~> 1.8)
 
 PLATFORMS
+  ruby
   x64-mingw32
 
 DEPENDENCIES
@@ -254,7 +259,6 @@ DEPENDENCIES
   turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)
-  wdm (>= 0.1.0)
   web-console (>= 3.3.0)
 
 RUBY VERSION
