@@ -5,8 +5,9 @@ class Runner
     deck = Deck.new
     opts = {
       talon: deck.talon,
+      bidding: Bidding.new,
       tricks: Tricks.new,
-      players: Player.players(deck.hands, nohuman)
+      players: Player.players(deck.hands, nohuman),
     }
     Runner.new(opts)
   end
@@ -14,20 +15,20 @@ class Runner
   def self.resume(params)
     opts = {
       talon: Talon.deserialize(params['talon']),
+      bidding: Bidding.deserialize(params['bidding']),
       tricks: Tricks.deserialize(params['tricks']),
       players: params['players'].map { |player| Player.deserialize(player) },
-      contract: params['contract']&.to_sym
     }
     Runner.new(opts)
   end
 
-  attr_reader :talon, :tricks, :players, :contract
+  attr_reader :talon, :tricks, :players, :bidding, :king
 
   def initialize(**opts)
     @talon = opts[:talon]
+    @bidding = opts[:bidding]
     @tricks = opts[:tricks]
     @players = opts[:players]
-    @contract = opts[:contract]
   end
 
   def serialize
@@ -35,34 +36,42 @@ class Runner
       'talon' => @talon.serialize,
       'tricks' => @tricks.serialize,
       'players' => @players.map(&:serialize),
-      'contract' => @contract
+      'bidding' => @bidding.serialize,
     }
   end
 
   def play(**args)
-    play_current_trick(args[:play_card]) if args[:play_card]
-    play if args[:play] # for testing with no human
+    # todo prob should deal with array input in controller or view
+    play_current_trick(args[:play_card][0].to_sym) if args[:play_card]
     play_next_trick if args[:next_trick]
-    @contract = args[:pick_contract].to_sym if args[:pick_contract]
-    return unless game_finished?
+    @bidding.contract = args[:pick_contract].to_sym if args[:pick_contract]
+    @bidding.king = args[:pick_king].to_sym if args[:pick_king]
+    pick_talon(args[:pick_talon].to_i) if args[:pick_talon]
+    resolve_talon(args[:resolve_talon].map(&:to_sym)) if args[:resolve_talon]
+    return unless stage == :finished
 
     calculate_scores
   end
 
-  def game_finished?
-    @tricks.finished?
+  def pick_talon(talon_half_index)
+    cards = @talon.remove_half(talon_half_index)
+    # assume player 0 for now
+    @players[0].hand.add(cards)
+    @bidding.talon_picked = true
   end
 
-  def pick_rufer?
-    !@tricks.started? || !@contract
+  def resolve_talon(card_slugs)
+    # assume player 0 for now
+    @players[0].discard(card_slugs)
+    @bidding.talon_resolved = true
   end
 
-  def pick_talon?
-    @contract == :rufer
-  end
+  def stage
+    return :finished if @tricks.finished?
 
-  def pick_card?
-    @tricks.started?
+    return :play_card if @bidding.stage == :finished
+
+    return @bidding.stage
   end
 
   def current_trick
@@ -83,12 +92,16 @@ class Runner
     @tricks[-2]
   end
 
+  def winners 
+    [@players.max_by(&:points).id]
+  end
+
   private
 
   def play_current_trick(card_slug = nil)
     play_card(card_slug, next_player) if card_slug
     current_player = next_player
-    until current_player.human || current_trick&.finished || game_finished?
+    until current_player.human || current_trick&.finished || stage == :finished
       card = current_player.pick_card(@tricks)
       play_card(card.slug, current_player)
       current_player = next_player

@@ -6,18 +6,33 @@
   max-width: 100%;
   max-height: 100%;
   padding: 2px;
-  .illegal {
-    &:hover {
-      border: 2px solid red;
-    }
+}
+
+.card.pickable, .talon-container{
+  &:hover {
+    z-index: 1;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid green;
   }
 }
 
-card.pickable, .talon-container{
+.card.own_king {
   &:hover {
-    z-index: 1;
-    border: 2px solid green;
-    border-radius: 5px;
+    border: 2px solid orange;
+  }
+}
+
+.card.selected {
+  z-index: 1;
+  border-radius: 5px;
+  border: 2px solid green;
+}
+
+.card.illegal {
+  &:hover {
+    border: 2px solid red;
+    cursor: not-allowed;
   }
 }
 

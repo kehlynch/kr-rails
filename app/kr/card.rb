@@ -2,7 +2,7 @@
 
 class Card
   def self.deserialize(state)
-    suit, value = state['slug'].split('_')
+    suit, value = state['slug'].to_s.split('_')
     player_id = state['player_id']
     legal = state['legal']
     Card.new(suit.to_sym, value.to_i, player_id, legal)
@@ -35,7 +35,7 @@ class Card
   def initialize(suit, value, player_id = nil, legal = true)
     @value = value
     @suit = suit
-    @slug = "#{suit}_#{value}"
+    @slug = "#{suit}_#{value}".to_sym
     @player_id = player_id
     @legal = legal
   end

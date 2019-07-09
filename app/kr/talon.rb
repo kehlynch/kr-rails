@@ -17,4 +17,8 @@ class Talon
   def serialize
     { 'cards' => @cards.map { |half| half.map(&:serialize) } }
   end
+
+  def remove_half(index)
+    @cards.delete_at(index)
+  end
 end

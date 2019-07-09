@@ -1,0 +1,9 @@
+<div class="player-info">
+  <%= "tricks #{info[:trick_count]}" %>
+  <% if info[:points] %>
+    <p><%= "points #{info[:points]}" %></p>
+  <% end %>
+  <% if info[:winner] %>
+    <p>WINNER!!</p>
+  <% end %>
+</div>

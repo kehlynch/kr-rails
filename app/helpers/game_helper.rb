@@ -1,12 +1,29 @@
 # frozen_string_literal: true
 
 module GameHelper
-  def hand_card_button(card, pickable)
-    active = pickable && 'pickable'
-    illegal = card.legal && 'illegal'
-    classes = "js-submit-game #{active} #{illegal}"
-    onclick = pickable && card.legal && "submitGame(#{card.slug})"
-    card_button(card, classes, onclick)
+  def hand_card_button(card, runner)
+    pickable = [:play_card, :resolve_talon].include?(runner.stage) ? 'pickable' : ''
+    illegal = card.legal ? '' : 'illegal'
+    classes = "js-submit-game #{pickable} #{illegal}"
+    onclick = card_action(card, runner)
+    card_button(card.slug, classes, onclick)
+  end
+
+  def card_action(card, runner)
+    checkbox_id = "play_card_#{card.slug}"
+    if runner.stage == :play_card
+      card.legal && "submitGame(#{checkbox_id})"
+    elsif runner.stage == :resolve_talon
+      card.legal && "toggleCard(#{checkbox_id})"
+    end
+  end
+
+  def king_card_button(card_slug, hand)
+    own_king = hand.include?(card_slug) ? 'own_king' : ''
+    classes = "js-submit-game pickable #{own_king}"
+    checkbox_id = "pick_king_#{card_slug}"
+    onclick = "submitGame(#{checkbox_id})"
+    card_button(card_slug, classes, onclick)
   end
 
   def talon_button(index)
@@ -55,30 +72,29 @@ module GameHelper
     }
   end
 
-  private
-
-  def card_button(card, classes = '', onclick = nil)
+  def card_button(card_slug, classes = '', onclick = nil)
     image_tag(
-      "#{card.slug}.jpg",
-      alt: card.slug,
+      "#{card_slug}.jpg",
+      alt: card_slug,
       class: "card #{classes}",
       onclick: onclick
     )
   end
+
+  private
 
   def find_player_card(cards, id)
     cards.find { |c| c.player_id == id }
   end
 
   def player_info(id, runner)
-    # player = players.find { |p| p.id == id }
-    trick_count = runner.tricks.select(&:finished).select do |t|
-      t.winning_player_id == id
-    end.length
+    trick_count = runner.tricks.won_tricks(id).length
+    
     {
       trick_count: trick_count,
       lead: runner.lead_player_id == id,
-      points: runner.players[id].points
+      points: runner.players[id].points,
+      winner: runner.winners.include?(id)
     }
   end
 end

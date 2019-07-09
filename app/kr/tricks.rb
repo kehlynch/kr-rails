@@ -35,6 +35,12 @@ class Tricks
   def started?
     !@tricks.empty?
   end
+  
+  def won_tricks(player_id)
+    @tricks.select(&:finished).select do |t|
+      t.winning_player_id == player_id
+    end
+  end
 
   def won_cards(player_id)
     @tricks

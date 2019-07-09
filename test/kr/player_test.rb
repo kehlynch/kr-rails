@@ -27,8 +27,16 @@ class PlayerTest < ActionDispatch::IntegrationTest
     assert card.is_a?(Card)
   end
 
+  test 'discards' do
+    player = create_player
+    discards = player.hand.cards[0..2].map(&:slug)
+    player.discard(discards)
+    assert_equal 3, player.discards.length
+    assert_equal 9, player.hand.cards.length
+  end
+
   def create_player
     hand = Deck.new.hands[0]
-    Player.new(0, hand)
+    Player.new({id: 0, hand: hand})
   end
 end
