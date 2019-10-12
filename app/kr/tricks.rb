@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Tricks
   def self.deserialize(state)
     tricks = state['tricks'].map { |t| Trick.deserialize(t) }

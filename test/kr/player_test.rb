@@ -17,14 +17,14 @@ class PlayerTest < ActionDispatch::IntegrationTest
   test 'pick_card' do
     player = create_player
     card = player.pick_card([])
-    assert card.is_a?(Card)
+    assert card.is_a?(LegacyCard)
   end
 
   test 'pick_card with trick' do
     player = create_player
-    trick = Trick.new([Card.new(:diamond, 1, create_player)])
+    trick = Trick.new([LegacyCard.new(:diamond, 1, create_player)])
     card = player.pick_card([trick])
-    assert card.is_a?(Card)
+    assert card.is_a?(LegacyCard)
   end
 
   test 'discards' do

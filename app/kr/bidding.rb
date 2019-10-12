@@ -1,13 +1,10 @@
-# frozen_string_literal: true
-
 class Bidding
-
   def self.deserialize(state)
     opts = {
       contract: state['contract']&.to_sym,
       king: state['king']&.to_sym,
       talon_picked: state['talon_picked'],
-      talon_resolved: state['talon_resolved'] 
+      talon_resolved: state['talon_resolved']
     }
     Bidding.new(opts)
   end

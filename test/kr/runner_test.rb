@@ -44,7 +44,7 @@ class RunnerTest < ActionDispatch::IntegrationTest
 
     assert_equal 12, runner.tricks.length
     assert_equal 4, runner.tricks[0].cards.length
-    talon_points = Card.calculate_points(runner.talon.cards.flatten)
+    talon_points = LegacyCard.calculate_points(runner.talon.cards.flatten)
     expected = (69..71)
     assert expected.include?(talon_points + runner.players.map(&:points).sum)
   end

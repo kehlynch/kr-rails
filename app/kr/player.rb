@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Player
   def self.deserialize(state)
     opts = {
@@ -7,7 +5,7 @@ class Player
       human: state['human'],
       hand: Hand.deserialize(state['hand']),
       points: state['points'],
-      discards: state['discards'].map { |c| Card.deserialize(c) },
+      discards: state['discards'].map { |c| LegacyCard.deserialize(c) },
     }
     Player.new(opts)
   end

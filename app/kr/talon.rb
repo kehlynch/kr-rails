@@ -1,10 +1,6 @@
-# frozen_string_literal: true
-
-require 'card'
-
 class Talon
   def self.deserialize(map)
-    cards = map['cards'].map { |half| half.map { |c| Card.deserialize(c) } }
+    cards = map['cards'].map { |half| half.map { |c| LegacyCard.deserialize(c) } }
     Talon.new(cards)
   end
 

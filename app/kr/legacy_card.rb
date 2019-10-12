@@ -1,11 +1,9 @@
-# frozen_string_literal: true
-
-class Card
+class LegacyCard
   def self.deserialize(state)
     suit, value = state['slug'].to_s.split('_')
     player_id = state['player_id']
     legal = state['legal']
-    Card.new(suit.to_sym, value.to_i, player_id, legal)
+    LegacyCard.new(suit.to_sym, value.to_i, player_id, legal)
   end
 
   def self.calculate_points(cards)

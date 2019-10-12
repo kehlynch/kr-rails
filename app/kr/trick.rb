@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 class Trick
   def self.deserialize(state)
-    cards = state['cards'].map { |c| Card.deserialize(c) }
+    cards = state['cards'].map { |c| LegacyCard.deserialize(c) }
     Trick.new(cards)
   end
 

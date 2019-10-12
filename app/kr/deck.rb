@@ -1,7 +1,3 @@
-# frozen_string_literal: true
-
-require 'card'
-
 class Deck
   attr_reader :hands, :talon
 
@@ -14,12 +10,12 @@ class Deck
     @cards = []
     (1..8).each do |value|
       %i[club diamond heart spade].each do |suit|
-        @cards << Card.new(suit, value)
+        @cards << LegacyCard.new(suit, value)
       end
     end
 
     (1..22).each do |value|
-      @cards << Card.new(:trump, value)
+      @cards << LegacyCard.new(:trump, value)
     end
   end
 

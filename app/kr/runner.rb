@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Runner
   def self.start(nohuman = false)
     deck = Deck.new
@@ -7,7 +5,7 @@ class Runner
       talon: deck.talon,
       bidding: Bidding.new,
       tricks: Tricks.new,
-      players: Player.players(deck.hands, nohuman),
+      players: Player.players(deck.hands, nohuman)
     }
     Runner.new(opts)
   end
@@ -127,7 +125,7 @@ class Runner
   def calculate_scores
     @players.each do |p|
       won_cards = @tricks.won_cards(p.id)
-      p.points = Card.calculate_points(won_cards)
+      p.points = LegacyCard.calculate_points(won_cards)
     end
   end
 

@@ -1,3 +1,308 @@
-require: rubocop-rails
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+inherit_from:
+  - .rubocop_rspec_todo.yml
+  - .rubocop_rails.yml
+
+AllCops:
+  CacheRootDirectory: tmp/cache
+  AllowSymlinksInCacheRootDirectory: true
+  MaxFilesInCache: 30000
+  TargetRubyVersion: 2.6
+
+  Exclude:
+    - .bundle/**/*
+    - bin/**/*
+    - log/**/*
+    - public/**/*
+    - tmp/**/*
+    - vendor/bundle/**/*
+    - vendor/cache/**/*
+    - node_modules/**/*
+    - db/schema.rb
+
+Capybara/FeatureMethods:
+  Enabled: false
+
+FactoryBot/StaticAttributeDefinedDynamically:
+  Enabled: false
+
+Layout/AlignHash:
+  Enabled: false
+
+Layout/EmptyComment:
+  Enabled: false
+
+Layout/ExtraSpacing:
+  AllowForAlignment: false
+
+Layout/IndentFirstArrayElement:
+  EnforcedStyle: consistent
+
+Layout/IndentFirstHashElement:
+  EnforcedStyle: consistent
+
+Layout/IndentHeredoc:
+  Enabled: true
+
+Layout/MultilineMethodCallBraceLayout:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Layout/SpaceBeforeFirstArg:
+  Enabled: false
+
+Layout/SpaceInsidePercentLiteralDelimiters:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Lint/HandleExceptions:
+  Exclude:
+    - config/unicorn.rb
+    - config/docker_unicorn.rb
+
+Lint/UnusedBlockArgument:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 200
+  Exclude:
+    - app/presenters/run_stats_group.rb
+    # TODO: Have a look through Run model to see if this can be reduced to fewer than 200 lines
+    - app/contexts/conversation/models/comment.rb
+    - app/models/run.rb
+    - app/models/user.rb
+    - app/models/enrolment.rb
+    - app/models/purchase.rb
+    - app/helpers/admin/admin_form_builder.rb
+    - app/models/course.rb
+    - app/models/program.rb
+    - lib/db/snapshot.rb
+    - lib/mapp/api/client.rb
+    - app/presenters/program_description_presenter.rb
+    - db/migrate/20181016103212_backfill_support_pages.rb
+
+Metrics/CyclomaticComplexity:
+  Max: 9
+  Exclude:
+    - app/controllers/admin/runs_controller.rb
+    - app/models/ability_*
+    - app/models/permissions/organisation_admin_permission.rb
+    - app/services/step_redirection_policy.rb
+    - app/helpers/learning_manager/learning_manager_helper.rb
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 62
+    - lib/db/snapshot.rb
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Max: 6
+  Exclude:
+    - app/presenters/react/comments_presenter.rb
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Naming/BinaryOperatorParameterName:
+  Exclude:
+    - spec/support/matchers/params_hash_matcher.rb
+
+Naming/FileName:
+  Exclude:
+    - bin/**
+    - Capfile
+    - Gemfile
+
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: true
+  Exclude:
+    - spec/features/authenticating_with_a_saml_identity_provider_spec.rb
+
+RSpec/ContextWording:
+  Enabled: true
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/ExampleWording:
+  Enabled: false
+
+RSpec/ExpectActual:
+  Enabled: false
+
+RSpec/ExpectChange:
+  EnforcedStyle: block
+
+RSpec/FilePath:
+  Exclude:
+    - spec/api_helpers/partners/**/*
+    - spec/apis/partners/**/*
+    - spec/controllers/comment_routing_spec.rb
+    - spec/controllers/comment_saving_spec.rb
+    - spec/controllers/restrict_access_to_step_spec.rb
+    - spec/controllers/run_lookup_spec.rb
+    - spec/controllers/step_within_run_lookup_spec.rb
+  CustomTransform:
+    MySQLVersionChecker: mysql_version_checker
+
+Style/AccessModifierDeclarations:
+  Enabled: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Style/CaseEquality:
+  Exclude:
+    - spec/support/controller_support.rb
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/ConditionalAssignment:
+  Enabled: false
+
 Style/Documentation:
-    Enabled: false
+  Enabled: false
+
+Style/EmptyCaseCondition:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/ExpandPathArguments:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/IfInsideElse:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/Lambda:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%i': '()'
+    '%I': '()'
+    '%r': '{}'
+    '%w': '()'
+    '%W': '()'
+
+Style/PreferredHashMethods:
+  Enabled: false
+
+Style/RedundantBegin:
+  Enabled: false
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false
+
+Style/SignalException:
+  EnforcedStyle: semantic
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
+Style/SpecialGlobalVars:
+  EnforcedStyle: use_english_names
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/SymbolProc:
+  Enabled: false
+
+Style/YodaCondition:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  Exclude:
+    - 'spec/services/transcript/generator_spec.rb'
+
+Style/TrailingCommaInHashLiteral:
+  Exclude:
+    - 'db/migrate/20181016103212_backfill_support_pages.rb'
+
+Style/TrivialAccessors:
+  AllowPredicates: True
+
+Style/UnneededPercentQ:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
+  Enabled: false

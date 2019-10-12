@@ -1,11 +1,7 @@
-# frozen_string_literal: true
-
-require 'card'
-
 class Hand
   def self.deserialize(state)
     cards = state['cards'].map do |s|
-      Card.deserialize(s)
+      LegacyCard.deserialize(s)
     end
     player_id = state['player_id']
     Hand.new(cards, player_id)

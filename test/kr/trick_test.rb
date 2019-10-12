@@ -8,12 +8,12 @@ class TrickTest < ActionDispatch::IntegrationTest
   end
 
   test 'winnng_card' do
-    winning = Card.new(:diamond, 6)
+    winning = LegacyCard.new(:diamond, 6)
     trick = Trick.new(
       [
-        Card.new(:diamond, 3),
-        Card.new(:diamond, 4),
-        Card.new(:diamond, 5),
+        LegacyCard.new(:diamond, 3),
+        LegacyCard.new(:diamond, 4),
+        LegacyCard.new(:diamond, 5),
         winning
       ]
     )
