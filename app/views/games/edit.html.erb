@@ -1,21 +1,22 @@
 <h1>Play Konigsrufen!</h1>
 <%= form_with model: @game, local: true, html: {id: "gameForm"} do |form| %>
+  <input hidden=true name="game[action]" value=<%= @game.stage %> />
   <div class="container">
-    <%= render 'hand', hand: @runner.players[0].hand, form: form %>
-    <% if @runner.stage == :pick_rufer %>
+    <%= render 'hand', hand: @game.players[0].cards, form: form %>
+    <% if @game.stage == :pick_contract %>
       <%= render 'contract' %>
     <% end %>
-    <% if @runner.stage == :pick_king %>
-      <%= render 'kings', hand: @runner.players[0].hand %>
+    <% if @game.stage == :pick_king %>
+      <%= render 'kings', hand: @game.players[0].cards %>
     <% end %>
-    <% if [:pick_talon].include?(@runner.stage) %>
-      <%= render 'talon', talon: @runner.talon %>
+    <% if [:pick_talon].include?(@game.stage) %>
+      <%= render 'talon', talon: @game.talon %>
     <% end %>
-    <% if @runner.stage == :play_card %>
-      <%= render 'trick', cards: layout_trick(@runner.current_trick&.cards), players: layout_players(@runner), form: form %>
+    <% if [:play_card, :finished].include?(@game.stage) %>
+      <%= render 'trick', cards: layout_trick(@game.current_trick&.cards), players: layout_players(@game), form: form %>
     <% end %>
-    <% if @runner.stage == :finished %>
-      <%= render 'score', players: layout_players(@runner), form: form %>
+    <% if @game.stage == :finished %>
+      <%= render 'score', players: layout_players(@game), form: form %>
     <% end %>
   </div>
 <% end %>

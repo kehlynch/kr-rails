@@ -1,4 +1,4 @@
-<% talon.cards.each_with_index do |half, i| %>
+<% talon.each_with_index do |half, i| %>
   <div class="d-flex justify-content-center">
     <div onClick="submitGame(talon_<%= i %>)" class="talon-container">
       <input hidden=true id="talon_<%= i %>" name="game[pick_talon]" type="checkbox" value="<%= i %>" />

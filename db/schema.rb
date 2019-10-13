@@ -15,41 +15,49 @@ ActiveRecord::Schema.define(version: 2019_10_12_151807) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "bids", force: :cascade do |t|
-    t.string "slug"
-    t.bigint "game_id"
-    t.bigint "player_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["game_id"], name: "index_bids_on_game_id"
-    t.index ["player_id"], name: "index_bids_on_player_id"
-  end
-
   create_table "cards", force: :cascade do |t|
+    t.integer "value"
+    t.string "suit"
     t.string "slug"
     t.integer "talon_half"
-    t.integer "trick"
-    t.boolean "discard"
+    t.integer "played_index"
+    t.boolean "discard", default: false
     t.bigint "game_id"
     t.bigint "player_id"
+    t.bigint "trick_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id"], name: "index_cards_on_game_id"
     t.index ["player_id"], name: "index_cards_on_player_id"
+    t.index ["trick_id"], name: "index_cards_on_trick_id"
   end
 
   create_table "games", force: :cascade do |t|
     t.json "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "contract"
+    t.string "king"
+    t.boolean "talon_picked", default: false
+    t.boolean "talon_resolved", default: false
   end
 
   create_table "players", force: :cascade do |t|
     t.string "name"
-    t.boolean "human"
+    t.boolean "human", default: false
     t.integer "points"
+    t.integer "position"
+    t.bigint "game_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_players_on_game_id"
+  end
+
+  create_table "tricks", force: :cascade do |t|
+    t.boolean "viewed", default: false
+    t.integer "trick_index"
+    t.bigint "game_id"
+    t.index ["game_id"], name: "index_tricks_on_game_id"
   end
 
 end

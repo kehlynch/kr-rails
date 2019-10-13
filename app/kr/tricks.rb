@@ -15,7 +15,7 @@ class Tricks
   end
 
   def add_trick
-    @tricks.append(Trick.new)
+    @tricks.append(LegacyTrick.new)
   end
 
   def [](ind)

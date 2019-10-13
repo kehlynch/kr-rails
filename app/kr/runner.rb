@@ -5,7 +5,7 @@ class Runner
       talon: deck.talon,
       bidding: Bidding.new,
       tricks: Tricks.new,
-      players: Player.players(deck.hands, nohuman)
+      players: LegacyPlayer.players(deck.hands, nohuman)
     }
     Runner.new(opts)
   end
@@ -15,7 +15,7 @@ class Runner
       talon: Talon.deserialize(params['talon']),
       bidding: Bidding.deserialize(params['bidding']),
       tricks: Tricks.deserialize(params['tricks']),
-      players: params['players'].map { |player| Player.deserialize(player) },
+      players: params['players'].map { |player| LegacyPlayer.deserialize(player) },
     }
     Runner.new(opts)
   end

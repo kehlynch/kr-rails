@@ -2,14 +2,14 @@
 
 require 'test_helper'
 
-class TrickTest < ActionDispatch::IntegrationTest
+class LegacyTrickTest < ActionDispatch::IntegrationTest
   test 'should get trick' do
-    Trick.new
+    LegacyTrick.new
   end
 
   test 'winnng_card' do
     winning = LegacyCard.new(:diamond, 6)
-    trick = Trick.new(
+    trick = LegacyTrick.new(
       [
         LegacyCard.new(:diamond, 3),
         LegacyCard.new(:diamond, 4),

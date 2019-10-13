@@ -1,7 +1,7 @@
-class Trick
+class LegacyTrick
   def self.deserialize(state)
     cards = state['cards'].map { |c| LegacyCard.deserialize(c) }
-    Trick.new(cards)
+    LegacyTrick.new(cards)
   end
 
   attr_reader :cards

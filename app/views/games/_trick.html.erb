@@ -1,4 +1,4 @@
-<div class="container pr-4 pl-4 justify-content-center">
+<div class="container pr-4 pl-4 justify-content-center" id="js-trick-container">
   <% if cards %>
     <div class="row justify-content-center">
       <div>
@@ -40,9 +40,15 @@
     </div>
   <% end %>
   <div class="row pr-4 pr-4 justify-content-end">
-    <% if @runner.current_trick_finished? && @runner.stage != :finished %>
-      <input hidden=true name="game[next_trick]" type="checkbox" value="true" checked />
-      <%= form.submit "next trick" %>
+    <% if @game.current_trick&.finished?  %>
+      <% if @game.stage != :finished %>
+        <input hidden=true name="game[action]" value="next_trick"/>
+        <%= form.submit "next trick" %>
+      <% end %>
+
+      <% if @game.stage === :finished %>
+        <%= button_tag "show scores", onclick: 'showScores()', type: 'button' %>
+      <% end %>
     <% end %>
   </div>
 </div>

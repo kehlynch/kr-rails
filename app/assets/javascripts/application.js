@@ -30,3 +30,10 @@ function toggleCard(checkbox) {
   var submitButton = document.getElementById('talon-submit')
   submitButton.disabled = selected != 3;
 }
+
+function showScores() {
+  console.log("running this!");
+  
+  document.getElementById("js-trick-container").style.display = "none";
+  document.getElementById("js-score-container").style.display = "block";
+}

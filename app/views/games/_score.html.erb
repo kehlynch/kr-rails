@@ -1,20 +1,20 @@
-<div class="container pr-4 pl-4 justify-content-center">
+<div class="score-container container pr-4 pl-4 justify-content-center" id="js-score-container">
   <div class="row justify-content-center">
     <div>
-      <%= render 'player_score', info: players[:n] %>
+      <%= render 'player_score', player: players[:n] %>
     </div>
   </div>
   <div class="row justify-content-around">
     <div>
-      <%= render 'player_score', info: players[:w] %>
+      <%= render 'player_score', player: players[:w] %>
     </div>
     <div>
-      <%= render 'player_score', info: players[:e] %>
+      <%= render 'player_score', player: players[:e] %>
     </div>
   </div>
   <div class="row justify-content-center">
     <div>
-      <%= render 'player_score', info: players[:s] %>
+      <%= render 'player_score', player: players[:s] %>
     </div>
   </div>
 </div>

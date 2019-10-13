@@ -1,4 +1,4 @@
-class Player
+class LegacyPlayer
   def self.deserialize(state)
     opts = {
       id: state['id'],
@@ -7,13 +7,13 @@ class Player
       points: state['points'],
       discards: state['discards'].map { |c| LegacyCard.deserialize(c) },
     }
-    Player.new(opts)
+    LegacyPlayer.new(opts)
   end
 
   def self.players(hands, nohuman = false)
     humans = nohuman ? [] : [0]
     hands.each_with_index.map do |h, i|
-      Player.new({id: i, hand: h, human: humans.include?(i)})
+      LegacyPlayer.new({id: i, hand: h, human: humans.include?(i)})
     end
   end
 

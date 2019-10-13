@@ -18,7 +18,7 @@ class GamesController < ApplicationController
   end
 
   def create
-    game = Game.create(data: Runner.start.serialize)
+    game = Game.create
 
     redirect_to edit_game_path(game)
   end
@@ -26,15 +26,25 @@ class GamesController < ApplicationController
   def edit
     @game = find_game
 
-    @runner = Runner.resume(@game.data)
+    # @runner = Runner.resume(@game.data)
   end
 
   def update
     game = find_game
-    @runner = Runner.resume(game.data)
-    @runner.play(game_params)
-    params = { data: @runner.serialize }
-    game.update(params)
+    case game_params[:action]
+      when 'pick_contract'
+        game.update(contract: game_params[:pick_contract])
+      when 'pick_king'
+        game.update(king: game_params[:pick_king])
+      when 'pick_talon'
+        game.pick_talon!(game_params[:pick_talon].to_i)
+      when 'resolve_talon'
+        game.resolve_talon!(game_params[:resolve_talon])
+      when 'play_card'
+        game.play_current_trick!(game_params[:play_card][0])
+      when 'next_trick'
+        game.play_next_trick!
+    end
     redirect_to edit_game_path(game)
   end
 
@@ -57,7 +67,7 @@ class GamesController < ApplicationController
 
   def game_params
     params.require(:game)
-          .permit(:next_trick, :pick_contract, :pick_king, :pick_talon, :resolve_talon => [], :play_card => [])
+          .permit(:action, :pick_contract, :pick_king, :pick_talon, :resolve_talon => [], :play_card => [])
           .to_h.symbolize_keys
   end
 end

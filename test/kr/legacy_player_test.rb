@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class PlayerTest < ActionDispatch::IntegrationTest
+class LegacyPlayerTest < ActionDispatch::IntegrationTest
   test 'should get player' do
     create_player
   end
@@ -22,7 +22,7 @@ class PlayerTest < ActionDispatch::IntegrationTest
 
   test 'pick_card with trick' do
     player = create_player
-    trick = Trick.new([LegacyCard.new(:diamond, 1, create_player)])
+    trick = LegacyTrick.new([LegacyCard.new(:diamond, 1, create_player)])
     card = player.pick_card([trick])
     assert card.is_a?(LegacyCard)
   end
@@ -37,6 +37,6 @@ class PlayerTest < ActionDispatch::IntegrationTest
 
   def create_player
     hand = Deck.new.hands[0]
-    Player.new({id: 0, hand: hand})
+    LegacyPlayer.new({id: 0, hand: hand})
   end
 end

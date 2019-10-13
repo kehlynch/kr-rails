@@ -45,6 +45,8 @@ module GameHelper
   end
 
   def layout_trick(cards)
+    p '*** layout_trick ***'
+    p cards
     return {} unless cards
 
     {
@@ -55,12 +57,12 @@ module GameHelper
     }
   end
 
-  def layout_players(runner)
+  def layout_players(game)
     {
-      n: player_info(0, runner),
-      w: player_info(1, runner),
-      s: player_info(2, runner),
-      e: player_info(3, runner)
+      n: game.players[0],
+      w: game.players[1],
+      s: game.players[2],
+      e: game.players[3]
     }
   end
 
@@ -83,12 +85,12 @@ module GameHelper
 
   private
 
-  def find_player_card(cards, id)
-    cards.find { |c| c.player_id == id }
+  def find_player_card(cards, position)
+    cards.find { |c| c.player.position == position }
   end
 
-  def player_info(id, runner)
-    trick_count = runner.tricks.won_tricks(id).length
+  def player_info(id, game)
+    trick_count = game.tricks.won_tricks(id).length
     
     {
       trick_count: trick_count,
