@@ -32,8 +32,8 @@ class GamesController < ApplicationController
   def update
     game = find_game
     case game_params[:action]
-      when 'pick_contract'
-        game.update(contract: game_params[:pick_contract])
+      when 'make_bid'
+        game.make_bid!(game_params[:make_bid])
       when 'pick_king'
         game.update(king: game_params[:pick_king])
       when 'pick_talon'
@@ -67,7 +67,7 @@ class GamesController < ApplicationController
 
   def game_params
     params.require(:game)
-          .permit(:action, :pick_contract, :pick_king, :pick_talon, :resolve_talon => [], :play_card => [])
+          .permit(:action, :make_bid, :pick_king, :pick_talon, :resolve_talon => [], :play_card => [])
           .to_h.symbolize_keys
   end
 end

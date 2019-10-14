@@ -5,6 +5,7 @@ class Game < ApplicationRecord
   has_many :cards
   has_many :players, -> { order(:position) }
   has_many :tricks, -> { order(:trick_index) }
+  has_many :bids, -> { order(:bid_index) }
 
   def talon
     self.cards.select { |c| !c.talon_half.nil? }.group_by(&:talon_half).values.to_a
@@ -22,7 +23,7 @@ class Game < ApplicationRecord
     return :pick_king if !self.contract.nil?
 
     # TODO: need to implement first level of bidding to check here
-    return :pick_contract
+    return :make_bid
   end
 
   def winner
@@ -66,6 +67,25 @@ class Game < ApplicationRecord
     play_current_trick!
   end
 
+  def make_bid!(bid_slug)
+    Bid.create(slug: bid_slug, game: self, player: next_player)
+    reload
+    current_player = next_player
+    until current_player.human || Bid.finished_for(self)
+      if current_player.can_bid?
+        bid_slug = current_player.pick_bid
+        Bid.create(slug: bid_slug, game: self, player: next_player)
+        reload
+      end
+      current_player = next_player
+    end
+  end
+
+  def play_next_trick!
+    Trick.create(game: self, trick_index: current_trick.trick_index + 1)
+    play_current_trick!
+  end
+
   def human_player
     self.players.find { |p| p.human }
   end
@@ -97,6 +117,22 @@ class Game < ApplicationRecord
   end
 
   def next_player
+    if stage == :make_bid
+      return next_bidder
+    elsif stage == :play_card
+      return next_card_player
+    end
+  end
+
+  def next_bidder
+    if bids.empty?
+      return human_player
+    else
+      return Player.next_from(bids[-1].player)
+    end
+  end
+
+  def next_card_player
     if !current_trick.started?
       # start of first trick - human player always leads for now
       return human_player if current_trick.trick_index == 0
@@ -106,6 +142,6 @@ class Game < ApplicationRecord
     end
 
     # mid trick - find next player
-    players.find_by(position: (current_trick.last_player.position + 1) % 4)
+    Player.next_from(current_trick.last_player)
   end
 end

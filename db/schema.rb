@@ -15,6 +15,15 @@ ActiveRecord::Schema.define(version: 2019_10_12_151807) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "bids", force: :cascade do |t|
+    t.string "slug"
+    t.integer "bid_index"
+    t.bigint "game_id"
+    t.bigint "player_id"
+    t.index ["game_id"], name: "index_bids_on_game_id"
+    t.index ["player_id"], name: "index_bids_on_player_id"
+  end
+
   create_table "cards", force: :cascade do |t|
     t.integer "value"
     t.string "suit"

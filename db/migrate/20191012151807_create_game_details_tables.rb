@@ -33,6 +33,14 @@ class CreateGameDetailsTables < ActiveRecord::Migration[5.2]
       t.references :game
     end
 
+    create_table :bids do |t|
+      t.string :slug
+      t.integer :bid_index
+      
+      t.references :game
+      t.references :player
+    end
+
     change_table :games do |t|
       t.string :contract
       t.string :king

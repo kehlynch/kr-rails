@@ -8,7 +8,7 @@ class GameTest < ActiveSupport::TestCase
 
     assert_equal game.talon.length, 2
     assert_equal game.tricks.length, 1
-    assert_equal game.stage, :pick_contract
+    assert_equal game.stage, :make_bid
 
     game.players.each do |player|
       assert player.cards.length == 12
@@ -16,7 +16,7 @@ class GameTest < ActiveSupport::TestCase
   end
 
   test 'should play card' do
-    game = Game.create
+    game = Game.create(talon_resolved: true, talon_picked: true, king: 'something', contract: 'something')
     card = game.players[0].cards[0]
     game.play_current_trick!(card.slug)
 
