@@ -1,14 +1,16 @@
 require 'test_helper'
 
 RSpec.describe Game do
-  describe '.create' do
+  let(:subject) { described_class.new }
+
+  describe '.deal_game' do
     it 'sets up a new game' do
-      game = Game.create
+      game = described_class.deal_game
       expect(game.players.length).to eq(4)
       expect(game.cards.length).to eq(54)
 
       expect(game.talon.length).to eq(2)
-      expect(game.tricks.length).to eq(1)
+      expect(game.tricks.length).to eq(0)
       expect(game.stage).to eq(:make_bid)
 
       game.players.each do |player|
@@ -17,31 +19,28 @@ RSpec.describe Game do
     end
   end
   
-  describe '.play_card' do
-    let(:game) { Game.create(talon_resolved: true, talon_picked: true, king: 'something') }
-
+  describe '#play_card' do
+    let(:tricking) { instance_double('Tricking', :tricking) }
     before do
-      allow(Bid).to receive(:finished?).with(game).and_return(:true)
-      allow(Bid).to receive(:pick_talon?).with(game).and_return(:false)
+      allow(Tricking).to receive(:new).and_return(tricking)
+      allow(tricking).to receive(:play_current_trick!)
     end
 
     it 'should play card' do
-      card = game.players[0].cards[0]
-      game.play_current_trick!(card.slug)
+      subject.play_current_trick!('cardslug')
 
-      expect(game.tricks.length).to eq(1)
-      expect(game.tricks[0].cards.length).to eq(4)
+      expect(tricking).to have_received(:play_current_trick!).with('cardslug')
     end
   end
 
   it 'should pick talon' do
-    game = Game.create
+    game = Game.deal_game
     game.pick_talon!(0)
     expect(game.players[0].cards.length).to eq(15)
   end
 
   it 'should put down discards' do
-    game = Game.create
+    game = Game.deal_game
     game.pick_talon!(0)
     card_slugs = game.players[0].cards[0..2].map(&:slug)
     game.resolve_talon!(card_slugs)

@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 module GameHelper
+  BID_NAMES = {
+    Bidding::RUFER => 'Rufer',
+    Bidding::SOLO => 'Solo',
+    Bidding::DREIER => 'Dreier',
+    Bidding::PASS => 'Pass',
+    Bidding::CALL_KING => 'Call a king',
+    Bidding::TRISCHAKEN => 'Trischaken',
+    Bidding::SECHSERDREIER => 'Sechserdreier'
+  }
+
   def hand_card_button(card, runner)
     pickable = [:play_card, :resolve_talon].include?(runner.stage) ? 'pickable' : ''
     illegal = card.legal ? '' : 'illegal'
@@ -35,13 +45,18 @@ module GameHelper
     )
   end
 
-  def contract_button(contract, label)
+  def bid_button(bid_slug)
+    label = bid_name(bid_slug)
     button_tag(
       label,
-      alt: contract,
-      class: 'contract-button js-submit-game',
-      onclick: "submitGame(#{contract})"
+      alt: label,
+      class: 'bid-button js-submit-game',
+      onclick: "submitGame(#{bid_slug})"
     )
+  end
+
+  def bid_name(bid_slug)
+    BID_NAMES[bid_slug]
   end
 
   def layout_trick(cards)

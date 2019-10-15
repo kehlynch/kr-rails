@@ -1,28 +1,45 @@
 class Game < ApplicationRecord
-
-  after_create :generate_new_game
-  
   has_many :cards
   has_many :players, -> { order(:position) }
   has_many :tricks, -> { order(:trick_index) }
   has_many :bids, -> { order(:bid_index) }
 
+  def self.deal_game
+    game = Game.create
+    game.players = 
+      4.times.collect do |i|
+        Player.create(game: game, human: i == 0, position: i)
+      end
+
+    Dealer.deal(game, game.players)
+
+    game
+  end
+
+  def bidding
+    @bidding ||= Bidding.new(id)
+  end
+
+  def tricking
+    @tricking ||= Tricking.new(id)
+  end
+  
   def talon
-    self.cards.select { |c| !c.talon_half.nil? }.group_by(&:talon_half).values.to_a
+    cards.select { |c| !c.talon_half.nil? }.group_by(&:talon_half).values.to_a
   end
 
   def stage
-    return :make_bid unless Bid.finished?(self)
+    return :make_bid unless bidding.finished?
     
-    return :pick_king if Bid.pick_king?(self) && !self.king.nil?
+    return :pick_king if bidding.pick_king? && !king.nil?
 
-    if Bid.pick_talon?(self)
-      return :pick_talon unless self.talon_picked
+    if @bidding.pick_talon?
+      return :pick_talon unless talon_picked
 
-      return :resolve_talon unless self.talon_resolved
+      return :resolve_talon unless talon_resolved
     end
 
-    return :play_card unless Trick.finished?(self)
+    return :play_card unless tricking.finished?
 
     return :finished
   end
@@ -54,85 +71,25 @@ class Game < ApplicationRecord
   end
 
   def play_current_trick!(card_slug = nil)
-    play_card(card_slug, next_player) if card_slug
-    current_player = next_player
-    until current_player.human || current_trick&.finished? || stage == :finished 
-      card = current_player.pick_card
-      play_card(card.slug, current_player)
-      current_player = next_player
-    end
+    tricking.play_current_trick!(card_slug)
   end
 
   def play_next_trick!
-    Trick.create(game: self, trick_index: current_trick.trick_index + 1)
-    play_current_trick!
+    tricking.play_next_trick!
   end
 
   def make_bid!(bid_slug)
-    Bid.create(slug: bid_slug, game: self, player: next_player)
-    reload
-    current_player = next_player
-    until current_player.human || Bid.finished?(self)
-      bid_slug = current_player.pick_bid
-      Bid.create(slug: bid_slug, game: self, player: next_player)
-      reload
-      current_player = next_player
-    end
-  end
-
-  def play_next_trick!
-    Trick.create(game: self, trick_index: current_trick.trick_index + 1)
-    play_current_trick!
+    bidding.make_bid!(bid_slug)
   end
 
   def human_player
-    self.players.find { |p| p.human }
+    players.find { |p| p.human }
   end
 
   def current_trick
-    self.tricks.last
+    tricking.current_trick
   end
 
   private
 
-  def generate_new_game
-    players = 
-      4.times.collect do |i|
-        Player.create(game: self, human: i == 0, position: i)
-      end
-
-    Dealer.deal(self, players)
-
-    Trick.create(game: self, trick_index: 0)
-  end
-
-  def play_card(card_slug, player)
-    self.cards.find_by(slug: card_slug).update(played_index: next_played_index, trick: current_trick)
-    reload
-  end
-
-  def next_played_index
-    (self.cards.maximum(:played_index) || 0) + 1
-  end
-
-  def next_bidder
-    if bids.empty?
-      return human_player
-    else
-      return Player.next_from(bids[-1].player)
-    end
-  end
-
-  def next_player
-    if !current_trick.started?
-      # start of first trick - human player always leads for now
-      return human_player if current_trick.trick_index == 0
-
-      # start of another trick - winner of previous trick
-      return tricks[-2]&.won_player if tricks[-2]&.won_player
-    end
-
-    # mid trick - find next player
-    Player.next_from(current_trick.last_player)
-  end
 end

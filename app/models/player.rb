@@ -65,7 +65,7 @@ class Player < ApplicationRecord
   def pick_bid
     # get random legal bid
     p 'available_bids'
-    p Bid.available_bids(game, self)
-    Bid.available_bids(game, self).sample
+    p Bidding.new(game_id).available_bids(self)
+    Bidding.new(game_id).available_bids(self).sample
   end
 end

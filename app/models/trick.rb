@@ -4,8 +4,14 @@ class Trick < ApplicationRecord
 
   has_many :cards, -> { order(:played_index) }
 
-  def self.finished?(game)
-    game.tricks.length == 12 && game.tricks[-1].finished?
+  def add_card(card_slug, player)
+    Card.find_by(slug: card_slug, game_id: game_id).update(played_index: next_played_index, trick_id: id)
+
+    cards.reload
+  end
+
+  def next_played_index
+    (cards.maximum(:played_index) || 0) + 1
   end
 
   def lead_player
@@ -17,7 +23,7 @@ class Trick < ApplicationRecord
   end
 
   def winning_card
-    self.cards.max_by do |card|
+    cards.max_by do |card|
       # convert to integers to avoid failing array comparison
       is_trump = card.suit == 'trump' ? 1 : 0
       is_led_suit = card.suit == led_suit ? 1 : 0

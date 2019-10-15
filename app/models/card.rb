@@ -35,10 +35,10 @@ class Card < ApplicationRecord
 
     return nil if discard || played_index
 
-    current_trick = game.current_trick
+    current_trick = Tricking.new(game_id).current_trick
 
     # p '1. trick not started - legal' if !current_trick.started?
-    return true if !current_trick.started?
+    return true if !current_trick&.started?
 
     led_suit = current_trick&.led_suit
 

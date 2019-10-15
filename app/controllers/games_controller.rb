@@ -9,24 +9,17 @@ class GamesController < ApplicationController
     @runner = Game.all
   end
 
-  # def show
-  #   @runner = Runner.resume(Game.find(params[:id]))
-  # end
-
   def new
-    # @runner = Runner.start
   end
 
   def create
-    game = Game.create
+    game = Game.deal_game
 
     redirect_to edit_game_path(game)
   end
 
   def edit
     @game = find_game
-
-    # @runner = Runner.resume(@game.data)
   end
 
   def update

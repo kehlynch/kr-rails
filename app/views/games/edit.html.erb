@@ -4,7 +4,7 @@
   <div class="container">
     <%= render 'hand', hand: @game.players[0].cards, form: form %>
     <% if @game.stage == :make_bid %>
-      <%= render 'contract' %>
+      <%= render 'bid' %>
     <% end %>
     <% if @game.stage == :pick_king %>
       <%= render 'kings', hand: @game.players[0].cards %>
