@@ -41,10 +41,6 @@ class Player < ApplicationRecord
     human
   end
 
-  def can_bid?
-    bids.find_by(slug: 'pass')
-  end
-
   def winner?
     game.winner == self
   end
@@ -52,17 +48,24 @@ class Player < ApplicationRecord
   def pick_card
     # get random legal card
     legal_cards = cards.select(&:legal)
-    if legal_cards.length == 0
-      p "NO LEGAL CARDS FOUND"
-      p "current_trick cards:"
+    # if legal_cards.length == 0
+    #   p "NO LEGAL CARDS FOUND"
+    #   p "current_trick cards:"
 
-      p "is it finished? from player? #{game.current_trick.id} #{game.current_trick.cards.length}"
-      p self.game.current_trick.cards.length
-      p self.game.current_trick.cards
-      p "hand:"
-      p self.cards.length
-      p self.cards
-    end
+    #   p "is it finished? from player? #{game.current_trick.id} #{game.current_trick.cards.length}"
+    #   p self.game.current_trick.cards.length
+    #   p self.game.current_trick.cards
+    #   p "hand:"
+    #   p self.cards.length
+    #   p self.cards
+    # end
     legal_cards.sample
+  end
+
+  def pick_bid
+    # get random legal bid
+    p 'available_bids'
+    p Bid.available_bids(game, self)
+    Bid.available_bids(game, self).sample
   end
 end

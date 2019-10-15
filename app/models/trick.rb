@@ -4,6 +4,10 @@ class Trick < ApplicationRecord
 
   has_many :cards, -> { order(:played_index) }
 
+  def self.finished?(game)
+    game.tricks.length == 12 && game.tricks[-1].finished?
+  end
+
   def lead_player
     cards[0]&.player
   end

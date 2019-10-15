@@ -12,18 +12,19 @@ class Game < ApplicationRecord
   end
 
   def stage
-    return :finished if tricks.length == 12 && tricks[-1].finished?
+    return :make_bid unless Bid.finished?(self)
+    
+    return :pick_king if Bid.pick_king?(self) && !self.king.nil?
 
-    return :play_card if self.talon_resolved
+    if Bid.pick_talon?(self)
+      return :pick_talon unless self.talon_picked
 
-    return :resolve_talon if self.talon_picked
+      return :resolve_talon unless self.talon_resolved
+    end
 
-    return :pick_talon if !self.king.nil?
+    return :play_card unless Trick.finished?(self)
 
-    return :pick_king if !self.contract.nil?
-
-    # TODO: need to implement first level of bidding to check here
-    return :make_bid
+    return :finished
   end
 
   def winner
@@ -71,12 +72,10 @@ class Game < ApplicationRecord
     Bid.create(slug: bid_slug, game: self, player: next_player)
     reload
     current_player = next_player
-    until current_player.human || Bid.finished_for(self)
-      if current_player.can_bid?
-        bid_slug = current_player.pick_bid
-        Bid.create(slug: bid_slug, game: self, player: next_player)
-        reload
-      end
+    until current_player.human || Bid.finished?(self)
+      bid_slug = current_player.pick_bid
+      Bid.create(slug: bid_slug, game: self, player: next_player)
+      reload
       current_player = next_player
     end
   end

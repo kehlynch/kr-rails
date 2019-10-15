@@ -42,7 +42,6 @@ class CreateGameDetailsTables < ActiveRecord::Migration[5.2]
     end
 
     change_table :games do |t|
-      t.string :contract
       t.string :king
       t.boolean :talon_picked, default: false
       t.boolean :talon_resolved, default: false
