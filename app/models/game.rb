@@ -115,14 +115,6 @@ class Game < ApplicationRecord
     (self.cards.maximum(:played_index) || 0) + 1
   end
 
-  def next_player
-    if stage == :make_bid
-      return next_bidder
-    elsif stage == :play_card
-      return next_card_player
-    end
-  end
-
   def next_bidder
     if bids.empty?
       return human_player
@@ -131,7 +123,7 @@ class Game < ApplicationRecord
     end
   end
 
-  def next_card_player
+  def next_player
     if !current_trick.started?
       # start of first trick - human player always leads for now
       return human_player if current_trick.trick_index == 0

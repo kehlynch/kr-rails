@@ -56,7 +56,9 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper', '1.2.0'
+  gem 'rspec-rails', '~> 3.8.0', require: false
 end
+
 gem 'rubocop-rails'
 gem 'bootstrap', '~> 4.3.1'
 gem 'jquery-rails'
