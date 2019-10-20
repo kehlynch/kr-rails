@@ -3,8 +3,9 @@ require 'spec_helper'
 RSpec.describe MessagePresenter do
   let(:game_id) { 'game-id' }
   let(:stage) { '' }
+  let(:king) { nil }
   let(:subject) { described_class.new(game_id, stage) }
-  let(:game) { instance_double(Game, :game) }
+  let(:game) { instance_double(Game, :game, king: king) }
   let(:bids) { instance_double(Bids, :bids) }
   let(:tricks) { instance_double(Tricks, :game) }
   let(:player) { instance_double('Player', :player) }

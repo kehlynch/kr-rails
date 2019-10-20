@@ -24,7 +24,7 @@ class Tricks
   def play_current_trick!(card_slug = nil)
     play_card!(card_slug) if card_slug
     until next_player.human || current_trick&.finished? || finished?
-      card = next_player.pick_card
+      card = next_player.pick_card_for(@game_id)
       play_card!(card.slug)
     end
   end

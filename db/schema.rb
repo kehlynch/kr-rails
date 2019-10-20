@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_12_151807) do
+ActiveRecord::Schema.define(version: 2019_10_20_185205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,13 @@ ActiveRecord::Schema.define(version: 2019_10_12_151807) do
     t.string "king"
     t.integer "talon_picked"
     t.boolean "talon_resolved", default: false
+    t.bigint "match_id"
+    t.index ["match_id"], name: "index_games_on_match_id"
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "players", force: :cascade do |t|
@@ -55,10 +62,10 @@ ActiveRecord::Schema.define(version: 2019_10_12_151807) do
     t.boolean "human", default: false
     t.integer "points"
     t.integer "position"
-    t.bigint "game_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["game_id"], name: "index_players_on_game_id"
+    t.bigint "match_id"
+    t.index ["match_id"], name: "index_players_on_match_id"
   end
 
   create_table "tricks", force: :cascade do |t|

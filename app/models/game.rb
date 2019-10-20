@@ -1,14 +1,11 @@
 class Game < ApplicationRecord
+  belongs_to :match
   has_many :cards
   attr_reader :bids, :tricks, 
 
-  def self.deal_game
-    game = Game.create
+  def self.deal_game(match_id, players)
+    game = Game.create(match_id: match_id)
 
-    players = 4.times.collect do |i|
-      Player.create(game: game, human: i == 0, position: i)
-    end
-  
     Dealer.deal(game, players)
 
     return game
@@ -19,10 +16,16 @@ class Game < ApplicationRecord
 
     return 'pick_king' if bids.pick_king? && king.nil?
 
-    if bids.pick_talon?
-      return 'pick_talon' unless !talon_picked.nil?
+    if !bids.talon_cards_to_pick.nil? 
+      unless talon_picked
+        return 'pick_whole_talon' if bids.talon_cards_to_pick == 6
+        return 'pick_talon'
+      end
 
-      return 'resolve_talon' unless talon_resolved
+      unless talon_resolved
+        return 'resolve_whole_talon' if bids.talon_cards_to_pick == 6
+        return 'resolve_talon'
+      end
     end
 
     # return 'first_trick' if tricks.first_trick?
@@ -61,6 +64,13 @@ class Game < ApplicationRecord
     talon.pick_talon!(talon_half_index, declarer)
 
     update(talon_picked: talon_half_index)
+  end
+
+  def pick_whole_talon!
+    talon.pick_whole_talon!(declarer)
+
+    # TODO urgh - sort this out!
+    update(talon_picked: 3)
   end
 
   def resolve_talon!(putdown_card_slugs)

@@ -1,25 +1,14 @@
-# frozen_string_literal: true
-
-require 'game'
-
 class GamesController < ApplicationController
   helper_method :game
 
-  def index
-    redirect_to(action: :new)
-  end
-
   def create
-    game = Game.deal_game
+    game = Match.find(params[:match_id]).deal_game
 
-    redirect_to edit_game_path(game)
-  end
-
-  def show
-    redirect_to(action: :edit, game: find_game)
+    redirect_to edit_match_game_path(params[:match_id], game)
   end
 
   def edit
+    @match_id = params[:match_id]
     game_id = params[:id]
     @game = find_game
     @stage = StagePresenter.new(game_id)
@@ -37,14 +26,18 @@ class GamesController < ApplicationController
         game.pick_king!(game_params[:pick_king])
       when 'pick_talon'
         game.pick_talon!(game_params[:pick_talon].to_i)
+      when 'pick_whole_talon'
+        game.pick_whole_talon!
       when 'resolve_talon'
         game.resolve_talon!(game_params[:resolve_talon])
+      when 'resolve_whole_talon'
+        game.resolve_talon!(game_params[:resolve_whole_talon])
       when 'play_card'
         game.play_current_trick!(game_params[:play_card][0])
       when 'next_trick'
         game.play_next_trick!
     end
-    redirect_to edit_game_path(game)
+    redirect_to edit_match_game_path(params[:match_id], game)
   end
 
   def destroy
@@ -56,17 +49,13 @@ class GamesController < ApplicationController
 
   private
 
-  def resume_runner
-    Runner.resume(find_game.data)
-  end
-
   def find_game
     Game.find(params[:id])
   end
 
   def game_params
     params.require(:game)
-          .permit(:action, :make_bid, :pick_king, :pick_talon, :resolve_talon => [], :play_card => [])
+          .permit(:action, :make_bid, :pick_king, :pick_talon, :resolve_talon => [], :resolve_whole_talon => [], :play_card => [])
           .to_h.symbolize_keys
   end
 end

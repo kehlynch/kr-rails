@@ -11,8 +11,8 @@ class BidsPresenter
     @players = Players.new(game_id)
   end
 
-  def available_bids
-    @bids.available_bids(@players.human_player).map do |slug|
+  def valid_bids
+    @bids.valid_bids.map do |slug|
       [slug, BidPresenter.new(slug).name]
     end
   end

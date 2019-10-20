@@ -2,14 +2,8 @@ require 'spec_helper'
 
 RSpec.describe GamesController do
 
-  describe 'GET new' do
-    it 'renders the new template' do
-      get :new
-      expect(response).to render_template('new')
-    end
-  end
-
   describe 'GET edit' do
+    let(:match_id) { 'match-id' }
     let(:game_id) { 'game-id' }
     let(:game) { instance_double('Game', :game) }
     let(:stage) { instance_double('StagePresenter', :game) }
@@ -30,12 +24,12 @@ RSpec.describe GamesController do
     end
 
     it 'renders the edit template' do
-      get :edit, params: { id: game_id }
+      get :edit, params: { match_id: match_id, id: game_id }
       expect(response).to render_template('edit')
     end
 
     it 'assigns' do
-      get :edit, params: { id: game_id }
+      get :edit, params: { match_id: match_id, id: game_id }
       expect(assigns(:game)).to eq(game)
       expect(assigns(:stage)).to eq(stage)
       expect(assigns(:players)).to eq(players)

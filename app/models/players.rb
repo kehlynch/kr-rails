@@ -6,7 +6,8 @@ class Players
 
   def initialize(game_id)
     @game_id = game_id
-    @players = Player.where(game_id: game_id).sort_by(&:position)
+    @match_id = Game.find(game_id).match_id
+    @players = Player.where(match_id: @match_id).sort_by(&:position)
   end
 
   def winner
@@ -18,10 +19,10 @@ class Players
   end
 
   def forehand
-    human_player
+    @players.find { |p| p.forehand_for?(@game_id) }
   end
 
   def next_from(player)
-    Player.find_by(game_id: @game_id, position: (player.position + 1) % 4)
+    Player.find_by(match_id: @match_id, position: (player.position + 1) % 4)
   end
 end

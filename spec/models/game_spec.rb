@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Game do
+  let(:match_id) { 'match_id' }
   let(:subject) { described_class.new }
   let(:bids) { instance_double('Bids', :bids) }
   let(:tricks) { instance_double('Tricks', :tricks) }
@@ -24,10 +25,9 @@ RSpec.describe Game do
     end
 
     it 'sets up a new game' do
-      expect(Dealer).to receive(:deal)
-      expect(Player).to receive(:create).exactly(4).times
+      expect(Dealer).to receive(:deal).with(instance_of(Game), players)
 
-      described_class.deal_game
+      described_class.deal_game(match_id, players)
     end
   end
   

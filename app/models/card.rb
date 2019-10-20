@@ -30,8 +30,8 @@ class Card < ApplicationRecord
   end
 
 
-  def legal
-    return legal_putdown if game.stage == :resolve_talon
+  def legal?
+    return simple_legal_putdown? if ['resolve_talon', 'resolve_whole_talon'].include?(game.stage)
 
     return nil if discard || played_index
 
@@ -46,25 +46,24 @@ class Card < ApplicationRecord
     return true if suit == led_suit
 
     # p '3. other led suit in hand - NOT legal' if player.suit_in_hand(led_suit).length > 0
-    return false if player.suit_in_hand(led_suit).length > 0
+    return false if player.suit_in_hand_for(game_id, led_suit).length > 0
 
     # p '4. trump - legal' if suit == 'trump'
     return true if suit == 'trump'
 
     # p '5. other trumps in hand - NOT legal' if player.trumps_in_hand.length > 0
-    return false if player.trumps_in_hand.length > 0
+    return false if player.trumps_in_hand_for(game_id).length > 0
 
     # TODO: leading pagat
-    p '6. fallback - legal'
     return true
   end
 
   def legal_putdown?(hand, current_putdowns)
-    return false if points == 5
+    return false if points == 4
     
     return true if suit != 'trump'
 
-    simple_legal_putdowns_in_hand = hand.filter { |c| c.suit != 'trump' && c.points != 5 }.length
+    simple_legal_putdowns_in_hand = hand.filter { |c| c.suit != 'trump' && c.points != 4 }.length
 
     trumps_allowed = 3 - simple_legal_putdowns_in_hand
 
@@ -77,9 +76,9 @@ class Card < ApplicationRecord
     return true
   end
 
-  private
-
-  def legal_putdown
+  def simple_legal_putdown?
+    return false if points == 4 || suit == 'trump'
+    
     return true
   end
 end

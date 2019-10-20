@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'games/edit.html.erb' do
+  let(:match_id) { 'match-id' }
   let(:game) { stub_model(Game) }
   let(:stage) { instance_double('StagePresenter', :stage) }
   let(:players) { instance_double('PlayersPresenter', :players) }
@@ -9,7 +10,7 @@ RSpec.describe 'games/edit.html.erb' do
   let(:player) { instance_double('Player', :player) }
   let(:hand) { [] }
   let(:message) { ['message'] }
-  let(:available_bids) { [] }
+  let(:valid_bids) { [] }
   let(:human_declarer?) { true }
   let(:show_talon?) { false }
   let(:action) { 'action' }
@@ -18,6 +19,7 @@ RSpec.describe 'games/edit.html.erb' do
   let(:cards) { [] }
 
   before do
+    assign(:match_id, match_id)
     assign(:game, game)
     assign(:stage, stage)
     assign(:players, players)
@@ -37,7 +39,7 @@ RSpec.describe 'games/edit.html.erb' do
     allow(player).to receive(:cards).and_return(cards)
 
     allow(bids).to receive(:finished?).and_return(false)
-    allow(bids).to receive(:available_bids).and_return(available_bids)
+    allow(bids).to receive(:valid_bids).and_return(valid_bids)
     allow(bids).to receive(:human_declarer?).and_return(human_declarer?)
     allow(bids).to receive(:winning_bid_name).and_return('')
 
@@ -47,7 +49,7 @@ RSpec.describe 'games/edit.html.erb' do
 
   describe 'when action is make_bid' do
     let(:action) { 'make_bid' }
-    let(:available_bids) { [['solo', 'Solo']] }
+    let(:valid_bids) { [['solo', 'Solo']] }
 
     it 'renders sucessfully' do
       render

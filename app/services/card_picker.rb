@@ -4,7 +4,7 @@ class CardPicker
   end
 
   def pick
-    legal_cards = @hand.select(&:legal)
+    legal_cards = @hand.select(&:legal?)
     legal_cards.sample
   end
 end

@@ -25,8 +25,6 @@ class Bid < ApplicationRecord
   end
 
   def points
-    p slug
-    p Bids::POINTS
     Bids::POINTS[slug]
   end
 end

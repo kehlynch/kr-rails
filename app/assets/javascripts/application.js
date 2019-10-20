@@ -22,7 +22,7 @@ function submitGame(checkbox) {
   if (checkbox) {
     checkbox.checked = true;
   }
-  document.getElementById("gameForm").submit();
+  document.getElementById('gameForm').submit();
 }
 
 function toggleCard(checkbox) {
@@ -30,17 +30,23 @@ function toggleCard(checkbox) {
   checkbox.nextElementSibling.classList.toggle('selected');
   var selected = document.querySelectorAll('input[type="checkbox"]:checked').length
   var submitButton = document.getElementById('talon-submit')
-  submitButton.disabled = selected != 3;
+  console.log(stage());
+  console.log(selected);
+  if (stage() == 'resolve_talon') {
+    submitButton.disabled = selected != 3;
+  } else if (stage() == 'resolve_whole_talon') {
+    submitButton.disabled = selected != 6;
+  }
 }
 
 function showScores() {
-  document.getElementById("js-trick-container").style.display = "none";
-  document.getElementById("js-score-container").style.display = "block";
+  document.getElementById('js-trick-container').style.display = 'none';
+  document.getElementById('js-score-container').style.display = 'block';
 }
 
 function stage() {
   const element = stageElement();
-  // console.log("element", element);
+  // console.log('element', element);
   return element && element.dataset.stage;
 }
 
@@ -51,7 +57,7 @@ function humanDeclarer() {
 }
 
 function stageElement() {
-  return document.getElementById("js-stage");
+  return document.getElementById('js-stage');
 }
 
 
@@ -61,14 +67,14 @@ function attachClickers() {
 
 function pageClicked() {
   const gameStage = stage();
-  if ( gameStage == "next_trick") {
-    document.getElementById("gameForm").submit();
-  } else if ( gameStage == "finished") {
+  if ( gameStage == 'next_trick' || gameStage == 'pick_whole_talon') {
+    document.getElementById('gameForm').submit();
+  } else if ( gameStage == 'finished') {
     showScores();
-  } else if (humanDeclarer() == "false") {
-    console.log("here")
-    if ( gameStage == "pick_talon" || gameStage == "resolve_talon" || gameStage == "pick_king") {
-      document.getElementById("gameForm").submit();
+  } else if (humanDeclarer() == 'false') {
+    console.log('here')
+    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king') {
+      document.getElementById('gameForm').submit();
     }
   }
 }

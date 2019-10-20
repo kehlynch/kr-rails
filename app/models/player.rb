@@ -1,80 +1,69 @@
 class Player < ApplicationRecord
-  # has_many :cards, -> { where(played_index: nil, discard: false).order([:suit, :value]).reverse }
   has_many :cards, -> { where(played_index: nil, discard: false).order(suit: :desc, value: :desc) }
   has_many :discards, -> { where(discard: true) }, class_name: 'Card', foreign_key: 'player_id'
   has_many :bids
 
-  belongs_to :game
+  belongs_to :match
 
-  # has_many :led_tricks, class_name: 'Trick', foreign_key: 'lead_player_id'
-  # has_many :won_tricks, class_name: 'Trick', foreign_key: 'won_player_id'
-  # has_many :won_cards, class_name: 'Card', through: :won_tricks, source: :cards
-  
-  def self.next_from(player)
-    Player.find_by(game: player.game, position: (player.position + 1) % 4)
-  end
-
-  def self.human_player_for(game_id)
-    Player.find_by(game_id: game_id, human: true)
-  end
-
-  def available_bids(game)
-    Bidding.new(game.id).available_bids(self)
-  end
-
-  def won_tricks
-    game.tricks.select { |t| t.won_player == self}
-  end
-
-  # this does lots of DB calls - something to optimise
-  def won_cards
-    won_tricks.map(&:cards).flatten
-  end
-
-  def scorable_cards
-    (won_cards + discards).flatten
-  end
-  
-  def trumps_in_hand
-    suit_in_hand('trump')
-  end
-
-  def suit_in_hand(suit)
-    cards.filter { |card| card.suit == suit }
-  end
+  has_many :games, through: :match
 
   def human?
     human
   end
 
-  def forehand?
-    human?
+  def won_tricks_for(game_id)
+    Tricks.new(game_id).select { |t| t.won_player == self }
   end
 
-  def pick_card
-    CardPicker.new(hand: cards).pick
+  def won_cards_for(game_id)
+    won_tricks_for(game_id).map(&:cards).flatten
   end
 
-  def pick_bid
-    available_bids = Bids.new(game_id).available_bids(self)
-    BidPicker.new(bids: available_bids, hand: cards).pick
+  def scorable_cards_for(game_id)
+    (won_cards_for(game_id) + discards.where(game_id: game_id)).flatten
   end
 
-  def pick_talon(_talon)
-    [0, 1].sample
+  def cards_for(game_id)
+    cards.where(game_id: game_id)
   end
 
-  def pick_king()
-    ['club_8', 'diamond_8', 'heart_8', 'spade_8'].sample
-  end
-
-  def pick_putdowns
+  def pick_putdowns_for(game_id)
     putdowns = []
-    until putdowns.length == 3
+    putdown_count = cards_for(game_id).length - 12
+    until putdowns.length == putdown_count
       putdowns << cards.filter { |c| c.legal_putdown?(cards, putdowns) }.sample
     end
 
     return putdowns
+  end
+
+  
+  def trumps_in_hand_for(game_id)
+    suit_in_hand_for(game_id, 'trump')
+  end
+
+  def suit_in_hand_for(game_id, suit)
+    cards_for(game_id).where(suit: suit)
+  end
+
+  def forehand_for?(_game_id)
+    human?
+  end
+
+  def pick_card_for(game_id)
+    CardPicker.new(hand: cards_for(game_id)).pick
+  end
+
+  def pick_bid_for(game_id, valid_bids)
+    BidPicker.new(bids: valid_bids, hand: cards_for(game_id)).pick
+  end
+
+  def pick_talon_for(_talon, game_id)
+    [0, 1].sample
+  end
+
+  def pick_king_for(game_id)
+    ['club_8', 'diamond_8', 'heart_8', 'spade_8'].sample
   end
 
   def name

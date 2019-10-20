@@ -2,7 +2,8 @@ class PlayerTeam
   attr_reader :players
   delegate :include?, to: :players
 
-  def initialize(players, talon:, bid:, king:, defence: false)
+  def initialize(players, game_id:, talon:, bid:, king:, defence: false)
+    @game_id = game_id
     @players = players
     @talon = talon
     @bid = bid
@@ -11,7 +12,7 @@ class PlayerTeam
   end
 
   def points
-    cards = @players.map(&:scorable_cards).flatten
+    cards = @players.map { |p| p.scorable_cards_for(@game_id) }.flatten
 
     cards = cards + @talon if score_talon?
 

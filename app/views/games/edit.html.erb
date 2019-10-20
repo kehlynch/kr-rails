@@ -1,4 +1,8 @@
-<%= form_with scope: :game, url: games_path, local: true, class: 'new-game-button-container' do |form| %>
+<%= form_with scope: :game, url: match_games_path(@match_id), local: true, class: 'new-hand-button-container' do |form| %>
+  <%= form.submit "new hand", class: 'btn btn-outline-dark new-game-button' %>
+<% end %>
+
+<%= form_with scope: :game, url: matches_path, local: true, class: 'new-game-button-container' do |form| %>
   <%= form.submit "new game", class: 'btn btn-outline-dark new-game-button' %>
 <% end %>
 
@@ -12,7 +16,7 @@
   <%= render 'info' %>
 <% end %>
 
-<%= form_with model: @game, local: true, html: {id: "gameForm"}, class: 'game-container' do |form| %>
+<%= form_with model: @game, url: match_game_path(@match_id, @game.id), local: true, html: {id: "gameForm"}, class: 'game-container' do |form| %>
   <input hidden=true name="game[action]" value=<%= @stage.action %> id="js-stage" data-stage=<%= @stage.action %> data-human-declarer=<%= @bids.human_declarer? %> />
 
   <%= render 'players', form: form %>

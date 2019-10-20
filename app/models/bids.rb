@@ -37,25 +37,24 @@ class Bids
   def make_bid!(bid_slug)
     add_bid!(bid_slug)
     until !next_bidder || next_bidder.human? || finished?
-      bid_slug = next_bidder.pick_bid
+      bid_slug = next_bidder.pick_bid_for(@game_id, valid_bids)
       add_bid!(bid_slug)
     end
   end
 
-  def available_bids(player)
-    return [] unless player == next_bidder
+  def valid_bids
     if first_round_finished?
-      return [PASS] unless declarer == player
+      return [PASS] unless highest&.player == next_bidder
 
       return RUFER_SLUGS if highest&.slug == RUFER
 
       raise 'bidding finished'
     else
-      return [PASS] if @bids.any? { |b| b.slug == PASS && b.player == player }
+      return [PASS] if @bids.any? { |b| b.slug == PASS && b.player == next_bidder }
 
-      lowest_rank = player.forehand? ? highest_rank : highest_rank + 1
+      lowest_rank = next_bidder.forehand_for?(@game_id) ? highest_rank : highest_rank + 1
 
-      slugs_for_rank_up(lowest_rank, player.forehand? && @bids.empty?)
+      slugs_for_rank_up(lowest_rank, next_bidder.forehand_for?(@game_id) && @bids.empty?)
     end
   end
 
@@ -83,8 +82,12 @@ class Bids
     passed_players >= 3
   end
 
-  def pick_talon?
-    finished? && highest&.talon?
+  def talon_cards_to_pick
+    return false if !finished? || !highest&.talon?
+
+    return 6 if highest&.slug == SECHSERDREIER 
+
+    return 3
   end
 
   def pick_king?
@@ -92,7 +95,7 @@ class Bids
   end
 
   def highest
-    @bids.sort_by { |b| "#{b.rank}#{b.player.forehand?}" }.last
+    @bids.sort_by { |b| "#{b.rank}#{b.player.forehand_for?(@game_id)}" }.last
   end
 
   def highest_rank

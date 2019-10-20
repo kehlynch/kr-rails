@@ -4,6 +4,7 @@ class PlayerPresenter
   delegate :human?, :position, :id, :won_tricks, :points, to: :player
 
   def initialize(player, game_id)
+    @game_id = game_id
     @player = player
     @game = Game.find(game_id)
     @player_teams = PlayerTeams.new(game_id)
@@ -19,7 +20,7 @@ class PlayerPresenter
   end
 
   def won_tricks_count
-    @player.won_tricks.count
+    @player.won_tricks_for(@game.id).count
   end
 
   def winner?
@@ -27,7 +28,7 @@ class PlayerPresenter
   end
 
   def points
-    Points.individual_points_for(@player)
+    Points.individual_points_for(@player, @game_id)
   end
 
   def team_points

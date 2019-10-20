@@ -16,6 +16,6 @@ class StagePresenter
   end
 
   def show_talon?
-    action == 'pick_talon' || (action == 'resolve_talon' && !@game.human_declarer?)
+    action == 'pick_talon' || action == 'pick_whole_talon' || (action == 'resolve_talon' && !@game.human_declarer?)
   end
 end
