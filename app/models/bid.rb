@@ -3,17 +3,30 @@ class Bid < ApplicationRecord
   belongs_to :player
   belongs_to :game
 
-  validates :slug, inclusion: { in: Bidding::RANKED_SLUGS }
+  validates :slug, inclusion: { in: Bids::RANKED_SLUGS }
 
   def rank
-    Bidding::RANKED_SLUGS.index(slug) || 0
+    Bids::RANKED_SLUGS.index(slug) || 0
   end
 
   def talon?
-    Bidding::PICK_TALON_SLUGS.include?(slug)
+    Bids::PICK_TALON_SLUGS.include?(slug)
   end
 
   def king?
-    Bidding::PICK_KING_SLUGS.include?(slug)
+    Bids::PICK_KING_SLUGS.include?(slug)
+  end
+
+  # breaking this out - it might cause issues if I change the way
+  # bids are created. There's a bid_index on the model that's not
+  # being set or used - could use that here
+  def bidding_order
+    id
+  end
+
+  def points
+    p slug
+    p Bids::POINTS
+    Bids::POINTS[slug]
   end
 end

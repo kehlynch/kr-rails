@@ -1,5 +1,6 @@
+<%= hidden_field_tag("game[pick_talon]", index, id: "talon_#{index}", type: "checkbox") %>
 <% cards.each do |card| %>
   <div class="card-container">
-    <%= card_button(card.slug) %>
+    <%= card_tag(card.slug) %>
   </div>
 <% end %>

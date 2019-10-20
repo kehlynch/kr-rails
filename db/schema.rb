@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2019_10_12_151807) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "king"
-    t.boolean "talon_picked", default: false
+    t.integer "talon_picked"
     t.boolean "talon_resolved", default: false
   end
 

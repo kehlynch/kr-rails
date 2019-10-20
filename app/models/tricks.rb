@@ -1,8 +1,15 @@
-class Tricking
+class Tricks
+  attr_reader :tricks
+  delegate :select, to: :tricks
   def initialize(game_id)
     @game_id = game_id
     @tricks = Trick.where(game_id: game_id).order(:trick_index)
-    @players = Player.where(game_id: game_id)
+    @players = Players.new(game_id)
+    @bids = Bids.new(game_id)
+  end
+
+  def first_trick?
+    @tricks.length == 0
   end
 
   def finished?
@@ -32,6 +39,18 @@ class Tricking
     @tricks.last
   end
 
+  def current_trick_cards
+    current_trick&.cards || []
+  end
+
+  def current_trick_finished?
+    current_trick&.finished?
+  end
+
+  def lead_player
+    @tricks[-2]&.won_player || @bids.lead
+  end
+
   private
 
   def add_trick!
@@ -46,7 +65,7 @@ class Tricking
     return @tricks[-2]&.won_player if !current_trick.started?
 
     # mid trick - find next player
-    Player.next_from(current_trick.last_player)
+    @players.next_from(current_trick.last_player)
   end
 
   def human_player

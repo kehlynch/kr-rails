@@ -35,7 +35,7 @@ class Card < ApplicationRecord
 
     return nil if discard || played_index
 
-    current_trick = Tricking.new(game_id).current_trick
+    current_trick = game.current_trick
 
     # p '1. trick not started - legal' if !current_trick.started?
     return true if !current_trick&.started?
@@ -56,6 +56,24 @@ class Card < ApplicationRecord
 
     # TODO: leading pagat
     p '6. fallback - legal'
+    return true
+  end
+
+  def legal_putdown?(hand, current_putdowns)
+    return false if points == 5
+    
+    return true if suit != 'trump'
+
+    simple_legal_putdowns_in_hand = hand.filter { |c| c.suit != 'trump' && c.points != 5 }.length
+
+    trumps_allowed = 3 - simple_legal_putdowns_in_hand
+
+    return false if trumps_allowed <= 0
+
+    trumps_already_put_down = ( current_putdowns.filter { |h| h.suit == 'trump' } )
+
+    return false if trumps_already_put_down >= trumps_allowed
+
     return true
   end
 

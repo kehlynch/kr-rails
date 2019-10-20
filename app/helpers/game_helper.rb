@@ -1,75 +1,63 @@
-# frozen_string_literal: true
-
 module GameHelper
-  BID_NAMES = {
-    Bidding::RUFER => 'Rufer',
-    Bidding::SOLO => 'Solo',
-    Bidding::DREIER => 'Dreier',
-    Bidding::PASS => 'Pass',
-    Bidding::CALL_KING => 'Call a king',
-    Bidding::TRISCHAKEN => 'Trischaken',
-    Bidding::SECHSERDREIER => 'Sechserdreier'
-  }
+  def winner_icon(player)
+    return "" unless player.winner?
+    return "⭐️"
+  end
+  
+  def talon_half(cards, index, game)
+    pickable_class = @game.human_declarer? ? "pickable" : ""
+    onclick = @game.human_declarer? ? "submitGame(talon_#{index})" : ""
 
-  def hand_card_button(card, runner)
-    pickable = [:play_card, :resolve_talon].include?(runner.stage) ? 'pickable' : ''
-    illegal = card.legal ? '' : 'illegal'
-    classes = "js-submit-game #{pickable} #{illegal}"
-    onclick = card_action(card, runner)
-    card_button(card.slug, classes, onclick)
+    picked_class = @game.talon_picked == index ? "picked" : ""
+
+    content_tag(
+      :div,
+      onclick: onclick,
+      class: "talon-half-container #{pickable_class} #{picked_class}"
+    ) do
+      render('talon_half', cards: cards, index: index)
+    end
   end
 
-  def card_action(card, runner)
-    checkbox_id = "play_card_#{card.slug}"
-    if runner.stage == :play_card
+  def human_resolve_talon?(game)
+    game.stage == 'resolve_talon' && game.human_declarer?
+  end
+
+  def hand_card_button(card, game)
+    pickable = human_resolve_talon?(game) || game.stage == 'play_card'
+    pickable_class = pickable ? 'pickable' : ''
+    illegal_class = card.legal ? '' : 'illegal'
+    classes = "js-submit-game #{pickable_class} #{illegal_class}"
+    onclick = card_action(card, game)
+    card_tag(card.slug, classes: classes, onclick: onclick)
+  end
+
+  def card_action(card, game)
+    if game.stage == 'play_card'
+      checkbox_id = "play_card_#{card.slug}"
       card.legal && "submitGame(#{checkbox_id})"
-    elsif runner.stage == :resolve_talon
+    elsif game.stage == 'resolve_talon'
+      checkbox_id = "resolve_talon_#{card.slug}"
       card.legal && "toggleCard(#{checkbox_id})"
     end
   end
 
   def king_card_button(card_slug, hand)
-    own_king = hand.include?(card_slug) ? 'own_king' : ''
+    own_king = hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
     classes = "js-submit-game pickable #{own_king}"
     checkbox_id = "pick_king_#{card_slug}"
     onclick = "submitGame(#{checkbox_id})"
-    card_button(card_slug, classes, onclick)
+    card_tag(card_slug, classes: classes, onclick: onclick)
   end
 
-  def talon_button(index)
-    content_tag(
-      :div,
-      alt: "talon #{index}",
-      class: 'row pl=4 pr-4 justify-content-center js-submit-game',
-      onclick: "submitGame(talon_#{index})"
-    )
-  end
-
-  def bid_button(bid_slug)
-    label = bid_name(bid_slug)
+  def bid_button(slug, name)
     button_tag(
-      label,
-      alt: label,
-      class: 'bid-button js-submit-game',
-      onclick: "submitGame(#{bid_slug})"
+      name,
+      alt: name,
+      type: 'button',
+      class: 'btn btn-outline-dark js-submit-game',
+      onclick: "submitGame(#{slug})"
     )
-  end
-
-  def bid_name(bid_slug)
-    BID_NAMES[bid_slug]
-  end
-
-  def layout_trick(cards)
-    p '*** layout_trick ***'
-    p cards
-    return {} unless cards
-
-    {
-      n: find_player_card(cards, 0),
-      w: find_player_card(cards, 1),
-      s: find_player_card(cards, 2),
-      e: find_player_card(cards, 3)
-    }
   end
 
   def layout_players(game)
@@ -89,11 +77,12 @@ module GameHelper
     }
   end
 
-  def card_button(card_slug, classes = '', onclick = nil)
+  def card_tag(card_slug, classes: classes = '', onclick: nil, landscape: false)
+    filename = landscape ? "landscape_#{card_slug}.jpg" : "#{card_slug}.jpg"
     image_tag(
-      "#{card_slug}.jpg",
+      filename,
       alt: card_slug,
-      class: "card #{classes}",
+      class: "kr-card #{classes}",
       onclick: onclick
     )
   end
@@ -109,9 +98,9 @@ module GameHelper
     
     {
       trick_count: trick_count,
-      lead: runner.lead_player_id == id,
-      points: runner.players[id].points,
-      winner: runner.winners.include?(id)
+      lead: game.lead_player_id == id,
+      points: game.players[id].points,
+      winner: game.winners.include?(id)
     }
   end
 end

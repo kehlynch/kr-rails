@@ -1,20 +1,28 @@
-<div class="score-container container pr-4 pl-4 justify-content-center" id="js-score-container">
-  <div class="row justify-content-center">
-    <div>
-      <%= render 'player_score', player: players[:n] %>
-    </div>
-  </div>
-  <div class="row justify-content-around">
-    <div>
-      <%= render 'player_score', player: players[:w] %>
-    </div>
-    <div>
-      <%= render 'player_score', player: players[:e] %>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div>
-      <%= render 'player_score', player: players[:s] %>
-    </div>
-  </div>
+<div class="score-container" id="js-score-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">tricks</th>
+        <th scope="col">points</th>
+        <th scope="col">team points</th>
+        <th scope="col">game points</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @players.each do |player| %>
+        <tr>
+          <th scope="row"><%= player.name %></th>
+          <td><%= player.role %></td>
+          <td><%= player.won_tricks_count %></td>
+          <td><%= player.points %></td>
+          <td><%= player.team_points %></td>
+          <td><%= player.game_points %></td>
+          <td><%= winner_icon(player) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

@@ -6,10 +6,7 @@ class GamesController < ApplicationController
   helper_method :game
 
   def index
-    @runner = Game.all
-  end
-
-  def new
+    redirect_to(action: :new)
   end
 
   def create
@@ -18,8 +15,17 @@ class GamesController < ApplicationController
     redirect_to edit_game_path(game)
   end
 
+  def show
+    redirect_to(action: :edit, game: find_game)
+  end
+
   def edit
+    game_id = params[:id]
     @game = find_game
+    @stage = StagePresenter.new(game_id)
+    @players = PlayersPresenter.new(game_id)
+    @bids = BidsPresenter.new(game_id)
+    @tricks = TricksPresenter.new(game_id)
   end
 
   def update
@@ -28,7 +34,7 @@ class GamesController < ApplicationController
       when 'make_bid'
         game.make_bid!(game_params[:make_bid])
       when 'pick_king'
-        game.update(king: game_params[:pick_king])
+        game.pick_king!(game_params[:pick_king])
       when 'pick_talon'
         game.pick_talon!(game_params[:pick_talon].to_i)
       when 'resolve_talon'

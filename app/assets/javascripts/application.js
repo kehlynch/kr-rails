@@ -18,8 +18,10 @@
 //= require popper
 //= require bootstrap-sprockets
 
-function submitGame(checkboxId) {
-  checkboxId.checked = true;
+function submitGame(checkbox) {
+  if (checkbox) {
+    checkbox.checked = true;
+  }
   document.getElementById("gameForm").submit();
 }
 
@@ -32,8 +34,44 @@ function toggleCard(checkbox) {
 }
 
 function showScores() {
-  console.log("running this!");
-  
   document.getElementById("js-trick-container").style.display = "none";
   document.getElementById("js-score-container").style.display = "block";
 }
+
+function stage() {
+  const element = stageElement();
+  // console.log("element", element);
+  return element && element.dataset.stage;
+}
+
+function humanDeclarer() {
+  const element = stageElement();
+  const humanDeclarer = element && element.dataset.humanDeclarer;
+  return humanDeclarer
+}
+
+function stageElement() {
+  return document.getElementById("js-stage");
+}
+
+
+function attachClickers() {
+  document.onclick = pageClicked;
+}
+
+function pageClicked() {
+  console.log("pageClicked")
+  const gameStage = stage();
+  console.log("gameStage", gameStage);
+  if ( gameStage == "next_trick") {
+    document.getElementById("gameForm").submit();
+  } else if ( gameStage == "finished") {
+    showScores();
+  } else if (!humanDeclarer()) {
+    if ( gameStage == "pick_talon" || gameStage == "resolve_talon") {
+      document.getElementById("gameForm").submit();
+    }
+  }
+}
+
+attachClickers()

@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'spec_helper'
 
 class CardTest < ActiveSupport::TestCase
   test 'creates a new card' do

@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"><%= player.name(false) %></h5>
+    <% if player.role == 'declarer' %>
+      <h6 class="card-subtitle mb-2 text-muted">Declarer</h6>
+    <% end %>
+    <% if player.known_partner %>
+      <h6 class="card-subtitle mb-2 text-muted">Partner</h6>
+    <% end %>
+    <% if @stage.action == 'make_bid' %>
+      <% player.bids.each do |bid| %>
+        <p class="card-text"><%= bid %></p>
+      <% end %>
+    <% end %>
+  </div>
+</div>

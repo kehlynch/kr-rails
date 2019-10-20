@@ -1,27 +1,44 @@
-<h1>Play Konigsrufen!</h1>
-<%= form_with model: @game, local: true, html: {id: "gameForm"} do |form| %>
-  <input hidden=true name="game[action]" value=<%= @game.stage %> />
-  <div class="container">
-    <%= render 'hand', hand: @game.players[0].cards, form: form %>
-    <% if @game.stage == :make_bid %>
-      <%= render 'bid' %>
-    <% end %>
-    <% if @game.stage == :pick_king %>
-      <%= render 'kings', hand: @game.players[0].cards %>
-    <% end %>
-    <% if [:pick_talon].include?(@game.stage) %>
-      <%= render 'talon', talon: @game.talon %>
-    <% end %>
-    <% if [:play_card, :finished].include?(@game.stage) %>
-      <%= render 'trick', cards: layout_trick(@game.current_trick&.cards), players: layout_players(@game), form: form %>
-    <% end %>
-    <% if @game.stage == :finished %>
-      <%= render 'score', players: layout_players(@game), form: form %>
-    <% end %>
-  </div>
+<%= form_with scope: :game, url: games_path, local: true, class: 'new-game-button-container' do |form| %>
+  <%= form.submit "new game", class: 'btn btn-outline-dark new-game-button' %>
 <% end %>
-<%= form_with scope: :game, url: games_path, local: true do |form| %>
-  <p>
-    <%= form.submit "new game" %>
-  </p>
+
+<div class="message">
+  <% @stage.message.each do |m| %>
+    <p><%= m %></p>
+  <% end %>
+</div>
+
+<% if @stage.action != 'make_bid' %>
+  <%= render 'info' %>
+<% end %>
+
+<%= form_with model: @game, local: true, html: {id: "gameForm"}, class: 'game-container' do |form| %>
+  <input hidden=true name="game[action]" value=<%= @stage.action %> id="js-stage" data-stage=<%= @stage.action %> data-human-declarer=<%= @bids.human_declarer? %> />
+
+  <%= render 'players', form: form %>
+
+  <% if @stage.action == 'make_bid' %>
+    <%= render 'bid', player: @players.human_player %>
+  <% end %>
+
+  <%= render 'hand', form: form %>
+
+  <% if @stage.action == 'pick_king' %>
+    <%= render 'kings'  %>
+  <% end %>
+
+  <% if @stage.show_talon? %>
+    <%= render 'talon', talon: @game.talon %>
+  <% end %>
+
+  <% if ['play_card', 'next_trick', 'finished'].include?(@stage.action) %>
+    <%= render 'trick', cards: @tricks.trick_cards, form: form %>
+  <% end %>
+
+  <% if @game.stage == 'finished' %>
+    <%= render 'score' %>
+  <% end %>
+  
+  <% if true %>
+  <% end %>
 <% end %>

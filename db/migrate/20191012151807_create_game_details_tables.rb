@@ -43,7 +43,7 @@ class CreateGameDetailsTables < ActiveRecord::Migration[5.2]
 
     change_table :games do |t|
       t.string :king
-      t.boolean :talon_picked, default: false
+      t.integer :talon_picked
       t.boolean :talon_resolved, default: false
     end
   end

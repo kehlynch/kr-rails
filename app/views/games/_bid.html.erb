@@ -1,8 +1,6 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <% @game.bidding.available_bids(@game.human_player).each do |bid_slug| %>
-      <input hidden=true id="<%= bid_slug %>" name="game[make_bid]" type="checkbox" value="<%= bid_slug %>" />
-      <%= bid_button(bid_slug) %>
-    <% end %>
-  </div>
+<div class="bid-buttons-container">
+  <% @bids.available_bids.each do |slug, name| %>
+    <input hidden=true id="<%= slug %>" name="game[make_bid]" type="checkbox" value="<%= slug %>" />
+    <%= bid_button(slug, name) %>
+  <% end %>
 </div>

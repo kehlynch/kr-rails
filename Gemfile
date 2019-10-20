@@ -55,8 +55,9 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper', '1.2.0'
   gem 'rspec-rails', '~> 3.8.0', require: false
+  gem 'rspec-activemodel-mocks'
+  gem 'rails-controller-testing'
 end
 
 gem 'rubocop-rails'
