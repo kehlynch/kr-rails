@@ -60,14 +60,13 @@ function attachClickers() {
 }
 
 function pageClicked() {
-  console.log("pageClicked")
   const gameStage = stage();
-  console.log("gameStage", gameStage);
   if ( gameStage == "next_trick") {
     document.getElementById("gameForm").submit();
   } else if ( gameStage == "finished") {
     showScores();
-  } else if (!humanDeclarer()) {
+  } else if (humanDeclarer() == "false") {
+    console.log("here")
     if ( gameStage == "pick_talon" || gameStage == "resolve_talon") {
       document.getElementById("gameForm").submit();
     }
