@@ -1,10 +1,10 @@
 class Player < ApplicationRecord
-  belongs_to :game
-
   # has_many :cards, -> { where(played_index: nil, discard: false).order([:suit, :value]).reverse }
   has_many :cards, -> { where(played_index: nil, discard: false).order(suit: :desc, value: :desc) }
   has_many :discards, -> { where(discard: true) }, class_name: 'Card', foreign_key: 'player_id'
   has_many :bids
+
+  belongs_to :game
 
   # has_many :led_tricks, class_name: 'Trick', foreign_key: 'lead_player_id'
   # has_many :won_tricks, class_name: 'Trick', foreign_key: 'won_player_id'
@@ -52,13 +52,12 @@ class Player < ApplicationRecord
   end
 
   def pick_card
-    legal_cards = cards.select(&:legal)
-    legal_cards.sample
+    CardPicker.new(hand: cards).pick
   end
 
   def pick_bid
-    # get random legal bid
-    Bids.new(game_id).available_bids(self).sample
+    available_bids = Bids.new(game_id).available_bids(self)
+    BidPicker.new(bids: available_bids, hand: cards).pick
   end
 
   def pick_talon(_talon)
