@@ -2,7 +2,7 @@
   <% @players.human_hand.each do |card| %>
     <div class="card-container hand">
       <input hidden=true id="<%= @stage.action %>_<%= card.slug %>" name="game[<%= @stage.action %>][]" type="checkbox" value="<%= card.slug %>" />
-      <%= hand_card_button(card, @game) %>
+      <%= hand_card_button(card, @game, @stage.action) %>
     </div>
   <% end %>
   <% if human_resolve_talon?(@game) %>

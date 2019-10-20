@@ -10,12 +10,12 @@ class PlayerTeams
 
   def declarers
     players = [@declarer, partner].reject(&:nil?).uniq
-    PlayerTeam.new(players, talon: @talon, bid: @bid)
+    PlayerTeam.new(players, talon: @talon, bid: @bid, king: @king)
   end
 
   def defence
     players = @game.players.reject { |p| declarers.include?(p) }
-    PlayerTeam.new(players, talon: @talon, defence: true, bid: @bid)
+    PlayerTeam.new(players, defence: true, talon: @talon, bid: @bid, king: @king)
   end
 
   def winners

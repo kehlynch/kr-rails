@@ -23,28 +23,29 @@ module GameHelper
     game.stage == 'resolve_talon' && game.human_declarer?
   end
 
-  def hand_card_button(card, game)
-    pickable = human_resolve_talon?(game) || game.stage == 'play_card'
+  def hand_card_button(card, game, action)
+    pickable = human_resolve_talon?(game) || action == 'play_card'
     pickable_class = pickable ? 'pickable' : ''
-    illegal_class = card.legal ? '' : 'illegal'
+    illegal_class = pickable && !card.legal ? 'illegal' : ''
     classes = "js-submit-game #{pickable_class} #{illegal_class}"
-    onclick = card_action(card, game)
+    onclick = card_action(card, action)
     card_tag(card.slug, classes: classes, onclick: onclick)
   end
 
-  def card_action(card, game)
-    if game.stage == 'play_card'
+  def card_action(card, action)
+    if action == 'play_card'
       checkbox_id = "play_card_#{card.slug}"
       card.legal && "submitGame(#{checkbox_id})"
-    elsif game.stage == 'resolve_talon'
+    elsif action == 'resolve_talon'
       checkbox_id = "resolve_talon_#{card.slug}"
       card.legal && "toggleCard(#{checkbox_id})"
     end
   end
 
-  def king_card_button(card_slug, hand)
+  def king_card_button(card_slug, hand, game)
     own_king = hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
-    classes = "js-submit-game pickable #{own_king}"
+    pickable = game.human_declarer? ? 'pickable' : ''
+    classes = "js-submit-game #{pickable} #{own_king}"
     checkbox_id = "pick_king_#{card_slug}"
     onclick = "submitGame(#{checkbox_id})"
     card_tag(card_slug, classes: classes, onclick: onclick)

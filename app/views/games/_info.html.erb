@@ -1,5 +1,10 @@
 <div class="info-card card">
   <div class="card-body">
-    <p class="card-text"><%= @bids.winning_bid_name %></p>
+    <div class="card-text"><%= @bids.winning_bid_name %></div>
+    <% if @game.king %>
+      <div class="card-container king-indicator">
+        <%= card_tag(@game.king) %>
+      </div>
+    <% end %>
   </div>
 </div>

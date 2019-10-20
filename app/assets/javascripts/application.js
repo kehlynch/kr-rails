@@ -67,7 +67,7 @@ function pageClicked() {
     showScores();
   } else if (humanDeclarer() == "false") {
     console.log("here")
-    if ( gameStage == "pick_talon" || gameStage == "resolve_talon") {
+    if ( gameStage == "pick_talon" || gameStage == "resolve_talon" || gameStage == "pick_king") {
       document.getElementById("gameForm").submit();
     }
   }

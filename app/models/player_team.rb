@@ -2,24 +2,26 @@ class PlayerTeam
   attr_reader :players
   delegate :include?, to: :players
 
-  def initialize(players, talon:, bid:, defence: false)
+  def initialize(players, talon:, bid:, king:, defence: false)
     @players = players
-    @defence = defence
     @talon = talon
     @bid = bid
+    @defence = defence
+    @king = king
   end
 
   def points
-    return @points if @points
-
-    p '@players'
-    p @players
-
     cards = @players.map(&:scorable_cards).flatten
 
-    cards = cards + @talon if @defence
+    cards = cards + @talon if score_talon?
 
-    @points = Points.points_for_cards(cards)
+    Points.points_for_cards(cards)
+  end
+
+  def score_talon?
+    return !@defence if @bid.slug == 'solo' && @talon.find { |c| c.slug == @king }
+
+    return @defence
   end
 
   def winner?

@@ -16,6 +16,8 @@ class MessagePresenter
   def message
     return make_bid_msg if @stage == 'make_bid'
 
+    return pick_king_msg if @stage == 'pick_king'
+
     return pick_talon_msg if @stage == 'pick_talon'
 
     return resolve_talon_msg if @stage == 'resolve_talon'
@@ -64,8 +66,24 @@ class MessagePresenter
     msg << "Make a bid."
   end
 
+  def pick_king_msg
+    msg = ["#{declarer_name} declare#{s_if_needed(declarer)} #{winning_bid_name}."]
+
+    if !human_declarer?
+      msg << "#{declarer_name} to pick talon."
+      msg << "Click to continue."
+    else 
+      msg << "Pick talon."
+    end
+  end
+
   def pick_talon_msg
     msg = ["#{declarer_name} declare#{s_if_needed(declarer)} #{winning_bid_name}."]
+
+    if @game.king
+      king_name = CardPresenter.new(@game.king).name
+      msg << ["#{declarer_name} pick#{s_if_needed(declarer)} #{king_name}."]
+    end
 
     if !human_declarer?
       msg << "#{declarer_name} to pick talon."

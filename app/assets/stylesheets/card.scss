@@ -1,0 +1,48 @@
+.card-container {
+  height: 6.875rem;
+  width: 3.75rem;
+  &.king-indicator {
+    height: 4rem;
+    width: 2.4rem;
+  }
+}
+
+.kings-container {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+}
+
+.kr-card {
+  max-width: 100%;
+  max-height: 100%;
+  padding: 2px;
+}
+
+.kr-card.pickable { 
+  &:hover {
+    z-index: 1;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid green;
+  }
+}
+
+.kr-card.own_king {
+  &:hover {
+    border: 2px solid orange;
+  }
+}
+
+.kr-card.selected {
+  z-index: 1;
+  border-radius: 5px;
+  border: 2px solid green;
+}
+
+.kr-card.illegal {
+  &:hover {
+    border: 2px solid red;
+    cursor: not-allowed;
+  }
+}
