@@ -53,7 +53,7 @@ class MessagePresenter
   def make_bid_msg
     bidder = PlayerPresenter.new(@bids.next_bidder, @game_id)
 
-    @msg = bidder.human? ? ["You are forehand."] : ["#{bidder.name} is forehand. "]
+    add_forehand_text
 
     @bids.each do |bid|
       player_presenter = PlayerPresenter.new(bid.player, @game_id)
@@ -64,14 +64,18 @@ class MessagePresenter
       @msg << "#{player_name} #{bid_text}."
     end
 
-    @msg << "Make a bid."
+    if bidder.human?
+      @msg << "Make a bid."
+    else
+      add_click_to_continue
+    end
   end
 
   def pick_king_msg
     add_declared_bid_info
 
     if !human_declarer?
-      @msg << "#{declarer_name} to pick talon."
+      @msg << "#{declarer_name} to pick king."
       add_click_to_continue
     else 
       @msg << "Pick a king."
@@ -118,7 +122,8 @@ class MessagePresenter
     lead = @tricks.lead_player
     lead_name = PlayerPresenter.new(lead, @game_id).name
     @msg << "#{lead_name} lead#{s_if_needed(lead)}."
-    @msg << "Play a card."
+    @msg << "Play a card." if @game.next_player_human?
+    add_click_to_continue if !@game.next_player_human?
   end
 
   def current_trick_finished_msg
@@ -145,6 +150,14 @@ class MessagePresenter
     if @game.king
       king_name = CardPresenter.new(@game.king).name
       @msg << "#{declarer_name} pick#{s_if_needed(declarer)} #{king_name}."
+    end
+  end
+
+  def add_forehand_text
+    if @game.human_forehand?
+      @msg << "You are forehand."
+    else
+      @msg << "#{player_name(@game.forehand)} is forehand."
     end
   end
 

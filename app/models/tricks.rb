@@ -51,21 +51,21 @@ class Tricks
     @tricks[-2]&.won_player || @bids.lead
   end
 
-  private
-
-  def add_trick!
-    Trick.create(game_id: @game_id, trick_index: next_index)
-    @tricks.reload
-  end
-
   def next_player
-    # start of first trick - human player always leads for now
-    return human_player if !current_trick
+    # start of first trick - forehand player always leads for now
+    return @players.forehand if !current_trick
 
     return @tricks[-2]&.won_player if !current_trick.started?
 
     # mid trick - find next player
     @players.next_from(current_trick.last_player)
+  end
+
+  private
+
+  def add_trick!
+    Trick.create(game_id: @game_id, trick_index: next_index)
+    @tricks.reload
   end
 
   def human_player

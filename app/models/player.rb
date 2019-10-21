@@ -61,8 +61,9 @@ class Player < ApplicationRecord
     cards_for(game_id).where(suit: suit)
   end
 
-  def forehand_for?(_game_id)
-    human?
+  def forehand_for?(game_id)
+    # position 0 starts as forehand, round 1 each game
+    position == (match.earlier_games(game_id).count) % 4
   end
 
   def pick_card_for(game_id)

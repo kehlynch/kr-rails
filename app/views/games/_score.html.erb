@@ -3,7 +3,6 @@
     <thead>
       <tr>
         <th scope="col"></th>
-        <th scope="col"></th>
         <th scope="col">tricks</th>
         <th scope="col">points</th>
         <th scope="col">team points</th>
@@ -15,7 +14,6 @@
       <% @players.each do |player| %>
         <tr>
           <th scope="row"><%= player.name %></th>
-          <td><%= player.role %></td>
           <td><%= player.won_tricks_count %></td>
           <td><%= player.points %></td>
           <td><%= player.team_points %></td>

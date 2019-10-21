@@ -1,15 +1,23 @@
 .points-container {
   font-weight: normal;
-  .forehand {
+  td {
+    color: red;
+  }
+
+  td.forehand {
     text-decoration: underline;
   }
 
-  .declarer {
+  td.declarer {
     font-weight: bold;
   }
 
-  .winner {
+  td.winner {
     color: green;
+  }
+  
+  td.bid {
+    color: black;
   }
 }
 

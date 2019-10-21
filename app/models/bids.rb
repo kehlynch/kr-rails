@@ -35,7 +35,7 @@ class Bids
   end
 
   def make_bid!(bid_slug)
-    add_bid!(bid_slug)
+    add_bid!(bid_slug) if bid_slug
     until !next_bidder || next_bidder.human? || finished?
       bid_slug = next_bidder.pick_bid_for(@game_id, valid_bids)
       add_bid!(bid_slug)
@@ -83,7 +83,7 @@ class Bids
   end
 
   def talon_cards_to_pick
-    return false if !finished? || !highest&.talon?
+    return nil if !finished? || !highest&.talon?
 
     return 6 if highest&.slug == SECHSERDREIER 
 

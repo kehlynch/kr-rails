@@ -98,12 +98,36 @@ class Game < ApplicationRecord
     players.human_player
   end
 
-  def human_declarer?
-    declarer == human_player
+  def next_player_human?
+    next_player&.human?
+  end
+
+  def next_player
+    if stage == 'make_bid'
+      return bids.next_bidder
+    elsif ['pick_king', 'pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(stage)
+      return declarer
+    elsif ['play_card', 'play_card'].include?(stage)
+      return tricks.next_player
+    elsif stage == 'finished'
+      return nil
+    end
+  end
+
+  def forehand
+    players.forehand
+  end
+
+  def human_forehand?
+    forehand.human?
   end
 
   def declarer
     bids.declarer
+  end
+
+  def human_declarer?
+    declarer.human?
   end
 
   def partner

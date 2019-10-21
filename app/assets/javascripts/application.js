@@ -59,10 +59,10 @@ function stage() {
   return element && element.dataset.stage;
 }
 
-function humanDeclarer() {
+function humanPlayer() {
   const element = stageElement();
-  const humanDeclarer = element && element.dataset.humanDeclarer;
-  return humanDeclarer
+  const humanPlayer = element && element.dataset.humanPlayer;
+  return humanPlayer
 }
 
 function stageElement() {
@@ -80,9 +80,9 @@ function pageClicked() {
     document.getElementById('gameForm').submit();
   // } else if ( gameStage == 'finished') {
   //   showScores();
-  } else if (humanDeclarer() == 'false') {
+  } else if (humanPlayer() == 'false') {
     console.log('here')
-    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king') {
+    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king' || gameStage == 'make_bid' || gameStage == 'play_card') {
       document.getElementById('gameForm').submit();
     }
   }
