@@ -1,6 +1,6 @@
 class PlayerTeam
   attr_reader :players
-  delegate :include?, to: :players
+  delegate :include?, :map, to: :players
 
   def initialize(players, game_id:, talon:, bid:, king:, defence: false)
     @game_id = game_id

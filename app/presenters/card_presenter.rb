@@ -1,4 +1,4 @@
-module CardPresenter
+class CardPresenter
   FACE_NAMES = {
     8 => 'King',
     7 => 'Queen',
@@ -8,18 +8,18 @@ module CardPresenter
 
   def initialize(slug)
     @slug = slug
-    @value, @suit = @slug.split('_')
+    @suit, @value = @slug.split('_')
     @value = @value.to_i
   end
 
   def name
-    return trump_name(@value) if @suit == 'trump'
+    return trump_name if @suit == 'trump'
 
-    return face_name(@value, @suit) if [5, 6, 7, 8].include?(@value)
+    return face_name if [5, 6, 7, 8].include?(@value)
 
-    return red_pip_name(@value, @suit) if ['diamond', 'heart'].include?(@suit)
+    return red_pip_name if ['diamond', 'heart'].include?(@suit)
 
-    return black_pip_name(@value, @suit)
+    return black_pip_name
   end
 
   private
@@ -30,7 +30,7 @@ module CardPresenter
   end
 
   def face_name
-    "#{FACE_NAMES[@value]} of #{@suit.capitalize}"
+    "#{FACE_NAMES[@value]} of #{@suit.capitalize}s"
   end
 
   def red_pip_name

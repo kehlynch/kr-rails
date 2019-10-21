@@ -2,7 +2,7 @@ class PlayersPresenter
   attr_reader :players, :player_presenters
 
   delegate :human_player, to: :players
-  delegate :each, to: :player_presenters
+  delegate :each, :[], to: :player_presenters
 
   def initialize(game_id)
     @game_id = game_id

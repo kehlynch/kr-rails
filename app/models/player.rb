@@ -26,6 +26,22 @@ class Player < ApplicationRecord
   def cards_for(game_id)
     cards.where(game_id: game_id)
   end
+  
+  def bids_for(game_id)
+    bids.where(game_id: game_id)
+  end
+
+  def game_points_for(game_id)
+    PlayerTeams.new(game_id).game_points_for(self)
+  end
+
+  def winner_for?(game_id)
+    PlayerTeams.new(game_id).winner?(self)
+  end
+
+  def declarer_for?(game_id)
+    PlayerTeams.new(game_id).declarer?(self)
+  end
 
   def pick_putdowns_for(game_id)
     putdowns = []
@@ -36,7 +52,6 @@ class Player < ApplicationRecord
 
     return putdowns
   end
-
   
   def trumps_in_hand_for(game_id)
     suit_in_hand_for(game_id, 'trump')

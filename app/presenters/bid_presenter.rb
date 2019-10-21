@@ -4,10 +4,17 @@ class BidPresenter
     Bids::RUFER => 'Rufer',
     Bids::SOLO => 'Solo',
     Bids::DREIER => 'Dreier',
-    Bids::PASS => 'Pass',
     Bids::CALL_KING => 'Call a king',
     Bids::TRISCHAKEN => 'Trischaken',
     Bids::SECHSERDREIER => 'Sechserdreier'
+  }
+
+  BID_SHORTNAMES = {
+    Bids::SOLO => 'S',
+    Bids::DREIER => 'D',
+    Bids::CALL_KING => 'R',
+    Bids::TRISCHAKEN => 'T',
+    Bids::SECHSERDREIER => 'XI'
   }
 
   def initialize(slug)
@@ -16,5 +23,9 @@ class BidPresenter
 
   def name
     BID_NAMES[@slug] if @slug
+  end
+
+  def shorthand
+    BID_SHORTNAMES[@slug] if @slug
   end
 end

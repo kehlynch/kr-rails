@@ -28,6 +28,10 @@ class PlayerTeams
     winners.include?(player)
   end
 
+  def declarer?(player)
+    @declarer == player
+  end
+
   def team_for(player)
     if declarers.include?(player)
       declarers

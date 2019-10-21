@@ -40,8 +40,17 @@ function toggleCard(checkbox) {
 }
 
 function showScores() {
+  console.log("showScores")
   document.getElementById('js-trick-container').style.display = 'none';
   document.getElementById('js-score-container').style.display = 'block';
+  document.getElementById('js-points-container').style.display = 'none';
+}
+
+function showPoints() {
+  console.log("showPoints")
+  document.getElementById('js-trick-container').style.display = 'none';
+  document.getElementById('js-score-container').style.display = 'none';
+  document.getElementById('js-points-container').style.display = 'block';
 }
 
 function stage() {
@@ -69,8 +78,8 @@ function pageClicked() {
   const gameStage = stage();
   if ( gameStage == 'next_trick' || gameStage == 'pick_whole_talon') {
     document.getElementById('gameForm').submit();
-  } else if ( gameStage == 'finished') {
-    showScores();
+  // } else if ( gameStage == 'finished') {
+  //   showScores();
   } else if (humanDeclarer() == 'false') {
     console.log('here')
     if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king') {

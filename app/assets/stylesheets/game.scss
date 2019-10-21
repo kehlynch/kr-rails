@@ -54,3 +54,10 @@ body {
   grid-template-rows: 1fr 20.625rem 1fr
 }
 
+.finished-buttons {
+  display: flex;
+  justify-content: space-between;
+  max-width: 540px;
+  padding-left: 4rem;
+  
+}

@@ -15,6 +15,7 @@ class GamesController < ApplicationController
     @players = PlayersPresenter.new(game_id)
     @bids = BidsPresenter.new(game_id)
     @tricks = TricksPresenter.new(game_id)
+    @match_games = Game.where(match_id: @match_id)
   end
 
   def update

@@ -1,7 +1,3 @@
-<%= form_with scope: :game, url: match_games_path(@match_id), local: true, class: 'new-hand-button-container' do |form| %>
-  <%= form.submit "new hand", class: 'btn btn-outline-dark new-game-button' %>
-<% end %>
-
 <%= form_with scope: :game, url: matches_path, local: true, class: 'new-game-button-container' do |form| %>
   <%= form.submit "new game", class: 'btn btn-outline-dark new-game-button' %>
 <% end %>
@@ -41,8 +37,21 @@
 
   <% if @game.stage == 'finished' %>
     <%= render 'score' %>
+    <%= render 'matches/points' %>
   <% end %>
-  
+
   <% if true %>
   <% end %>
 <% end %>
+
+<% if @game.stage == 'finished' %>
+  <div class="finished-buttons">
+    <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
+
+    <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
+    <%= form_with scope: :game, url: match_games_path(@match_id), local: true, class: 'new-hand-button-container' do |form| %>
+      <%= form.submit "next hand", class: 'btn btn-outline-dark new-game-button' %>
+    <% end %>
+  </div>
+<% end %>
+

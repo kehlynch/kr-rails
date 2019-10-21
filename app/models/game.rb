@@ -52,11 +52,11 @@ class Game < ApplicationRecord
   end
 
   def winners
-    Points.new(id).winners
+    PlayerTeams.new(id).winners
   end
 
   def pick_king!(king_slug)
-    self.king = king_slug || declarer.pick_king
+    self.king = king_slug || declarer.pick_king_for(id)
     save
   end
 

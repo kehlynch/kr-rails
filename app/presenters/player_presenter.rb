@@ -1,7 +1,7 @@
 class PlayerPresenter
   attr_reader :player
 
-  delegate :human?, :position, :id, :won_tricks, :points, to: :player
+  delegate :human?, :position, :id, :game_points_for, :forehand_for?, :winner_for?, :declarer_for?, :bids_for, to: :player
 
   def initialize(player, game_id)
     @game_id = game_id
@@ -16,7 +16,7 @@ class PlayerPresenter
   end
 
   def bids
-    @player.bids.map { |b| BidPresenter.new(b.slug).name }
+    @player.bids_for(@game_id).map { |b| BidPresenter.new(b.slug).name }
   end
 
   def won_tricks_count

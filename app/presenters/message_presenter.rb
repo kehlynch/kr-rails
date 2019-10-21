@@ -1,7 +1,7 @@
 class MessagePresenter
   attr_reader :game, :tricks, :bids
 
-  delegate :human_declarer?, :talon_picked, to: :game
+  delegate :winners, :human_declarer?, :talon_picked, to: :game
   delegate :declarer, to: :bids
   delegate :current_trick, :current_trick_finished?, :first_trick?, to: :tricks
 
@@ -68,14 +68,13 @@ class MessagePresenter
   end
 
   def pick_king_msg
-    @msg << ["#{declarer_name} declare#{s_if_needed(declarer)} #{winning_bid_name}."]
-    add_declarer_bid_info
+    add_declared_bid_info
 
     if !human_declarer?
       @msg << "#{declarer_name} to pick talon."
       add_click_to_continue
     else 
-      @msg << "Pick talon."
+      @msg << "Pick a king."
     end
   end
 
@@ -131,7 +130,7 @@ class MessagePresenter
   end
 
   def finished_msg
-    @msg << 'click for scores.'
+    @msg << "Winners: #{winners.map { |w| player_name(w) }.join(', ')}"
   end
 
   def add_declared_bid_info
@@ -145,7 +144,11 @@ class MessagePresenter
   def add_picked_king_info
     if @game.king
       king_name = CardPresenter.new(@game.king).name
-      @msg << ["#{declarer_name} pick#{s_if_needed(declarer)} #{king_name}."]
+      @msg << "#{declarer_name} pick#{s_if_needed(declarer)} #{king_name}."
     end
+  end
+
+  def player_name(player)
+    PlayerPresenter.new(player, @game_id).name
   end
 end
