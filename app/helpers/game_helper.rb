@@ -4,8 +4,18 @@ module GameHelper
     return "⭐️"
   end
   
+  def bid_button(slug, name)
+    button_tag(
+      name,
+      alt: name,
+      type: 'button',
+      class: 'btn btn-outline-dark js-submit-game',
+      onclick: "submitGame(#{slug})"
+    )
+  end
+
   def talon_half(cards, index, game, stage)
-    is_pickable = game.human_declarer? && stage == 'pick_talon'
+    is_pickable = game.human_declarer? && stage.action == 'pick_talon'
     pickable_class = is_pickable ? "pickable" : ""
     onclick = game.human_declarer? ? "submitGame(talon_#{index})" : ""
 
@@ -29,33 +39,16 @@ module GameHelper
     pickable_class = pickable ? 'pickable' : ''
     illegal_class = pickable && !card.legal? ? 'illegal' : ''
     classes = "js-submit-game #{pickable_class} #{illegal_class}"
-    onclick = card_action(card, action)
+    onclick = card.legal? && card_action(card.slug, action)
     card_tag(card.slug, classes: classes, onclick: onclick)
-  end
-
-  def card_action(card, action)
-    checkbox_id = "#{action}_#{card.slug}"
-    function = action == 'play_card' ? 'submitGame' : 'toggleCard'
-    card.legal? && "#{function}(#{checkbox_id})"
   end
 
   def king_card_button(card_slug, hand, game)
     own_king = hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
     pickable = game.human_declarer? ? 'pickable' : ''
     classes = "js-submit-game #{pickable} #{own_king}"
-    checkbox_id = "pick_king_#{card_slug}"
-    onclick = "submitGame(#{checkbox_id})"
+    onclick = card_action(card_slug, 'pick_king')
     card_tag(card_slug, classes: classes, onclick: onclick)
-  end
-
-  def bid_button(slug, name)
-    button_tag(
-      name,
-      alt: name,
-      type: 'button',
-      class: 'btn btn-outline-dark js-submit-game',
-      onclick: "submitGame(#{slug})"
-    )
   end
 
   def card_tag(card_slug, classes: classes = '', onclick: nil, landscape: false)
@@ -66,5 +59,18 @@ module GameHelper
       class: "kr-card #{classes}",
       onclick: onclick
     )
+  end
+
+  private
+
+  def card_action(card_slug, action)
+    checkbox_id = "#{action}_#{card_slug}"
+    function =
+      if ['play_card', 'pick_king'].include?(action)
+        'submitGame'
+      elsif ['resolve_talon', 'resolve_whole_talon'].include?(action)
+        'toggleCard'
+      end
+    "#{function}(#{checkbox_id})"
   end
 end
