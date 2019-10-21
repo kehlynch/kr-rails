@@ -5,6 +5,8 @@ class CardPicker
 
   def pick
     legal_cards = @hand.select(&:legal?)
+    p 'legal_cards'
+    p legal_cards
     legal_cards.sample
   end
 end

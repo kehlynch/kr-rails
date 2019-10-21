@@ -35,7 +35,10 @@ class Card < ApplicationRecord
 
     return nil if discard || played_index
 
+
     current_trick = game.current_trick
+
+    return trischaken_legal? if Bids.new(game_id).highest&.trischaken?
 
     # p '1. trick not started - legal' if !current_trick.started?
     return true if !current_trick&.started?
@@ -54,7 +57,46 @@ class Card < ApplicationRecord
     # p '5. other trumps in hand - NOT legal' if player.trumps_in_hand.length > 0
     return false if player.trumps_in_hand_for(game_id).length > 0
 
-    # TODO: leading pagat
+    return true
+  end
+
+  def trischaken_legal?
+    led = game.current_trick&.led_card
+
+    winning = game.current_trick&.winning_card
+
+    p led
+    p winning
+
+    if !led
+      # leading pagat
+      return false if slug == 'trump_1' && player.trumps_in_hand_for(game_id).length > 1
+
+      return true
+    end
+
+    play_ups = player.suit_in_hand_for(game_id, winning.suit).select { |c| c.value > winning.value }
+
+    if suit == led.suit
+      return true if winning.suit != led.suit
+    
+      return true if value > winning.value
+
+      return true if play_ups.empty?
+    end
+
+    return false if player.suit_in_hand_for(game_id, led.suit).any?
+
+    if suit == 'trump'
+      return true if winning.suit != 'trump'
+
+      return true if value > winning.value
+
+      return true if play_ups.empty?
+    end
+
+    return false if player.trumps_in_hand_for(game_id).any?
+
     return true
   end
 

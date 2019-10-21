@@ -1,7 +1,7 @@
 class MessagePresenter
   attr_reader :game, :tricks, :bids
 
-  delegate :winners, :human_declarer?, :talon_picked, to: :game
+  delegate :winners, :declarer_human?, :talon_picked, to: :game
   delegate :declarer, to: :bids
   delegate :current_trick, :current_trick_finished?, :first_trick?, to: :tricks
 
@@ -39,7 +39,7 @@ class MessagePresenter
   private
 
   def declarer_name
-    human_declarer? ? 'You' : PlayerPresenter.new(declarer, @game_id).name
+    declarer_human? ? 'You' : PlayerPresenter.new(declarer, @game_id).name
   end
 
   def s_if_needed(player)
@@ -74,7 +74,7 @@ class MessagePresenter
   def pick_king_msg
     add_declared_bid_info
 
-    if !human_declarer?
+    if !declarer_human?
       @msg << "#{declarer_name} to pick king."
       add_click_to_continue
     else 
@@ -86,7 +86,7 @@ class MessagePresenter
     add_declared_bid_info()
     add_picked_king_info()
 
-    if !human_declarer?
+    if !declarer_human?
       @msg << "#{declarer_name} to pick talon."
       add_click_to_continue
     else 
@@ -105,7 +105,7 @@ class MessagePresenter
   def resolve_talon_msg
     @msg << "#{declarer_name} pick#{s_if_needed(declarer)} #{ ActiveSupport::Inflector.ordinalize(talon_picked + 1)} half of talon."
            
-    return @msg << "click to continue." if !human_declarer?
+    return @msg << "click to continue." if !declarer_human?
 
     return @msg << 'pick 3 cards to put down.'
   end
@@ -113,7 +113,7 @@ class MessagePresenter
   def resolve_whole_talon_msg
     @msg << "#{declarer_name} take#{s_if_needed(declarer)} the whole talon."
 
-    add_click_to_continue if !human_declarer?
+    add_click_to_continue if !declarer_human?
 
     @msg << 'pick 6 cards to put down.'
   end

@@ -17,6 +17,10 @@ class Bid < ApplicationRecord
     Bids::PICK_KING_SLUGS.include?(slug)
   end
 
+  def trischaken?
+    Bids::TRISCHAKEN == slug
+  end
+
   # breaking this out - it might cause issues if I change the way
   # bids are created. There's a bid_index on the model that's not
   # being set or used - could use that here

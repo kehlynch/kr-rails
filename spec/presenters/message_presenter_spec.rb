@@ -14,14 +14,14 @@ RSpec.describe MessagePresenter do
   let(:bid_presenter) { instance_double('BidPresenter', :bid_presenter) }
   let(:bid_name) { 'bid-name' }
   let(:finished?) { false }
-  let(:human_declarer) { true }
+  let(:declarer_human) { true }
 
   before do
     allow(Game).to receive(:find).with(game_id).and_return(game)
     allow(Bids).to receive(:new).with(game_id).and_return(bids)
     allow(Tricks).to receive(:new).with(game_id).and_return(tricks)
     allow(game).to receive(:stage).and_return(stage)
-    allow(game).to receive(:human_declarer?).and_return(true)
+    allow(game).to receive(:declarer_human?).and_return(true)
     allow(bids).to receive(:declarer).and_return(player)
     allow(game).to receive(:finished?).and_return(finished?)
     allow(bids).to receive(:highest).and_return(bid)
@@ -34,7 +34,7 @@ RSpec.describe MessagePresenter do
   describe 'message' do
 
     context 'pick_talon when human is declarer' do
-      let(:human_declarer) { true }
+      let(:declarer_human) { true }
       let(:stage) { 'pick_talon' }
       let(:bid_name) { 'bid-name' }
 

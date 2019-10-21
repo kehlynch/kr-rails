@@ -35,6 +35,10 @@ class Player < ApplicationRecord
     PlayerTeams.new(game_id).game_points_for(self)
   end
 
+  def individual_points_for(game_id)
+    Points.individual_points_for(self, game_id)
+  end
+
   def winner_for?(game_id)
     PlayerTeams.new(game_id).winner?(self)
   end

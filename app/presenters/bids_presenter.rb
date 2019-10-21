@@ -21,11 +21,9 @@ class BidsPresenter
     PlayerPresenter.new(@bids.declarer, @game_id)
   end
 
-  def human_declarer?
-    @game.human_declarer?
-  end
-
   def winning_bid_name
+    return 'Rufer' if winning_bid_slug == Bids::CALL_KING
+      
     BidPresenter.new(winning_bid_slug).name
   end
 

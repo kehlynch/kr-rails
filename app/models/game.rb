@@ -89,7 +89,7 @@ class Game < ApplicationRecord
 
   def make_bid!(bid_slug)
     bids.make_bid!(bid_slug)
-    # if bids.finished? && !human_declarer?
+    # if bids.finished? && !declarer_human??
     #   self.king = declarer.pick_king if bids.pick_king?
     # end
   end
@@ -126,7 +126,7 @@ class Game < ApplicationRecord
     bids.declarer
   end
 
-  def human_declarer?
+  def declarer_human?
     declarer.human?
   end
 

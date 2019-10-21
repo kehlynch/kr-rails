@@ -15,9 +15,9 @@ module GameHelper
   end
 
   def talon_half(cards, index, game, stage)
-    is_pickable = game.human_declarer? && stage.action == 'pick_talon'
+    is_pickable = game.declarer_human? && stage.action == 'pick_talon'
     pickable_class = is_pickable ? "pickable" : ""
-    onclick = game.human_declarer? ? "submitGame(talon_#{index})" : ""
+    onclick = game.declarer_human? ? "submitGame(talon_#{index})" : ""
 
     picked_class = game.talon_picked == index ? "picked" : ""
 
@@ -31,7 +31,7 @@ module GameHelper
   end
 
   def human_resolve_talon?(game)
-    ['resolve_talon', 'resolve_whole_talon'].include?(game.stage) && game.human_declarer?
+    ['resolve_talon', 'resolve_whole_talon'].include?(game.stage) && game.declarer_human?
   end
 
   def hand_card_button(card, game, action)
@@ -45,7 +45,7 @@ module GameHelper
 
   def king_card_button(card_slug, hand, game)
     own_king = hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
-    pickable = game.human_declarer? ? 'pickable' : ''
+    pickable = game.declarer_human? ? 'pickable' : ''
     classes = "js-submit-game #{pickable} #{own_king}"
     onclick = card_action(card_slug, 'pick_king')
     card_tag(card_slug, classes: classes, onclick: onclick)

@@ -57,7 +57,11 @@ class Trick < ApplicationRecord
     cards[-1]&.player_id
   end
 
+  def led_card
+    cards[0]
+  end
+
   def led_suit
-    cards[0]&.suit
+    led_card&.suit
   end
 end

@@ -11,7 +11,7 @@ RSpec.describe 'games/edit.html.erb' do
   let(:hand) { [] }
   let(:message) { ['message'] }
   let(:valid_bids) { [] }
-  let(:human_declarer?) { true }
+  let(:declarer_human?) { true }
   let(:show_talon?) { false }
   let(:action) { 'action' }
 
@@ -25,6 +25,11 @@ RSpec.describe 'games/edit.html.erb' do
     assign(:players, players)
     assign(:bids, bids)
     assign(:tricks, tricks)
+
+    allow(game).to receive(:next_player_human?).and_return(true)
+    allow(game).to receive(:declarer_human?).and_return(declarer_human?)
+    allow(game).to receive(:stage).and_return('make_bid')
+
 
     allow(players).to receive(:human_hand).and_return(hand)
     allow(players).to receive(:human_player).and_return(player)
@@ -40,7 +45,6 @@ RSpec.describe 'games/edit.html.erb' do
 
     allow(bids).to receive(:finished?).and_return(false)
     allow(bids).to receive(:valid_bids).and_return(valid_bids)
-    allow(bids).to receive(:human_declarer?).and_return(human_declarer?)
     allow(bids).to receive(:winning_bid_name).and_return('')
 
     allow(tricks).to receive(:current_trick_finished?).and_return(false)
@@ -82,7 +86,7 @@ RSpec.describe 'games/edit.html.erb' do
     end
 
     context 'when declarer is not human' do
-      let(:human_declarer?) { false }
+      let(:declarer_human?) { false }
 
       it 'should render kings' do
         render

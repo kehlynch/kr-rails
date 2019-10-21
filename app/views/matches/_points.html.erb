@@ -16,7 +16,7 @@
               <%= player_points %>
             </td>
           <% end %>
-          <td class="bid">
+          <td class="bid <%= bid_classes(@game) %>">
             <%= bid_shorthand(@match_games[i]) %>
           </td>
         </tr>

@@ -18,6 +18,9 @@
   
   td.bid {
     color: black;
+    &.off {
+      text-decoration: line-through;
+    }
   }
 }
 

@@ -27,4 +27,8 @@ module MatchHelper
     
     [forehand_class, winner_class, declarer_class].join(' ')
   end
+
+  def bid_classes(game)
+    'off' if !game.winners.include?(game.forehand)
+  end
 end
