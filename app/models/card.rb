@@ -22,7 +22,7 @@ class Card < ApplicationRecord
   end
 
   def points
-    if suit == 'trump'
+    if trump?
       TRUMP_POINTS[value] || 0
     else
       NONTRUMP_POINTS[value] || 0
@@ -31,6 +31,10 @@ class Card < ApplicationRecord
 
   def player
     @player ||= game.players.find { |p| p.id == player_id } if player_id
+  end
+
+  def trump?
+    suit == 'trump'
   end
 
   def pagat?

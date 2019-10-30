@@ -13,7 +13,7 @@
 <% end %>
 
 <%= form_with model: @game, url: match_game_path(@match_id, @game.id), local: true, html: {id: "gameForm"}, class: 'game-container' do |form| %>
-  <input hidden=true name="game[action]" value=<%= @stage.action %> id="js-stage" data-stage=<%= @stage.action %> data-human-player=<%= @game.next_player_human? %> />
+  <input hidden=true name="game[action]" value=<%= @stage.action %> id="js-stage" data-stage=<%= @stage.action %> data-human-player=<%= @game.next_player_human? %> data-bid-slug=<%= @bids.winning_bid_slug %> />
 
   <%= render 'players', form: form %>
 

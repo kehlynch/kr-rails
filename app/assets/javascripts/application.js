@@ -49,7 +49,6 @@ function toggleAnnouncement(checkbox) {
       checkbox.nextElementSibling.classList.toggle('active');
     })
   } else {
-    console.log("here");
     const passCheckbox = document.getElementById('pass')
     passCheckbox.checked = false
     passCheckbox.nextElementSibling.classList.remove('active');
@@ -61,8 +60,16 @@ function toggleAnnouncement(checkbox) {
   var submitButton = document.getElementById('announcements-submit')
   var selected = document.querySelectorAll('input[type="checkbox"]:checked').length
   if (stage() == 'make_announcement') {
-    submitButton.disabled = selected == 0;
+    const birdBidNeeded = bidSlug() == 'besser_rufer' && activeBirdBids() == 0;
+    const disabled = selected == 0 || birdBidNeeded
+    submitButton.disabled = disabled;
   }
+}
+
+function activeBirdBids() {
+  const birds = ["pagat", "uhu", "kakadu"]
+  const selected = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).filter((checkbox) => birds.includes(checkbox.value));
+  return selected.length
 }
 
 function showScores() {
@@ -83,6 +90,12 @@ function stage() {
   const element = stageElement();
   // console.log('element', element);
   return element && element.dataset.stage;
+}
+
+function bidSlug() {
+  const element = stageElement();
+  const bidSlug = element && element.dataset.bidSlug;
+  return bidSlug
 }
 
 function humanPlayer() {

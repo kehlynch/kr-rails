@@ -3,25 +3,34 @@ class Bids
   RUFER = 'rufer'
   SOLO = 'solo'
   DREIER = 'dreier'
+  BESSER_RUFER = 'besser_rufer'
+  SOLO_DREIER = 'solo_dreier'
+
+  # PICCOLO = 'piccolo'
+  # BETTEL = 'bettel'
+  # PICCOLO_OUVERT = 'piccolo_ouvert'
+  # BETTEL_OUVERT = 'piccolo_ouvert'
 
   CALL_KING = 'call_king'
   TRISCHAKEN = 'trischaken'
   SECHSERDREIER = 'sechserdreier'
 
-  FIRST_ROUND_SLUGS = [PASS, RUFER, SOLO, DREIER]
+  FIRST_ROUND_SLUGS = [PASS, RUFER, SOLO, BESSER_RUFER, DREIER, SOLO_DREIER]
   RUFER_SLUGS = [CALL_KING, TRISCHAKEN, SECHSERDREIER]
 
   RANKED_SLUGS = FIRST_ROUND_SLUGS + RUFER_SLUGS
 
-  PICK_TALON_SLUGS = [DREIER, CALL_KING, SECHSERDREIER]
-  PICK_KING_SLUGS = [CALL_KING, SOLO]
+  PICK_TALON_SLUGS = [DREIER, CALL_KING, SECHSERDREIER, BESSER_RUFER]
+  PICK_KING_SLUGS = [CALL_KING, SOLO, BESSER_RUFER]
 
   POINTS = {
     CALL_KING => 1,
     TRISCHAKEN => 1,
     SECHSERDREIER => 3,
+    BESSER_RUFER => 1,
     SOLO => 2,
-    DREIER => 3
+    DREIER => 3,
+    SOLO_DREIER => 6
   }
 
   attr_reader :bids
@@ -92,6 +101,10 @@ class Bids
 
   def pick_king?
     finished? && highest&.king?
+  end
+
+  def bird_required?
+    finished? && highest.slug == BESSER_RUFER
   end
 
   def highest

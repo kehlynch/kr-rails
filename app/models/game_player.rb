@@ -106,11 +106,13 @@ class GamePlayer
   end
   
   def pick_announcements(_valid_announcements)
-    ['pass']
+    bird_required = @game.bids.bird_required? && @game.bids.highest&.player_id == id
+    AnnouncementPicker.new(hand: hand, bird_required: bird_required).pick
   end
 
   def pick_card
-    CardPicker.new(hand: hand).pick
+    bird_announced = ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
+    CardPicker.new(hand: hand, bird_announced: bird_announced).pick
   end
 
   def pick_talon(_talon)
