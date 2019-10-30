@@ -5,17 +5,19 @@ class MessagePresenter
   delegate :declarer, to: :bids
   delegate :current_trick, :current_trick_finished?, :first_trick?, to: :tricks
 
-  def initialize(game_id, stage)
-    @game_id = game_id
+  def initialize(game, stage)
+    @game = game
     @stage = stage
-    @game = Game.find(game_id)
-    @bids = Bids.new(game_id)
-    @tricks = Tricks.new(game_id)
+    @game = game
+    @bids = game.bids
+    @tricks = game.tricks
     @msg = []
   end
 
   def message
     make_bid_msg if @stage == 'make_bid'
+
+    make_announcement_msg if @stage == 'make_announcement'
 
     pick_king_msg if @stage == 'pick_king'
 
@@ -39,7 +41,7 @@ class MessagePresenter
   private
 
   def declarer_name
-    declarer_human? ? 'You' : PlayerPresenter.new(declarer, @game_id).name
+    declarer_human? ? 'You' : PlayerPresenter.new(declarer, @game).name
   end
 
   def s_if_needed(player)
@@ -51,12 +53,12 @@ class MessagePresenter
   end
 
   def make_bid_msg
-    bidder = PlayerPresenter.new(@bids.next_bidder, @game_id)
+    bidder = PlayerPresenter.new(@bids.next_bidder, @game)
 
     add_forehand_text
 
     @bids.each do |bid|
-      player_presenter = PlayerPresenter.new(bid.player, @game_id)
+      player_presenter = PlayerPresenter.new(bid.player, @game)
       bid_presenter = BidPresenter.new(bid.slug)
       player_name = player_presenter.human? ? "You" : player_presenter.name
       s = s_if_needed(player_presenter)
@@ -118,9 +120,30 @@ class MessagePresenter
     @msg << 'pick 6 cards to put down.'
   end
 
+  def make_announcement_msg
+    add_declared_bid_info
+    add_picked_king_info
+
+    player = PlayerPresenter.new(@game.announcements.next_player, @game)
+
+    @game.announcements.each do |announcement|
+      player_presenter = PlayerPresenter.new(announcement.player, @game)
+      announcement_presenter = AnnouncementPresenter.new(announcement.slug)
+      player_name = player_presenter.human? ? "You" : player_presenter.name
+      s = s_if_needed(player_presenter)
+      announcement_text = announcement.slug == 'pass' ? 'passes' : "announce#{s} #{announcement_presenter.name}"
+      @msg << "#{player_name} #{announcement_text}."
+    end
+
+    if player.human?
+      @msg << "Make an announcement."
+    else
+      add_click_to_continue
+    end
+  end
   def play_card_msg
     lead = @tricks.lead_player
-    lead_name = PlayerPresenter.new(lead, @game_id).name
+    lead_name = PlayerPresenter.new(lead, @game).name
     @msg << "#{lead_name} lead#{s_if_needed(lead)}."
     @msg << "Play a card." if @game.next_player_human?
     add_click_to_continue if !@game.next_player_human?
@@ -128,7 +151,7 @@ class MessagePresenter
 
   def current_trick_finished_msg
     winner = current_trick.won_player
-    winner_name = PlayerPresenter.new(winner, @game_id).name
+    winner_name = PlayerPresenter.new(winner, @game).name
     @msg << "#{winner_name} take#{s_if_needed(winner)} trick."
             
     @msg << "click to continue."
@@ -162,6 +185,6 @@ class MessagePresenter
   end
 
   def player_name(player)
-    PlayerPresenter.new(player, @game_id).name
+    PlayerPresenter.new(player, @game).name
   end
 end

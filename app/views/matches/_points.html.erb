@@ -12,12 +12,15 @@
       <% match_points(@match_games).each_with_index do |points, i| %>
         <tr>
           <% points.each_with_index do |player_points, player_i| %>
-            <td class="<%= points_classes(@players[player_i], @match_games[i].id) %>" >
+            <td class="<%= points_classes(@players[player_i], @match_games[i]) %>" >
+              <div>
               <%= player_points %>
+              </div>
             </td>
           <% end %>
           <td class="bid <%= bid_classes(@game) %>">
             <%= bid_shorthand(@match_games[i]) %>
+            <%= announcement_shorthands(@match_games[i]) %>
           </td>
         </tr>
       <% end %>

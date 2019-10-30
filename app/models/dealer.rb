@@ -23,7 +23,7 @@ class Dealer
     end
 
     @cards.last(48).in_groups_of(12).each_with_index do |hand_cards, i|
-      hand_cards.each { |c| c.update(player: players[i]) }
+      hand_cards.each { |c| c.update(_player: players[i]) }
     end
 
     @cards.each(&:save!)

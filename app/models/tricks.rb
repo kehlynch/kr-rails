@@ -1,11 +1,11 @@
 class Tricks
   attr_reader :tricks
-  delegate :select, to: :tricks
-  def initialize(game_id)
-    @game_id = game_id
-    @tricks = Trick.where(game_id: game_id).order(:trick_index)
-    @players = Players.new(game_id)
-    @bids = Bids.new(game_id)
+  delegate :select, :last, :[], to: :tricks
+  def initialize(tricks, game)
+    @game = game
+    @tricks = tricks.order(:id)
+    @players = game.players
+    @bids = game.bids 
   end
 
   def first_trick?
@@ -17,21 +17,22 @@ class Tricks
   end
 
   def play_next_trick!
-    add_trick!
+    add_trick! if current_trick&.finished?
     play_current_trick!
   end
 
   def play_current_trick!(card_slug = nil)
     play_card!(card_slug) if card_slug
-    until next_player.human || current_trick&.finished? || finished?
-      card = next_player.pick_card_for(@game_id)
+    until next_player.human? || current_trick&.finished? || finished?
+      card = next_player.pick_card
       play_card!(card.slug)
     end
   end
 
   def play_card!(card_slug)
+    player = next_player
     add_trick! if !current_trick
-    current_trick.add_card(card_slug, next_player) if card_slug
+    current_trick.add_card(card_slug, player) if card_slug
     @tricks.reload
   end
 
@@ -56,7 +57,7 @@ class Tricks
     return @players.forehand if !current_trick
 
     p current_trick.started?
-    return @tricks[-2]&.won_player if !current_trick.started?
+    return @tricks[-2].won_player if !current_trick.started?
 
     # mid trick - find next player
     @players.next_from(current_trick.last_player)
@@ -65,7 +66,7 @@ class Tricks
   private
 
   def add_trick!
-    Trick.create(game_id: @game_id, trick_index: next_index)
+    Trick.create(game_id: @game.id, trick_index: next_index)
     @tricks.reload
   end
 

@@ -21,6 +21,10 @@
     <%= render 'bid', player: @players.human_player %>
   <% end %>
 
+  <% if @stage.action == 'make_announcement' && @game.next_player_human? %>
+    <%= render 'announcement', player: @players.human_player, form: form %>
+  <% end %>
+
   <%= render 'hand', form: form %>
 
   <% if @stage.action == 'pick_king' %>

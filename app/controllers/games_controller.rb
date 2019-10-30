@@ -9,13 +9,14 @@ class GamesController < ApplicationController
 
   def edit
     @match_id = params[:match_id]
-    game_id = params[:id]
     @game = find_game
-    @stage = StagePresenter.new(game_id)
-    @players = PlayersPresenter.new(game_id)
-    @bids = BidsPresenter.new(game_id)
-    @tricks = TricksPresenter.new(game_id)
+    @stage = StagePresenter.new(@game)
+    @bids = BidsPresenter.new(@game)
+    @tricks = TricksPresenter.new(@game)
+    @announcements = AnnouncementsPresenter.new(@game)
     @match_games = Game.where(match_id: @match_id)
+    @match_players = Player.where(match_id: @match_id)
+    @players = PlayersPresenter.new(@game)
   end
 
   def update
@@ -23,6 +24,8 @@ class GamesController < ApplicationController
     case game_params[:action]
       when 'make_bid'
         game.make_bid!(game_params[:make_bid])
+      when 'make_announcement'
+        game.make_announcements!(game_params[:make_announcement])
       when 'pick_king'
         game.pick_king!(game_params[:pick_king])
       when 'pick_talon'
@@ -57,7 +60,7 @@ class GamesController < ApplicationController
 
   def game_params
     params.require(:game)
-          .permit(:action, :make_bid, :pick_king, :pick_talon, :resolve_talon => [], :resolve_whole_talon => [], :play_card => [])
+          .permit(:action, :make_bid, :pick_talon, :pick_king, :make_announcement => [], :resolve_talon => [], :resolve_whole_talon => [], :play_card => [])
           .to_h.symbolize_keys
   end
 end

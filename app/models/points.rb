@@ -7,7 +7,7 @@ class Points
     end
   end
 
-  def self.individual_points_for(player, game_id)
-    points_for_cards(player.scorable_cards_for(game_id))
+  def self.individual_points_for(player)
+    points_for_cards(player.scorable_cards)
   end
 end

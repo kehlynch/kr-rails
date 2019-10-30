@@ -1,16 +1,16 @@
 class StagePresenter
-  def initialize(game_id)
-    @game_id = game_id
-    @game = Game.find(game_id)
-    @tricks = Tricks.new(game_id)
+  def initialize(game)
+    @game = game
   end
 
   def message
-    MessagePresenter.new(@game_id, action).message
+    MessagePresenter.new(@game, action).message
   end
 
   def action
-    return 'next_trick' if @game.stage == 'play_card' && @tricks.current_trick_finished?
+    p '*** @game.current_trick_finished?'
+    p  @game.current_trick_finished?
+    return 'next_trick' if @game.stage == 'play_card' && @game.current_trick_finished?
 
     @game.stage
   end

@@ -2,6 +2,10 @@
   font-weight: normal;
   td {
     color: red;
+    div {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   td.forehand {
@@ -10,6 +14,10 @@
 
   td.declarer {
     font-weight: bold;
+    div {
+      border-radius: 50%;
+      border: 1px solid black;
+    }
   }
 
   td.winner {
@@ -20,6 +28,25 @@
     color: black;
     &.off {
       text-decoration: line-through;
+    }
+    .announcements {
+      display: inline-block;
+      span {
+        margin-left: 2px;
+        &.declared {
+          text-decoration: underline;
+        }
+        &.off {
+          text-decoration: line-through;
+        }
+        &.defence {
+          &:after {
+            content: "D";
+            vertical-align: sub;
+            font-size: smaller;
+          }
+        }
+      }
     }
   }
 }

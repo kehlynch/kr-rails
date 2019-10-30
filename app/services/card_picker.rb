@@ -1,5 +1,6 @@
 class CardPicker
   def initialize(hand:)
+    raise if hand.empty?
     @hand = hand
   end
 

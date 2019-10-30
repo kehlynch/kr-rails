@@ -1,4 +1,21 @@
-.bid-buttons-container {
+.bid-buttons-container, .announcement-buttons-container {
   grid-column: 1 / span 3;
   justify-items: center;
+  // button.selected {
+  //   color: #fff;
+  //   background-color: #343a40;
+  //   border-color: #343a40;
+  // }
+
+  .submit-announcements-button {
+    background-color: white;
+    &:hover {
+      color: red;
+      &:disabled {
+        color: #343a40;
+      }
+    }
+  }
 }
+
+

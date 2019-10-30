@@ -4,12 +4,11 @@ class Talon
 
   delegate :each_with_index, to: :talon
 
-  def initialize(game_id)
-    @game_id = game_id
+  def initialize(cards, game)
+    @game_id = game.id
 
     @talon =
-      Card
-        .where(game_id: game_id)
+      cards
         .where.not(talon_half: nil)
         .order(:id)
         .to_a
@@ -19,7 +18,7 @@ class Talon
 
   def pick_whole_talon!(player)
     @talon.flatten.each do |talon_card|
-      talon_card.update(player: player)
+      talon_card.update(player_id: player.id)
     end
   end
 
@@ -27,14 +26,14 @@ class Talon
     talon_half_index = player.pick_talon_half_for(@game_id) if !talon_half_index
 
     @talon[talon_half_index].each do |talon_card|
-      talon_card.update(player: player)
+      talon_card.update(player_id: player.id)
     end
   end
 
   def resolve_talon!(putdown_card_slugs, player)
-    putdown_card_slugs = player.pick_putdowns_for(@game_id).map(&:slug) if !putdown_card_slugs
+    putdown_card_slugs = player.pick_putdowns.map(&:slug) if !putdown_card_slugs
 
-    player.cards_for(@game_id)
+    player.hand
       .select { |card| putdown_card_slugs.include?(card.slug) }
       .each { |card| card.update(discard: true) }
   end

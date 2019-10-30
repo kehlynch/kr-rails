@@ -5,6 +5,9 @@
     height: 4rem;
     width: 2.4rem;
   }
+  &:hover {
+    z-index: 1;
+  }
 }
 
 .kings-container {
@@ -21,7 +24,6 @@
 
 .kr-card.pickable { 
   &:hover {
-    z-index: 1;
     border-radius: 5px;
     cursor: pointer;
     border: 2px solid green;

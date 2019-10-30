@@ -1,14 +1,39 @@
 class Game < ApplicationRecord
   belongs_to :match
   has_many :cards
-  attr_reader :bids, :tricks, 
+  has_many :_announcements, class_name: 'Announcement'
+  has_many :_bids, class_name: 'Bid'
+  has_many :_tricks, class_name: 'Trick'
 
   def self.deal_game(match_id, players)
     game = Game.create(match_id: match_id)
-
     Dealer.deal(game, players)
 
     return game
+  end
+
+  def bids
+    @bids ||= Bids.new(_bids, self)
+  end
+
+  def tricks
+    @tricks ||= Tricks.new(_tricks, self)
+  end
+
+  def players
+    @players ||= Players.new(self)
+  end
+  
+  def talon
+    @talon ||= Talon.new(cards, self)
+  end
+
+  def player_teams
+    @player_teams ||= PlayerTeams.new(self)
+  end
+
+  def announcements
+    @announcements ||= Announcements.new(_announcements, self)
   end
 
   def stage
@@ -28,6 +53,8 @@ class Game < ApplicationRecord
       end
     end
 
+    return 'make_announcement' if bids.highest&.slug != Bids::TRISCHAKEN && !announcements.finished?
+
     # return 'first_trick' if tricks.first_trick?
 
     return 'play_card' unless tricks.finished?
@@ -35,28 +62,24 @@ class Game < ApplicationRecord
     return 'finished'
   end
 
-  def bids
-    @bids ||= Bids.new(id)
-  end
-
-  def tricks
-    @tricks ||= Tricks.new(id)
-  end
-
-  def players
-    @players ||= Players.new(id)
-  end
-  
-  def talon
-    @talon ||= Talon.new(id)
-  end
-
   def winners
-    PlayerTeams.new(id).winners
+    player_teams.winners
+  end
+
+  def team_for(player)
+    player_teams.team_for(player)
+  end
+
+  def make_bid!(bid_slug)
+    bids.make_bid!(bid_slug)
+  end
+
+  def make_announcements!(slugs)
+    announcements.make_announcements!(slugs)
   end
 
   def pick_king!(king_slug)
-    self.king = king_slug || declarer.pick_king_for(id)
+    self.king = king_slug || declarer.pick_king
     save
   end
 
@@ -87,13 +110,6 @@ class Game < ApplicationRecord
     tricks.play_next_trick!
   end
 
-  def make_bid!(bid_slug)
-    bids.make_bid!(bid_slug)
-    # if bids.finished? && !declarer_human??
-    #   self.king = declarer.pick_king if bids.pick_king?
-    # end
-  end
-
   def human_player
     players.human_player
   end
@@ -105,6 +121,8 @@ class Game < ApplicationRecord
   def next_player
     if stage == 'make_bid'
       return bids.next_bidder
+    elsif stage == 'make_announcement'
+      return announcements.next_player
     elsif ['pick_king', 'pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(stage)
       return declarer
     elsif ['play_card', 'play_card'].include?(stage)
@@ -131,7 +149,7 @@ class Game < ApplicationRecord
   end
 
   def partner
-    PlayerTeams.new(id).partner
+    player_teams.partner
   end
 
   def current_trick

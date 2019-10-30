@@ -1,16 +1,18 @@
 class PlayersPresenter
-  attr_reader :players, :player_presenters
+  attr_reader :game, :player_presenters
 
-  delegate :human_player, to: :players
+  delegate :human_player, to: :game
   delegate :each, :[], to: :player_presenters
 
-  def initialize(game_id)
-    @game_id = game_id
-    @players = Players.new(game_id)
-    @player_presenters = @players.players.map { |p| PlayerPresenter.new(p, game_id) }
+  def initialize(game)
+    @game = game
+    @player_presenters = @game.players.map { |p| PlayerPresenter.new(p, game) }
   end
 
   def human_hand
-    human_player.cards_for(@game_id)
+    display_order = ['trump', 'heart', 'spade', 'diamond', 'club']
+    human_player.hand.sort_by do |c|
+      [display_order.index(c.suit), -c.value]
+    end
   end
 end

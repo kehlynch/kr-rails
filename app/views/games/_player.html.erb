@@ -7,6 +7,9 @@
     <% if player.known_partner %>
       <h6 class="card-subtitle mb-2 text-muted">Partner</h6>
     <% end %>
+    <h6 class="card-subtitle mb-2 text-muted">
+      <%= player.announcements_text %>
+    </h6>
     <% if @stage.action == 'make_bid' %>
       <% player.bids.each do |bid| %>
         <p class="card-text"><%= bid %></p>

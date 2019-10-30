@@ -3,12 +3,11 @@ class BidsPresenter
 
   delegate :finished?, to: :bids
 
-  def initialize(game_id)
-    @game_id = game_id
-    @game = Game.find(game_id)
-    @bids = Bids.new(game_id)
+  def initialize(game)
+    @game = game
+    @bids = game.bids
     @bid_presenters = @bids.map { |b| BidPresenter.new(b.slug) }
-    @players = Players.new(game_id)
+    @players = game.players
   end
 
   def valid_bids
@@ -18,7 +17,7 @@ class BidsPresenter
   end
 
   def declarer
-    PlayerPresenter.new(@bids.declarer, @game_id)
+    PlayerPresenter.new(@bids.declarer, @game)
   end
 
   def winning_bid_name

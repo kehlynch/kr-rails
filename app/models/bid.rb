@@ -1,9 +1,12 @@
 class Bid < ApplicationRecord
 
-  belongs_to :player
   belongs_to :game
 
   validates :slug, inclusion: { in: Bids::RANKED_SLUGS }
+
+  def player
+    game.players.find { |p| p.id == player_id }
+  end
 
   def rank
     Bids::RANKED_SLUGS.index(slug) || 0

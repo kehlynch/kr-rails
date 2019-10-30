@@ -19,6 +19,8 @@
 //= require bootstrap-sprockets
 
 function submitGame(checkbox) {
+  console.log("submitGame");
+  console.log("checkbox", checkbox);
   if (checkbox) {
     checkbox.checked = true;
   }
@@ -26,6 +28,7 @@ function submitGame(checkbox) {
 }
 
 function toggleCard(checkbox) {
+  console.log("toggleCard", checkbox);
   checkbox.checked = !checkbox.checked;
   checkbox.nextElementSibling.classList.toggle('selected');
   var selected = document.querySelectorAll('input[type="checkbox"]:checked').length
@@ -36,6 +39,29 @@ function toggleCard(checkbox) {
     submitButton.disabled = selected != 3;
   } else if (stage() == 'resolve_whole_talon') {
     submitButton.disabled = selected != 6;
+  }
+}
+
+function toggleAnnouncement(checkbox) {
+  if (checkbox.id == 'pass') {
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach((checkbox) => {
+      checkbox.checked = false;
+      checkbox.nextElementSibling.classList.toggle('active');
+    })
+  } else {
+    console.log("here");
+    const passCheckbox = document.getElementById('pass')
+    passCheckbox.checked = false
+    passCheckbox.nextElementSibling.classList.remove('active');
+  }
+
+  checkbox.checked = !checkbox.checked;
+  checkbox.nextElementSibling.classList.toggle('active');
+
+  var submitButton = document.getElementById('announcements-submit')
+  var selected = document.querySelectorAll('input[type="checkbox"]:checked').length
+  if (stage() == 'make_announcement') {
+    submitButton.disabled = selected == 0;
   }
 }
 
@@ -75,14 +101,17 @@ function attachClickers() {
 }
 
 function pageClicked() {
+  console.log("pageClicked()");
   const gameStage = stage();
+  console.log(gameStage);
+  console.log(humanPlayer());
   if ( gameStage == 'next_trick' || gameStage == 'pick_whole_talon') {
     document.getElementById('gameForm').submit();
   // } else if ( gameStage == 'finished') {
   //   showScores();
   } else if (humanPlayer() == 'false') {
     console.log('here')
-    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king' || gameStage == 'make_bid' || gameStage == 'play_card') {
+    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king' || gameStage == 'make_bid' || gameStage == 'play_card' || gameStage == 'make_announcement') {
       document.getElementById('gameForm').submit();
     }
   }

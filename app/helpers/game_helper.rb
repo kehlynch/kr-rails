@@ -13,6 +13,16 @@ module GameHelper
       onclick: "submitGame(#{slug})"
     )
   end
+  
+  def announcement_button(slug, name)
+    button_tag(
+      name,
+      alt: name,
+      type: 'button',
+      class: 'btn btn-outline-dark js-submit-game',
+      onclick: "toggleAnnouncement(#{slug})"
+    )
+  end
 
   def talon_half(cards, index, game, stage)
     is_pickable = game.declarer_human? && stage.action == 'pick_talon'
@@ -34,12 +44,16 @@ module GameHelper
     ['resolve_talon', 'resolve_whole_talon'].include?(game.stage) && game.declarer_human?
   end
 
+  def hand_card_pickable?(game, action)
+    human_resolve_talon?(game) || action == 'play_card'
+  end
+
   def hand_card_button(card, game, action)
-    pickable = human_resolve_talon?(game) || action == 'play_card'
+    pickable = hand_card_pickable?(game, action)
     pickable_class = pickable ? 'pickable' : ''
     illegal_class = pickable && !card.legal? ? 'illegal' : ''
     classes = "js-submit-game #{pickable_class} #{illegal_class}"
-    onclick = card.legal? && card_action(card.slug, action)
+    onclick = pickable && card.legal? && card_action(card.slug, action)
     card_tag(card.slug, classes: classes, onclick: onclick)
   end
 

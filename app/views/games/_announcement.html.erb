@@ -1,0 +1,7 @@
+<div class="announcement-buttons-container">
+  <% @announcements.valid_announcements.each do |slug, name| %>
+    <input hidden=true id="<%= slug %>" name="game[make_announcement][]" type="checkbox" value="<%= slug %>" />
+    <%= announcement_button(slug, name) %>
+  <% end %>
+  <%= form.submit 'make announcements', disabled: true, id: 'announcements-submit', class: 'btn btn-outline-dark submit-announcements-button' %>
+</div>

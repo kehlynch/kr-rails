@@ -1,7 +1,9 @@
 <div class="row pl-4 pr-4 justify-content-center hand-container">
   <% @players.human_hand.each do |card| %>
     <div class="card-container hand">
-      <input hidden=true id="<%= @stage.action %>_<%= card.slug %>" name="game[<%= @stage.action %>][]" type="checkbox" value="<%= card.slug %>" />
+      <% if hand_card_pickable?(@game, @stage.action) %>
+        <input hidden=true id="<%= @stage.action %>_<%= card.slug %>" name="game[<%= @stage.action %>][]" type="checkbox" value="<%= card.slug %>" />
+      <% end %>
       <%= hand_card_button(card, @game, @stage.action) %>
     </div>
   <% end %>

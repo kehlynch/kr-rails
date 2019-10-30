@@ -26,25 +26,25 @@ class Bids
 
   attr_reader :bids
 
-  delegate :each, :map, to: :bids
+  delegate :each, :map, :select, to: :bids
 
-  def initialize(game_id)
-    @game_id = game_id
-    @bids = Bid.where(game_id: game_id).sort_by(&:bidding_order)
-    @players = Players.new(game_id)
+  def initialize(bids, game)
+    @game = game
+    @bids = bids.sort_by(&:bidding_order)
+    @players = game.players
   end
 
   def make_bid!(bid_slug)
     add_bid!(bid_slug) if bid_slug
     until !next_bidder || next_bidder.human? || finished?
-      bid_slug = next_bidder.pick_bid_for(@game_id, valid_bids)
+      bid_slug = next_bidder.pick_bid(valid_bids)
       add_bid!(bid_slug)
     end
   end
 
   def valid_bids
     if first_round_finished?
-      return [PASS] unless highest&.player == next_bidder
+      return [PASS] unless highest&.player.id == next_bidder.id
 
       return RUFER_SLUGS if highest&.slug == RUFER
 
@@ -52,9 +52,9 @@ class Bids
     else
       return [PASS] if @bids.any? { |b| b.slug == PASS && b.player == next_bidder }
 
-      lowest_rank = next_bidder.forehand_for?(@game_id) ? highest_rank : highest_rank + 1
+      lowest_rank = next_bidder.forehand? ? highest_rank : highest_rank + 1
 
-      slugs_for_rank_up(lowest_rank, next_bidder.forehand_for?(@game_id) && @bids.empty?)
+      slugs_for_rank_up(lowest_rank, next_bidder.forehand? && @bids.empty?)
     end
   end
 
@@ -95,7 +95,9 @@ class Bids
   end
 
   def highest
-    @bids.sort_by { |b| "#{b.rank}#{b.player.forehand_for?(@game_id)}" }.last
+    @bids.sort_by do |b|
+      "#{b.rank}#{b.player.forehand?}"
+    end.last
   end
 
   def highest_rank
@@ -103,7 +105,7 @@ class Bids
   end
 
   def declarer
-    finished? && highest&.player
+    finished? ? highest&.player : nil
   end
 
   def lead
@@ -122,6 +124,6 @@ class Bids
   private
 
   def add_bid!(bid_slug)
-    @bids << Bid.create(slug: bid_slug, game_id: @game_id, player: next_bidder)
+    @bids << Bid.create(slug: bid_slug, game_id: @game.id, player_id: next_bidder.id)
   end
 end

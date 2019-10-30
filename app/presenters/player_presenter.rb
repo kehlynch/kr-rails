@@ -1,13 +1,12 @@
 class PlayerPresenter
   attr_reader :player
 
-  delegate :human?, :position, :id, :game_points_for, :forehand_for?, :winner_for?, :declarer_for?, :bids_for, to: :player
+  delegate :forehand_for?, :human?, :position, :id, :announcements, :points, :team_points, :game_points, :winner?, to: :player
 
-  def initialize(player, game_id)
-    @game_id = game_id
+  def initialize(player, game)
     @player = player
-    @game = Game.find(game_id)
-    @player_teams = PlayerTeams.new(game_id)
+    @game = game
+    @player_teams = game.player_teams
   end
 
   def name(you_if_human=true)
@@ -16,32 +15,20 @@ class PlayerPresenter
   end
 
   def bids
-    @player.bids_for(@game_id).map { |b| BidPresenter.new(b.slug).name }
+    @player.bids.map { |b| BidPresenter.new(b.slug).name }
+  end
+
+  def announcements_text
+    @player.announcements.map { |b| AnnouncementPresenter.new(b.slug).shorthand }.join(" ")
   end
 
   def won_tricks_count
-    @player.won_tricks_for(@game.id).count
-  end
-
-  def winner?
-    @player_teams.winner?(@player)
-  end
-
-  def points
-    Points.individual_points_for(@player, @game_id)
-  end
-
-  def team_points
-    @player_teams.team_points_for(@player)
-  end
-
-  def game_points
-    @player_teams.game_points_for(@player)
+    @player.won_tricks.count
   end
 
   def known_partner
     king_played = Card.where.not(trick_id: nil).find_by(game_id: @game.id, slug: @game.king)
-    @game.partner == @player && king_played
+    @game.partner&.id == @player&.id && king_played
   end
 
   def role

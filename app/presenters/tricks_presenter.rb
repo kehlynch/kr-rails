@@ -4,16 +4,16 @@ class TricksPresenter
 
   delegate :current_trick_finished?, to: :tricks
 
-  def initialize(game_id)
-    @tricks = Tricks.new(game_id)
-    @players = Players.new(game_id)
+  def initialize(game)
+    @tricks = game.tricks
+    @players = game.players
   end
 
   def trick_cards
     cards = @tricks.current_trick_cards
 
     @players.map do |p|
-      [ p, cards.find { |c| c.player == p } ]
+      [ p, cards.find { |c| c.player.id == p.id } ]
     end
   end
 end

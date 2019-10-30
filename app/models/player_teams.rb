@@ -1,63 +1,104 @@
 class PlayerTeams
-  def initialize(game_id)
-    @game_id = game_id
-    @game = Game.find(game_id)
+
+  attr_reader :declarers, :defence, :teams
+
+  delegate :find, :each, to: :teams
+
+  def initialize(game)
+    @game = game
     @king = @game.king
     @talon = @game.talon.unpicked
     @declarer = @game.declarer
     @bid = @game.bids.highest
     @trischaken = @bid&.trischaken?
+    init_declarers
+    init_defence
+
+    @teams = [@declarers, @defence]
   end
 
-  def declarers
-    return [] if @trischaken
-    players = [@declarer, partner].reject(&:nil?).uniq
-    PlayerTeam.new(players, talon: @talon, bid: @bid, king: @king, game_id: @game_id)
+  def init_declarers
+    @declarers = [] if @trischaken
+    players = [@declarer, partner].reject(&:nil?).uniq { |p| p.id }
+    @declarers = PlayerTeam.new(players, game: @game, talon: @talon, bid: @bid, king: @king)
   end
 
-  def defence
-    return [] if @trischaken
-    players = @game.players.reject { |p| declarers.include?(p) }
-    PlayerTeam.new(players, defence: true, talon: @talon, bid: @bid, king: @king, game_id: @game_id)
+  def init_defence
+    @defence = [] if @trischaken
+    players = @game.players.reject { |p| @declarers.map(&:id).include?(p.id) }
+    @defence = PlayerTeam.new(players, game: @game, defence: true, talon: @talon, bid: @bid, king: @king)
   end
 
   def winners
     return trischaken_winners if @trischaken
 
-    return defence if defence.winner?
+    return defence.players if defence.winner?
 
-    return declarers
+    return declarers.players
   end
 
   def trischaken_winners
     return trischaken_zero_trick_winners if trischaken_zero_trick_winners.any?
 
-    highest = @game.players.map { |p| p.individual_points_for(@game_id) }.max
-    @game.players.select { |p| p.individual_points_for(@game_id) != highest }
+    highest = @game.players.map { |p| Points.individual_points_for(p) }.max
+    @game.players.select { |p| Points.individual_points_for(p) != highest }
   end
 
   def trischaken_zero_trick_winners
-    @game.players.select { |p| p.individual_points_for(@game_id) == 0 }
+    @game.players.select { |p| Points.individual_points_for(p) == 0 }
+  end
+
+  def game_points_for(player)
+    return trischaken_game_points_for(player) if @trischaken
+
+    team_for(player).game_points
+  end
+
+  def trischaken_game_points_for(player)
+    if trischaken_zero_trick_winners.include?(player)
+      (4 - winners.length)/winners.length
+    elsif winners.include?(player)
+      loss = 1
+      return loss * 2 if !winners.include?(@game.forehand)
+      return loss * 2 if player.forehand_for?(@game.id)
+      return loss
+    elsif trischaken_zero_trick_winners.any?
+      -1
+    else
+      loss = -(winners.length/(4 - winners.length))
+      
+      return loss * 2 if player.forehand_for?(@game.id)
+
+      return loss
+    end
   end
 
   def winner?(player)
-    winners.include?(player)
+    winners.map(&:id).include?(player.id)
   end
 
   def declarer?(player)
-    @declarer == player
+    @declarer.id == player.id
+  end
+
+  def declarer_or_partner?(player)
+    declarers.map(&:id).include?(player.id)
+  end
+
+  def defence?(player)
+    defence.map(&:id).include?(player.id)
   end
 
   def team_for(player)
-    if declarers.include?(player)
+    if declarer_or_partner?(player)
       declarers
-    else
+    elsif defence?(player)
       defence
     end
   end
 
   def team_points_for(player)
-    return player.individual_points_for(@game_id) if @trischaken
+    return Points.individual_points_for(player) if @trischaken
 
     team_for(player).points
   end
@@ -80,13 +121,13 @@ class PlayerTeams
     else
       loss = -(winners.length/(4 - winners.length))
       
-      return loss * 2 if player.forehand_for?(@game_id)
+      return loss * 2 if player.forehand?
 
       return loss
     end
   end
 
   def partner
-    Card.find_by(slug: @king, game_id: @game_id)&.player
+    Card.find_by(slug: @king, game_id: @game.id)&.player
   end
 end

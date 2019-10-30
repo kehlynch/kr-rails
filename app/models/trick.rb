@@ -4,10 +4,17 @@ class Trick < ApplicationRecord
 
   has_many :cards, -> { order(:played_index) }
 
-  def add_card(card_slug, player)
-    Card.find_by(slug: card_slug, game_id: game_id).update(played_index: next_played_index, trick_id: id)
+  def add_card(slug, player)
+    p '***add_card'
+    p slug
+    p player.hand
+    player.hand.find_card(slug).update(played_index: next_played_index, trick_id: id)
 
     cards.reload
+  end
+  
+  def find_card(slug)
+    cards.find_by(slug: slug)
   end
 
   def next_played_index

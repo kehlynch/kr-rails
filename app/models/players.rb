@@ -2,12 +2,13 @@ class Players
 
   attr_reader :players
 
-  delegate :[], :each, :map, :select, :reject, to: :players
+  delegate :[], :each, :map, :select, :reject, :find, to: :players
 
-  def initialize(game_id)
-    @game_id = game_id
-    @match_id = Game.find(game_id).match_id
-    @players = Player.where(match_id: @match_id).sort_by(&:position)
+  def initialize(game)
+    @game = game
+    @players = game.match.players.order(:position).map do |p|
+      GamePlayer.new(p, game)
+    end
   end
 
   def winner
@@ -15,14 +16,16 @@ class Players
   end
 
   def human_player
-    @players.find { |p| p.human }
+    @players.find { |p| p.human? }
   end
 
   def forehand
-    @players.find { |p| p.forehand_for?(@game_id) }
+    @players.find(&:forehand?)
   end
 
   def next_from(player)
-    Player.find_by(match_id: @match_id, position: (player.position + 1) % 4)
+    @players.find do |p|
+      p.position == (player.position + 1) % 4
+    end
   end
 end
