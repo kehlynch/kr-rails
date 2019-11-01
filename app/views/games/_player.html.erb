@@ -1,6 +1,14 @@
 <div class="card">
   <div class="card-body">
     <h5 class="card-title"><%= player.name(false) %></h5>
+    <% if player.forehand? %>
+      <h6 class="card-subtitle mb-2 text-muted">Forehand</h6>
+    <% end %>
+    <% if player.human? && !player.active? %>
+      <h6>
+        <%= link_to 'human', edit_match_player_game_path(@match_id, player.id, @game), target: '_blank', class:'card-subtitle mb-2 text-muted' %>
+      </h6>
+    <% end %>
     <% if player.role == 'declarer' %>
       <h6 class="card-subtitle mb-2 text-muted">Declarer</h6>
     <% end %>

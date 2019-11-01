@@ -1,8 +1,9 @@
 module MatchHelper
-  def match_points(match_games)
+  def match_points(match_games, player)
     points = match_games.map do |game|
       if game.finished?
-        game.players.map do |p|
+        players = PlayersPresenter.new(game, player.id)
+        players.map do |p|
           points = p.game_points
         end
       else

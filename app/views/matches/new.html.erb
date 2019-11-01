@@ -1,5 +1,19 @@
-<%= form_with scope: :match, url: matches_path, local: true do |form| %>
-  <p>
-    <%= form.submit "new game" %>
-  </p>
-<% end %>
+<div class="container">
+  <h1>Create Players</h1>
+  <%= form_for(@match) do |f| %>
+    <%= f.fields_for :players do |player_fields| %>
+      <%= player_fields.hidden_field :position %>
+      <div class="row pb-2">
+        <div class="col">
+          <%= player_fields.text_field :name, class: "form-control", placeholder: "name" %>
+        </div>
+        <div class="col">
+          <%= player_fields.check_box :human %>
+          <%= player_fields.label :human %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= f.submit "create game", class: "btn btn-primary" %>
+  <% end %>
+</div>

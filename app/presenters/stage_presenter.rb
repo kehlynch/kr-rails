@@ -3,10 +3,6 @@ class StagePresenter
     @game = game
   end
 
-  def message
-    MessagePresenter.new(@game, action).message
-  end
-
   def action
     p '*** @game.current_trick_finished?'
     p  @game.current_trick_finished?

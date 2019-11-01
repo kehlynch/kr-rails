@@ -5,6 +5,10 @@ class GamePlayer
     @player = player
     @game = game
   end
+
+  def name
+    @player.name
+  end
   
   def hand
     cards =

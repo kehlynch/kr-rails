@@ -1,16 +1,17 @@
 class MessagePresenter
   attr_reader :game, :tricks, :bids
 
-  delegate :winners, :declarer_human?, :talon_picked, to: :game
+  delegate :winners, :talon_picked, to: :game
   delegate :declarer, to: :bids
   delegate :current_trick, :current_trick_finished?, :first_trick?, to: :tricks
 
-  def initialize(game, stage)
+  def initialize(game, stage, active_player)
     @game = game
     @stage = stage
     @game = game
     @bids = game.bids
     @tricks = game.tricks
+    @active_player = active_player
     @msg = []
   end
 
@@ -40,12 +41,20 @@ class MessagePresenter
 
   private
 
+  def declarer_active?
+    @active_player.role == 'declarer'
+  end
+
+  def forehand_active?
+    @game.forehand.id == @active_player.id
+  end
+
   def declarer_name
-    declarer_human? ? 'You' : PlayerPresenter.new(declarer, @game).name
+    declarer_active? ? 'You' : PlayerPresenter.new(declarer, @game).name
   end
 
   def s_if_needed(player)
-    player.human? ? '' : 's'
+    player.id == @active_player.id ? '' : 's'
   end
 
   def winning_bid_name
@@ -60,15 +69,15 @@ class MessagePresenter
     @bids.each do |bid|
       player_presenter = PlayerPresenter.new(bid.player, @game)
       bid_presenter = BidPresenter.new(bid.slug)
-      player_name = player_presenter.human? ? "You" : player_presenter.name
+      player_name = player_presenter.active? ? "You" : player_presenter.name
       s = s_if_needed(player_presenter)
       bid_text = bid.slug == 'pass' ? 'passes' : "bid#{s} #{bid_presenter.name}"
       @msg << "#{player_name} #{bid_text}."
     end
 
-    if bidder.human?
+    if bidder.id == @active_player.id
       @msg << "Make a bid."
-    else
+    elsif
       add_click_to_continue
     end
   end
@@ -76,7 +85,7 @@ class MessagePresenter
   def pick_king_msg
     add_declared_bid_info
 
-    if !declarer_human?
+    if !declarer_active?
       @msg << "#{declarer_name} to pick king."
       add_click_to_continue
     else 
@@ -88,7 +97,7 @@ class MessagePresenter
     add_declared_bid_info()
     add_picked_king_info()
 
-    if !declarer_human?
+    if !declarer_active?
       @msg << "#{declarer_name} to pick talon."
       add_click_to_continue
     else 
@@ -107,7 +116,7 @@ class MessagePresenter
   def resolve_talon_msg
     @msg << "#{declarer_name} pick#{s_if_needed(declarer)} #{ ActiveSupport::Inflector.ordinalize(talon_picked + 1)} half of talon."
            
-    return @msg << "click to continue." if !declarer_human?
+    return @msg << "click to continue." if !declarer_active?
 
     return @msg << 'pick 3 cards to put down.'
   end
@@ -115,7 +124,7 @@ class MessagePresenter
   def resolve_whole_talon_msg
     @msg << "#{declarer_name} take#{s_if_needed(declarer)} the whole talon."
 
-    add_click_to_continue if !declarer_human?
+    add_click_to_continue if !declarer_active?
 
     @msg << 'pick 6 cards to put down.'
   end
@@ -129,24 +138,32 @@ class MessagePresenter
     @game.announcements.each do |announcement|
       player_presenter = PlayerPresenter.new(announcement.player, @game)
       announcement_presenter = AnnouncementPresenter.new(announcement.slug)
-      player_name = player_presenter.human? ? "You" : player_presenter.name
+      player_name = player_presenter.active? ? "You" : player_presenter.name
       s = s_if_needed(player_presenter)
       announcement_text = announcement.slug == 'pass' ? 'passes' : "announce#{s} #{announcement_presenter.name}"
       @msg << "#{player_name} #{announcement_text}."
     end
 
-    if player.human?
+    if player.id == @active_player.id
       @msg << "Make an announcement."
     else
       add_click_to_continue
     end
   end
+
   def play_card_msg
     lead = @tricks.lead_player
-    lead_name = PlayerPresenter.new(lead, @game).name
-    @msg << "#{lead_name} lead#{s_if_needed(lead)}."
-    @msg << "Play a card." if @game.next_player_human?
-    add_click_to_continue if !@game.next_player_human?
+    if lead.id == @active_player.id
+      @msg << "You lead"
+    else
+      @msg << "#{lead.name} leads"
+    end
+
+    if @game.tricks.next_player.id == @active_player.id
+      @msg << "Play a card."
+    else
+      add_click_to_continue
+    end
   end
 
   def current_trick_finished_msg
@@ -164,9 +181,14 @@ class MessagePresenter
   def add_declared_bid_info
     @msg << "#{declarer_name} declare#{s_if_needed(declarer)} #{winning_bid_name}."
   end
-  
+
+  # TODO rename this
   def add_click_to_continue
-    @msg << "Click to continue."
+    if @game.next_player_human?
+      @msg << "Waiting for #{@game.next_player.name}, refresh page to continue..."
+    else
+      @msg << "Click to continue."
+    end
   end
 
   def add_picked_king_info
@@ -177,7 +199,7 @@ class MessagePresenter
   end
 
   def add_forehand_text
-    if @game.human_forehand?
+    if forehand_active?
       @msg << "You are forehand."
     else
       @msg << "#{player_name(@game.forehand)} is forehand."

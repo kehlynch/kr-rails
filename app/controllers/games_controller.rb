@@ -2,9 +2,14 @@ class GamesController < ApplicationController
   helper_method :game
 
   def create
-    game = Match.find(params[:match_id]).deal_game
+    match = Match.find(params[:match_id])
+    if match.games.last.finished?
+      game = match.deal_game
+    else
+      game = match.games.last
+    end
 
-    redirect_to edit_match_game_path(params[:match_id], game)
+    redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
   end
 
   def edit
@@ -12,12 +17,17 @@ class GamesController < ApplicationController
     @game = find_game
     @stage = StagePresenter.new(@game)
     @bids = BidsPresenter.new(@game)
-    @tricks = TricksPresenter.new(@game)
     @announcements = AnnouncementsPresenter.new(@game)
     @match_games = Game.where(match_id: @match_id)
     @match_players = Player.where(match_id: @match_id)
-    @players = PlayersPresenter.new(@game)
+    @player_id = params[:player_id].to_i
+    @players = PlayersPresenter.new(@game, @player_id)
+    @tricks = TricksPresenter.new(@game, @players)
+    @player = @players.first
+    @message = MessagePresenter.new(@game, @stage.action, @player).message
+    @player.active = true
   end
+
 
   def update
     game = find_game
@@ -42,7 +52,7 @@ class GamesController < ApplicationController
       when 'next_trick'
         game.play_next_trick!
     end
-    redirect_to edit_match_game_path(params[:match_id], game)
+    redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
   end
 
   def destroy

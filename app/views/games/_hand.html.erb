@@ -1,13 +1,13 @@
 <div class="row pl-4 pr-4 justify-content-center hand-container">
-  <% @players.human_hand.each do |card| %>
+  <% @player.hand.each do |card| %>
     <div class="card-container hand">
-      <% if hand_card_pickable?(@game, @stage.action) %>
+      <% if hand_card_pickable?(@game, @player, @stage.action) %>
         <input hidden=true id="<%= @stage.action %>_<%= card.slug %>" name="game[<%= @stage.action %>][]" type="checkbox" value="<%= card.slug %>" />
       <% end %>
-      <%= hand_card_button(card, @game, @stage.action) %>
+      <%= hand_card_button(card, @game, @player, @stage.action) %>
     </div>
   <% end %>
-  <% if human_resolve_talon?(@game) %>
+  <% if human_resolve_talon?(@game, @player) %>
     <div>
       <%= form.submit 'put down cards', disabled: true, id: 'talon-submit' %>
     </div>

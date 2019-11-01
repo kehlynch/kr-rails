@@ -1,6 +1,8 @@
 class Match < ApplicationRecord
-  has_many :players
+  has_many :players, -> { order(:id) }
   has_many :games, -> { order(:id) }
+
+  accepts_nested_attributes_for :players
 
   def deal_game
     Game.deal_game(id, players)

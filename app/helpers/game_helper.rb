@@ -40,16 +40,16 @@ module GameHelper
     end
   end
 
-  def human_resolve_talon?(game)
-    ['resolve_talon', 'resolve_whole_talon'].include?(game.stage) && game.declarer_human?
+  def human_resolve_talon?(game, player)
+    ['resolve_talon', 'resolve_whole_talon'].include?(game.stage) && game.declarer.id == player.id
   end
 
-  def hand_card_pickable?(game, action)
-    human_resolve_talon?(game) || action == 'play_card'
+  def hand_card_pickable?(game, player, action)
+    human_resolve_talon?(game, player) || (action == 'play_card' && game.next_player.id == player.id)
   end
 
-  def hand_card_button(card, game, action)
-    pickable = hand_card_pickable?(game, action)
+  def hand_card_button(card, game, player, action)
+    pickable = hand_card_pickable?(game, player, action)
     pickable_class = pickable ? 'pickable' : ''
     illegal_class = pickable && !card.legal? ? 'illegal' : ''
     classes = "js-submit-game #{pickable_class} #{illegal_class}"

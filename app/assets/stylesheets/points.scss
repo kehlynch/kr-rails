@@ -25,6 +25,7 @@
   }
   
   td.bid {
+    display: flex;
     color: black;
     &.off {
       text-decoration: line-through;

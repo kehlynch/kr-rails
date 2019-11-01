@@ -9,20 +9,22 @@
       <th scope="col"></th>
     </thead>
     <tbody>
-      <% match_points(@match_games).each_with_index do |points, i| %>
-        <tr>
-          <% points.each_with_index do |player_points, player_i| %>
-            <td class="<%= points_classes(@players[player_i], @match_games[i]) %>" >
-              <div>
-              <%= player_points %>
-              </div>
+      <% match_points(@match_games, @player).each_with_index do |points, i| %>
+        <% if @match_games[i].finished? %>
+          <tr>
+            <% points.each_with_index do |player_points, player_i| %>
+              <td class="<%= points_classes(@players[player_i], @match_games[i]) %>" >
+                <div>
+                  <%= player_points %>
+                </div>
+              </td>
+            <% end %>
+            <td class="bid <%= bid_classes(@game) %>">
+              <div><%= bid_shorthand(@match_games[i]) %></div>
+              <%= announcement_shorthands(@match_games[i]) %>
             </td>
-          <% end %>
-          <td class="bid <%= bid_classes(@game) %>">
-            <%= bid_shorthand(@match_games[i]) %>
-            <%= announcement_shorthands(@match_games[i]) %>
-          </td>
-        </tr>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>

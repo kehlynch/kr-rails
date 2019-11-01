@@ -1,7 +1,8 @@
 class PlayerPresenter
   attr_reader :player
+  attr_accessor :active
 
-  delegate :forehand_for?, :human?, :position, :id, :announcements, :points, :team_points, :game_points, :winner?, to: :player
+  delegate :forehand?, :human?, :position, :id, :announcements, :points, :team_points, :game_points, :winner?, to: :player
 
   def initialize(player, game)
     @player = player
@@ -9,9 +10,23 @@ class PlayerPresenter
     @player_teams = game.player_teams
   end
 
+  def hand
+    display_order = ['trump', 'heart', 'spade', 'diamond', 'club']
+    @player.hand.sort_by do |c|
+      [display_order.index(c.suit), -c.value]
+    end
+  end
+
+  def active?
+    active
+  end
+
   def name(you_if_human=true)
-    return 'You' if you_if_human && human?
-    ['Katherine', 'Mary', 'David', 'Clare'][position]
+    p 'name'
+    player.name
+    p active
+    return 'You' if you_if_human && active
+    player.name
   end
 
   def bids

@@ -2,7 +2,9 @@
 
 Rails.application.routes.draw do
   resources :matches, only: [:create, :new] do
-    resources :games, only: [:create, :edit, :update, :destroy]
+    resources :players, only: [:show] do
+      resources :games, only: [:create, :edit, :update, :destroy]
+    end
   end
 
 
