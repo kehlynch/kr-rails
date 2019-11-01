@@ -11,11 +11,10 @@ class GamePlayer
   end
   
   def hand
-    cards =
-      @game.cards
-      .where(player_id: id, played_index: nil, discard: false)
+    cards = @game.cards.select do |c|
+      c.player_id == id && c.played_index.nil? && !c.discard
+    end
 
-    p cards.map(&:slug)
     Hand.new(cards, @game)
   end
 

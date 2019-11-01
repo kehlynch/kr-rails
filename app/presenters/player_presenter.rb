@@ -22,9 +22,6 @@ class PlayerPresenter
   end
 
   def name(you_if_human=true)
-    p 'name'
-    player.name
-    p active
     return 'You' if you_if_human && active
     player.name
   end
@@ -42,7 +39,9 @@ class PlayerPresenter
   end
 
   def known_partner
-    king_played = Card.where.not(trick_id: nil).find_by(game_id: @game.id, slug: @game.king)
+    king_played = @game.cards.find do |c|
+      c.trick_id.nil? && c.slug == @game.king
+    end.present?
     @game.partner&.id == @player&.id && king_played
   end
 

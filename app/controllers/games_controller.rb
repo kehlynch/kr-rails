@@ -15,7 +15,7 @@ class GamesController < ApplicationController
   def edit
     @match_id = params[:match_id]
     @game = find_game
-    @stage = StagePresenter.new(@game)
+    @action = @game.stage
     @bids = BidsPresenter.new(@game)
     @announcements = AnnouncementsPresenter.new(@game)
     @match_games = Game.where(match_id: @match_id)
@@ -24,7 +24,7 @@ class GamesController < ApplicationController
     @players = PlayersPresenter.new(@game, @player_id)
     @tricks = TricksPresenter.new(@game, @players)
     @player = @players.first
-    @message = MessagePresenter.new(@game, @stage.action, @player).message
+    @message = MessagePresenter.new(@game, @action, @player).message
     @player.active = true
   end
 

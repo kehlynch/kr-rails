@@ -4,34 +4,34 @@
   <% end %>
 </div>
 
-<% if @stage.action != 'make_bid' %>
+<% if @action != 'make_bid' %>
   <%= render 'info' %>
 <% end %>
 
 <%= form_with model: @game, url: match_player_game_path(@match_id, @player_id, @game.id), local: true, html: {id: "gameForm"}, class: 'game-container' do |form| %>
-  <input hidden=true name="game[action]" value=<%= @stage.action %> id="js-stage" data-stage=<%= @stage.action %> data-human-player=<%= @game.next_player_human? %> data-bid-slug=<%= @bids.winning_bid_slug %> />
+  <input hidden=true name="game[action]" value=<%= @action %> id="js-stage" data-stage=<%= @action %> data-human-player=<%= @game.next_player_human? %> data-bid-slug=<%= @bids.winning_bid_slug %> />
 
   <%= render 'players', form: form %>
 
-  <% if @stage.action == 'make_bid' && @game.next_player_human? %>
+  <% if @action == 'make_bid' && @game.next_player_human? %>
     <%= render 'bid', player: @player %>
   <% end %>
 
-  <% if @stage.action == 'make_announcement' && @game.next_player_human? %>
+  <% if @action == 'make_announcement' && @game.next_player_human? %>
     <%= render 'announcement', player: @player, form: form %>
   <% end %>
 
   <%= render 'hand', form: form %>
 
-  <% if @stage.action == 'pick_king' %>
+  <% if @action == 'pick_king' %>
     <%= render 'kings'  %>
   <% end %>
 
-  <% if @stage.show_talon? %>
+  <% if ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
     <%= render 'talon', talon: @game.talon %>
   <% end %>
 
-  <% if ['play_card', 'next_trick', 'finished'].include?(@stage.action) %>
+  <% if ['play_card', 'next_trick', 'finished'].include?(@action) %>
     <%= render 'trick', cards: @tricks.trick_cards, form: form %>
   <% end %>
 

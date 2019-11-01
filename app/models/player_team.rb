@@ -50,7 +50,9 @@ class PlayerTeam
   end
 
   def announced?(slug)
-    Announcement.find_by(slug: slug, player_id: players.map(&:id), game_id: @game.id).present?
+    @game.announcements
+      .find { |a| a.slug == slug && players.map(&:id).include?(a.player_id) }
+      .present?
   end
 
   def points

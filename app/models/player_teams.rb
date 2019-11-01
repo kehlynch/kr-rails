@@ -128,6 +128,6 @@ class PlayerTeams
   end
 
   def partner
-    Card.find_by(slug: @king, game_id: @game.id)&.player
+    @game.cards.find { |c| c.slug == @king }&.player
   end
 end

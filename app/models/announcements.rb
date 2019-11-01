@@ -35,7 +35,7 @@ class Announcements
 
   def initialize(announcements, game)
     @game = game
-    @announcements = announcements.order(:id).to_a
+    @announcements = announcements.sort_by(&:id)
     @players = @game.players
   end
 
