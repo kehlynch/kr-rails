@@ -10,8 +10,6 @@ class CardPicker
     if @bird_announced && legal_cards.any?(&:trump?)
       return legal_cards.select(&:trump?).sample
     end
-    p 'legal_cards'
-    p legal_cards
     legal_cards.sample
   end
 end

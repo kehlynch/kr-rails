@@ -2,7 +2,7 @@ class MatchesController < ApplicationController
   def new
     @match = Match.new
     4.times do |i|
-      @match.players.build({'position' => i})
+      @match.players.build({'position' => i, human: i == 0})
     end
   end
 
@@ -12,12 +12,7 @@ class MatchesController < ApplicationController
 
     game = match.deal_game
 
-    p game
-
     player = match.players.find_by(human: true)
-
-    p match_params
-    p match.errors
     redirect_to edit_match_player_game_path(match, player, game)
   end
 

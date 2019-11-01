@@ -2,7 +2,7 @@ class PlayerPresenter
   attr_reader :player
   attr_accessor :active
 
-  delegate :forehand?, :human?, :position, :id, :announcements, :points, :team_points, :game_points, :winner?, to: :player
+  delegate :declarer?, :forehand?, :human?, :position, :id, :announcements, :points, :team_points, :game_points, :winner?, to: :player
 
   def initialize(player, game)
     @player = player
@@ -40,7 +40,7 @@ class PlayerPresenter
 
   def known_partner
     king_played = @game.cards.find do |c|
-      c.trick_id.nil? && c.slug == @game.king
+      c.trick_id.present? && c.slug == @game.king
     end.present?
     @game.partner&.id == @player&.id && king_played
   end

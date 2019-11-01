@@ -110,7 +110,7 @@ class MessagePresenter
     add_picked_king_info()
 
     @msg << "#{declarer_name} take#{s_if_needed(declarer)} the whole talon."
-    add_click_to_continue
+    @msg << "click to continue..."
   end
 
   def resolve_talon_msg

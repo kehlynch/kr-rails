@@ -24,8 +24,8 @@ module GameHelper
     )
   end
 
-  def talon_half(cards, index, game, stage)
-    is_pickable = game.declarer_human? && stage.action == 'pick_talon'
+  def talon_half(cards, index, game, action)
+    is_pickable = game.declarer_human? && action == 'pick_talon'
     pickable_class = is_pickable ? "pickable" : ""
     onclick = game.declarer_human? ? "submitGame(talon_#{index})" : ""
 

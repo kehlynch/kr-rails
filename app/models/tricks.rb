@@ -56,7 +56,6 @@ class Tricks
     # start of first trick - forehand player always leads for now
     return @players.forehand if !current_trick
 
-    p current_trick.started?
     return @tricks[-2].won_player if !current_trick.started?
 
     # mid trick - find next player

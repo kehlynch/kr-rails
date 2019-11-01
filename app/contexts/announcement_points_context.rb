@@ -5,7 +5,7 @@ class AnnouncementPointsContext
   end
 
   def points_for(team)
-    p = {
+    {
       'pagat' => bird_points(1, team),
       'uhu' => bird_points(2, team),
       'kakadu' => bird_points(3, team),
@@ -13,9 +13,6 @@ class AnnouncementPointsContext
       'forty_five' => forty_five_points(team),
       'valat' => valat_points(team)
     }
-    p 'points_for'
-    p p 
-    return p
   end
 
   private

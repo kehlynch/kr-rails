@@ -12,7 +12,7 @@ class Hand
   end
 
   def find_card(slug)
-    find_by(slug: slug)
+    find { |c| c.slug == slug }
   end
 
   def pagat
@@ -32,15 +32,15 @@ class Hand
   end
 
   def cards_in_led_suit?
-    find_by(suit: @led_suit).present?
+    find { |c| c.suit == @led_suit }.present?
   end
 
   def trumps?
-    find_by(suit: 'trump').present?
+    find { |c| c.suit == 'trump' }.present?
   end
 
   def trumps
-    where(suit: 'trump')
+    select { |c| c.suit == 'trump' }
   end
 
   def trump_legal?
@@ -58,6 +58,6 @@ class Hand
   private
 
   def led_suit_cards
-    where(suit: @led_suit)
+    select { |c| c.suit == @led_suit }
   end
 end

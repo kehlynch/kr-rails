@@ -9,7 +9,7 @@ class Trick < ApplicationRecord
   end
   
   def find_card(slug)
-    cards.find_by(slug: slug)
+    cards.find { |c| c.slug == slug }
   end
 
   def next_played_index

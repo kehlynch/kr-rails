@@ -15,7 +15,6 @@ class PlayerTeam
   end
 
   def include?(player)
-    p @players
     @players.map(&:id).include?(player&.id)
   end
 

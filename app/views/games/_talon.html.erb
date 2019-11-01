@@ -1,5 +1,5 @@
 <div class="talon-container">
   <% talon.each_with_index do |cards, index| %>
-    <%= talon_half(cards, index) %>
+    <%= talon_half(cards, index, @game, @action) %>
   <% end %>
 </div>

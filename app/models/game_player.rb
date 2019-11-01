@@ -67,7 +67,7 @@ class GamePlayer
   end
 
   def suit_cards(suit)
-    hand.where(suit: suit)
+    hand.select { |c| c.suit == suit }
   end
 
   def points
