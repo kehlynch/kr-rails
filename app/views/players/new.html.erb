@@ -1,0 +1,7 @@
+<div class="container">
+  <h1>Join Game</h1>
+  <%= bootstrap_form_for([@match, @player]) do |f| %>
+    <%= f.text_field :name, label: "Name", class: "form-control", placeholder: "name" %>
+    <%= f.submit "join game", class: "btn btn-primary" %>
+  <% end %>
+</div>

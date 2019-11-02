@@ -1,0 +1,15 @@
+<div class="container">
+  <h1>Games</h1>
+  <% @matches.each do |match| %>
+    <div class="row pb-2">
+      <div class="col">
+        <%= link_to "Join Game with #{match.players.find(&:human).name}", new_match_player_path(match), class: "btn btn-outline-dark" %>
+      </div>
+    </div>
+  <% end %>
+  <div class="row">
+    <div class="col">
+      <%= link_to "New Game", new_match_path, class: "btn btn-outline-dark" %>
+    </div>
+  </div>
+</div>

@@ -1,19 +1,8 @@
 <div class="container">
   <h1>Create Players</h1>
-  <%= form_for(@match) do |f| %>
-    <%= f.fields_for :players do |player_fields| %>
-      <%= player_fields.hidden_field :position %>
-      <div class="row pb-2">
-        <div class="col">
-          <%= player_fields.text_field :name, class: "form-control", placeholder: "name" %>
-        </div>
-        <div class="col">
-          <%= player_fields.check_box :human %>
-          <%= player_fields.label :human %>
-        </div>
-      </div>
-    <% end %>
-
+  <%= bootstrap_form_for(@match) do |f| %>
+    <%= f.text_field :human_name, label: "Name", class: "form-control", placeholder: "name" %>
+    <%= f.select :human_count, @human_count_select, label: "Game setup" %>
     <%= f.submit "create game", class: "btn btn-primary" %>
   <% end %>
 </div>

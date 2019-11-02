@@ -7,8 +7,8 @@ class Player < ApplicationRecord
   has_many :games, through: :match
 
   before_save do |player|
-    if player.name.empty?
-      player.name = ['Mary', 'Clare', 'David', 'Katherine'][player.position]
+    if player.name.blank?
+      player.name = Names::NAMES.reject { |n| match.players.map(&:name).include?(n) }.sample
     end
   end
 
