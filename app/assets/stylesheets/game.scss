@@ -2,50 +2,51 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$grey-blue: rgb(224, 224, 235);
+$light-green: rgba(51, 102, 0, 0.2);
+
 body {
   background-color: white;
   display: flex;
   justify-content: center;
 }
 
-.info-card {
-  display: grid;
-  grid-column: 5;
-  grid-row: 1;
-  background-color: transparent;
-  .card-body {
-    display: flex;
-    align-items: center;
-  }
+.center-container {
+  grid-column: 2 / span 3;
+  grid-row: 3 / span 3;
+  align-self: center;
 }
 
 .new-game-button-container {
-  grid-column: 1;
-  grid-row: 6;
-  justify-self: flex-start;
+  grid-column: 5;
+  grid-row: 7;
+  justify-self: flex-end;
   align-self: flex-end;
 }
 
 .game-container {
-  background-color: rgba(51, 102, 0, 0.2);
+  background-color: $grey-blue;
   padding: 1rem;
-  grid-column: 1 / span 5;
   display: grid;
   justify-items: center;
   grid-gap: 10px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 2fr;
+  grid-template-rows: 2fr 1fr 2fr 1fr 2fr 1fr 2fr;
   height: 100vh;
   max-height: 100vh;
+  width: 130vh;
   max-width: 130vh;
 }
 
 .finished-buttons {
   grid-column: 3 / span 3;
-  grid-row: 6;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 2px;
+
+  grid-template-rows: auto;
   justify-self: flex-end;
-  max-width: 540px;
-  padding-left: 4rem;
 }
 
 .score-container {

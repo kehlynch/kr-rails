@@ -1,4 +1,4 @@
-<div class="bid-buttons-container">
+<div class="bid-buttons-container center-container">
   <% @bids.valid_bids.each do |slug, name| %>
     <input hidden=true id="<%= slug %>" name="game[make_bid]" type="checkbox" value="<%= slug %>" />
     <%= bid_button(slug, name) %>

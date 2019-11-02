@@ -1,4 +1,16 @@
 <div class="message card">
+  <div class="card-header">
+    <% if @action == 'make_bid' %>
+      Bidding
+    <% else %>
+      <%= @bids.winning_bid_name %>
+      <% if @game.king %>
+        <div class="card-container king-indicator">
+          <%= card_tag(@game.king) %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
   <div class="card-body">
     <% message.each do |m| %>
       <p class="card-text">

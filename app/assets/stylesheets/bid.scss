@@ -1,14 +1,13 @@
-.bid-buttons-container, .announcement-buttons-container, .kings-container, .talon-container, .center-container {
-  grid-column: 2 / span 3;
-  grid-row: 2 / span 3;
-  align-self: center;
-
-  padding: 0 4rem;
+.bid-buttons-container, .talon-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  grid-gap: 0.4rem;
 
   .submit-announcements-button {
     background-color: white;
     &:hover {
-      color: red;
+      color: green;
       &:disabled {
         color: #343a40;
       }

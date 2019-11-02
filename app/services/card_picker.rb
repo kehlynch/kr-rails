@@ -8,8 +8,14 @@ class CardPicker
   def pick
     legal_cards = @hand.select(&:legal?)
     if @bird_announced && legal_cards.any?(&:trump?)
-      return legal_cards.select(&:trump?).sample
+      return legal_cards.select(&:trump?).sample if perc(80)
     end
     legal_cards.sample
+  end
+
+  private
+
+  def perc(percentage)
+    rand > percentage/100
   end
 end

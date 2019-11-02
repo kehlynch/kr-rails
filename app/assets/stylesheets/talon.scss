@@ -1,20 +1,21 @@
 .talon-container {
+  display: flex;
   flex-direction: column;
-  align-self: center;
 }
 
 .talon-half-container {
   display: flex;
+  padding: 1rem;
 }
 
 .talon-half-container.pickable:hover {
   z-index: 1;
   border-radius: 5px;
   cursor: pointer;
-  border: 2px solid green;
+  background-color: green;
 }
 
 .talon-half-container.picked {
   border-radius: 5px;
-  border: 2px solid green;
+  border: 6px solid green;
 }

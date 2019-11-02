@@ -3,11 +3,6 @@
 
   <%= render 'message', message: @message %>
 
-  <% if @action != 'make_bid' %>
-    <%= render 'info' %>
-  <% end %>
-
-
   <%= render 'players', form: form %>
 
   <% if @action == 'make_bid' && @game.next_player_human? %>
@@ -37,19 +32,23 @@
     <%= render 'matches/points' %>
   <% end %>
 
-  <% if true %>
-  <% end %>
-
   <div class="new-game-button-container">
     <%= link_to 'New game', new_match_path, class: 'btn btn-outline-dark new-game-button' %>
   </div>
 
   <% if @game.stage == 'finished' %>
     <div class="finished-buttons">
-      <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
+      <div>
+        <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
+      </div>
 
-      <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
-      <%= form.submit "next hand", class: 'btn btn-outline-dark new-game-button' %>
+      <div>
+        <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
+      </div>
+
+      <div>
+        <%= form.submit "next hand", class: 'btn btn-outline-dark new-game-button' %>
+      </div>
     </div>
   <% end %>
 <% end %>

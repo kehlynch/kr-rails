@@ -1,3 +1,5 @@
+$row-start: 2;
+
 .player-container {
   .card {
     background-color: transparent;
@@ -9,7 +11,7 @@
 .player-container {
   &.number-1 {
     grid-column: 3;
-    grid-row: 5;
+    grid-row: $row-start + 4;;
   }
 }
 
@@ -17,7 +19,7 @@
 .player-container {
   &.number-2 {
     grid-column: 5;
-    grid-row: 3;
+    grid-row: $row-start + 2;;
     align-self: center;
   }
 }
@@ -26,7 +28,7 @@
 .player-container {
   &.number-3 {
     grid-column: 3;
-    grid-row: 1;
+    grid-row: $row-start;
     align-self: end;
   }
 }
@@ -35,7 +37,7 @@
 .player-container {
   &.number-4 {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: $row-start + 2;
     align-self: center;
   }
 }

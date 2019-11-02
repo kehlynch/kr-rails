@@ -1,16 +1,24 @@
+$white-transparent: rgba(255, 255, 255, 0.5);
 .message {
-  grid-column: 1;
+  background-color: $white-transparent;
+  grid-column: 1 / span 2;
   grid-row: 1 / span 2;
   width: 100%;
   color: #6c757d;
-  .card-body {
-    padding: 0.5rem;
-  }
   p {
     margin-bottom: 0;
-    font-size: 0.8rem;
+    // font-size: 0.8rem;
     &:last-of-type {
       color: green;
     }
+  }
+  .card-body {
+    overflow: scroll;
+
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 }
