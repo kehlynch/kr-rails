@@ -1,7 +1,13 @@
 <div class="announcement-buttons-container">
-  <% @announcements.valid_announcements.each do |slug, name| %>
-    <input hidden=true id="<%= slug %>" name="game[make_announcement][]" type="checkbox" value="<%= slug %>" />
-    <%= announcement_button(slug, name) %>
-  <% end %>
-  <%= form.submit 'make announcements', disabled: true, id: 'announcements-submit', class: 'btn btn-outline-dark submit-announcements-button' %>
+  <div class="announcement-buttons">
+    <% @announcements.valid_announcements.each do |slug, name| %>
+      <div>
+        <input hidden=true id="<%= slug %>" name="game[make_announcement][]" type="checkbox" value="<%= slug %>" />
+        <%= announcement_button(slug, name) %>
+      </div>
+    <% end %>
+  </div>
+  <div class="d-flex justify-content-center">
+    <%= form.submit 'make announcements', disabled: true, id: 'announcements-submit', class: 'btn btn-outline-dark submit-announcements-button' %>
+  </div>
 </div>

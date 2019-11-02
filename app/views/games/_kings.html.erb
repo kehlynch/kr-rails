@@ -1,8 +1,8 @@
-<div class="kings-container d-flex">
+<div class="kings-container">
   <% ['club_8', 'diamond_8', 'heart_8', 'spade_8'].each do |card_slug| %>
     <div class="card-container">
       <input hidden=true id="pick_king_<%= card_slug %>" name="game[pick_king]" type="checkbox" value=<%= card_slug %> />
-      <%= king_card_button(card_slug, @player.hand, @game) %>
+      <%= king_card_button(card_slug, @player, @game) %>
     </div>
   <% end %>
 </div>

@@ -3,22 +3,16 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 body {
-  // display: grid;
-  // justify-items: center;
-  // grid-gap: 10px;
-  // grid-template-columns: 2fr 3fr 3fr 3fr 2fr;
-  // grid-template-rows: auto;
-  // justify-items: center;
-  // align-items: center;
-
-  background-color: rgba(51, 102, 0, 0.2);
+  background-color: white;
+  display: flex;
+  justify-content: center;
 }
 
 .info-card {
+  display: grid;
+  grid-column: 5;
+  grid-row: 1;
   background-color: transparent;
-  position: absolute;
-  right: 4rem;
-  top: 2rem;
   .card-body {
     display: flex;
     align-items: center;
@@ -26,38 +20,38 @@ body {
 }
 
 .new-game-button-container {
-  position: absolute;
-  bottom: 2rem;
-  left: 4rem;
-}
-
-.message {
-  position: absolute;
-  top: 2rem;
-  left: 4rem;
-  width: 20rem;
-  p {
-    margin-bottom: 0;
-  }
-  p:last-of-type {
-    font-size: 1.4rem;
-    color: green;
-  }
+  grid-column: 1;
+  grid-row: 6;
+  justify-self: flex-start;
+  align-self: flex-end;
 }
 
 .game-container {
+  background-color: rgba(51, 102, 0, 0.2);
+  padding: 1rem;
   grid-column: 1 / span 5;
   display: grid;
   justify-items: center;
   grid-gap: 10px;
-  grid-template-columns: 1fr 18.625rem 1fr;
-  grid-template-rows: 1fr 18.625rem 1fr
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 2fr;
+  height: 100vh;
+  max-height: 100vh;
+  max-width: 130vh;
 }
 
 .finished-buttons {
-  display: flex;
-  justify-content: space-between;
+  grid-column: 3 / span 3;
+  grid-row: 6;
+  justify-self: flex-end;
   max-width: 540px;
   padding-left: 4rem;
-  
+}
+
+.score-container {
+  display: none;
+}
+
+.kings-container {
+  display: flex;
 }

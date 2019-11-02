@@ -18,7 +18,7 @@ class GamesController < ApplicationController
     @action = @game.stage
     @bids = BidsPresenter.new(@game)
     @announcements = AnnouncementsPresenter.new(@game)
-    @match_games = Game.where(match_id: @match_id)
+    @match_games = Match.find(@match_id).games
     @match_players = Player.where(match_id: @match_id)
     @player_id = params[:player_id].to_i
     @players = PlayersPresenter.new(@game, @player_id)
@@ -28,9 +28,9 @@ class GamesController < ApplicationController
     @player.active = true
   end
 
-
   def update
     game = find_game
+    path = edit_match_player_game_path(params[:match_id], params[:player_id], game)
     case game_params[:action]
       when 'make_bid'
         game.make_bid!(game_params[:make_bid])
@@ -51,8 +51,14 @@ class GamesController < ApplicationController
         game.play_current_trick!(card_slug)
       when 'next_trick'
         game.play_next_trick!
+      when 'finished'
+        if game.finished?
+          new_game = game.match.deal_game
+          path = edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
+        end
     end
-    redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
+
+    redirect_to path
   end
 
   def destroy

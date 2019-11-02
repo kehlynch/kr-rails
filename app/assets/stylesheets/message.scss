@@ -1,0 +1,16 @@
+.message {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 100%;
+  color: #6c757d;
+  .card-body {
+    padding: 0.5rem;
+  }
+  p {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    &:last-of-type {
+      color: green;
+    }
+  }
+}

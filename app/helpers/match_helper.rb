@@ -34,7 +34,10 @@ module MatchHelper
   end
 
   def bid_classes(game)
-    'off' if !game.winners.include?(game.declarer)
+    classes = []
+    classes << 'vs-three' if ['solo', 'solo_dreier'].include?(game.bids.highest&.slug) && game.player_teams.defence.length == 3
+    classes << 'off' if !game.winners.include?(game.declarer)
+    classes.join(' ')
   end
 
   def announcement_shorthands(game)

@@ -1,4 +1,5 @@
 .points-container {
+  display: none;
   font-weight: normal;
   td {
     color: red;
@@ -24,13 +25,22 @@
     color: green;
   }
   
-  td.bid {
+  td.game-shorthands {
     display: flex;
     color: black;
-    &.off {
-      text-decoration: line-through;
+    .bid-shorthand {
+      &.off {
+        text-decoration: line-through;
+      }
+      &.vs-three {
+        &:after {
+          content: "3";
+          vertical-align: sub;
+          font-size: smaller;
+        }
+      }
     }
-    .announcements {
+    .announcement-shorthands {
       display: inline-block;
       span {
         margin-left: 2px;
@@ -43,7 +53,7 @@
         &.defence {
           &:after {
             content: "D";
-            vertical-align: sub;
+            vertical-align: super;
             font-size: smaller;
           }
         }

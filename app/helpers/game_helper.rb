@@ -19,7 +19,7 @@ module GameHelper
       name,
       alt: name,
       type: 'button',
-      class: 'btn btn-outline-dark js-submit-game',
+      class: 'announcement-button btn btn-outline-dark js-submit-game',
       onclick: "toggleAnnouncement(#{slug})"
     )
   end
@@ -57,9 +57,9 @@ module GameHelper
     card_tag(card.slug, classes: classes, onclick: onclick)
   end
 
-  def king_card_button(card_slug, hand, game)
-    own_king = hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
-    pickable = game.declarer_human? ? 'pickable' : ''
+  def king_card_button(card_slug, player, game)
+    own_king = player.hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
+    pickable = player.declarer? ? 'pickable' : ''
     classes = "js-submit-game #{pickable} #{own_king}"
     onclick = card_action(card_slug, 'pick_king')
     card_tag(card_slug, classes: classes, onclick: onclick)

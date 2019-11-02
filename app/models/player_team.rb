@@ -1,6 +1,6 @@
 class PlayerTeam
   attr_reader :players, :announcement_status
-  delegate :map, to: :players
+  delegate :map, :length, to: :players
 
   def initialize(players, game:, talon:, bid:, king:, defence: false)
     @game = game

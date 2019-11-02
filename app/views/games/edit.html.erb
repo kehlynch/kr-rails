@@ -1,15 +1,12 @@
-<div class="message">
-  <% @message.each do |m| %>
-    <p><%= m %></p>
-  <% end %>
-</div>
-
-<% if @action != 'make_bid' %>
-  <%= render 'info' %>
-<% end %>
-
 <%= form_with model: @game, url: match_player_game_path(@match_id, @player_id, @game.id), local: true, html: {id: "gameForm"}, class: 'game-container' do |form| %>
-  <input hidden=true name="game[action]" value=<%= @action %> id="js-stage" data-stage=<%= @action %> data-human-player=<%= @game.next_player_human? %> data-bid-slug=<%= @bids.winning_bid_slug %> />
+  <input hidden=true name="game[action]" value=<%= @action %> id="js-stage" data-stage=<%= @action %> data-human-player=<%= @game.next_player_human? %> data-bid-slug=<%= @player.declarer? && @bids.winning_bid_slug %> />
+
+  <%= render 'message', message: @message %>
+
+  <% if @action != 'make_bid' %>
+    <%= render 'info' %>
+  <% end %>
+
 
   <%= render 'players', form: form %>
 
@@ -42,17 +39,17 @@
 
   <% if true %>
   <% end %>
-<% end %>
 
-<% if @game.stage == 'finished' %>
-  <div class="finished-buttons">
-    <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
-
-    <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
-    <%= form_with scope: :game, url: match_player_games_path(@match_id, @player_id), local: true, class: 'new-hand-button-container' do |form| %>
-      <%= form.submit "next hand", class: 'btn btn-outline-dark new-game-button' %>
-    <% end %>
+  <div class="new-game-button-container">
+    <%= link_to 'New game', new_match_path, class: 'btn btn-outline-dark new-game-button' %>
   </div>
-<% end %>
 
-<%= link_to 'New game', new_match_path, class: 'btn btn-outline-dark new-game-button' %>
+  <% if @game.stage == 'finished' %>
+    <div class="finished-buttons">
+      <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
+
+      <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
+      <%= form.submit "next hand", class: 'btn btn-outline-dark new-game-button' %>
+    </div>
+  <% end %>
+<% end %>

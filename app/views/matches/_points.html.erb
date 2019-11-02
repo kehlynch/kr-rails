@@ -1,12 +1,12 @@
-<div class="score-container points-container" id="js-points-container">
+<div class="points-container center-container" id="js-points-container">
   <table class="table">
     <thead>
       <tr>
         <% @players.each do |p| %>
           <th scope="col"><%= p.name %></th>
         <% end %>
+        <th scope="col"></th>
       </tr>
-      <th scope="col"></th>
     </thead>
     <tbody>
       <% match_points(@match_games, @player).each_with_index do |points, i| %>
@@ -19,9 +19,11 @@
                 </div>
               </td>
             <% end %>
-            <td class="bid <%= bid_classes(@game) %>">
-              <div><%= bid_shorthand(@match_games[i]) %></div>
-              <%= announcement_shorthands(@match_games[i]) %>
+            <td class="game-shorthands">
+              <div class="bid-shorthand <%= bid_classes(@match_games[i]) %>"><%= bid_shorthand(@match_games[i]) %></div>
+              <div class="announcement-shorthands">
+                <%= announcement_shorthands(@match_games[i]) %>
+              </div>
             </td>
           </tr>
         <% end %>

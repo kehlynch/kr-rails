@@ -1,11 +1,9 @@
-.bid-buttons-container, .announcement-buttons-container {
-  grid-column: 1 / span 3;
-  justify-items: center;
-  // button.selected {
-  //   color: #fff;
-  //   background-color: #343a40;
-  //   border-color: #343a40;
-  // }
+.bid-buttons-container, .announcement-buttons-container, .kings-container, .talon-container, .center-container {
+  grid-column: 2 / span 3;
+  grid-row: 2 / span 3;
+  align-self: center;
+
+  padding: 0 4rem;
 
   .submit-announcements-button {
     background-color: white;
@@ -18,4 +16,13 @@
   }
 }
 
+.announcement-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
 
+.announcement-button {
+  width: 8rem;
+  margin: 1rem;
+}

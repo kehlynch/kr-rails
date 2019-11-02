@@ -40,7 +40,7 @@ class Announcements
   end
 
   def make_announcements!(announcement_slugs)
-    add_announcements!(announcement_slugs) if !announcement_slugs.nil?
+    add_announcements!(announcement_slugs) if announcement_slugs.present?
     until !next_player || next_player.human? || finished?
       announcement_slugs = next_player.pick_announcements(valid_announcements)
       add_announcements!(announcement_slugs)

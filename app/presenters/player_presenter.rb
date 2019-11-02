@@ -42,7 +42,7 @@ class PlayerPresenter
     king_played = @game.cards.find do |c|
       c.trick_id.present? && c.slug == @game.king
     end.present?
-    @game.partner&.id == @player&.id && king_played
+    @game.partner&.id == @player&.id && (king_played || active?)
   end
 
   def role
