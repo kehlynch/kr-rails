@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount ActionCable.server => '/channels'
+
   resources :matches, only: [:create, :new, :index] do
     resources :players, only: [:show, :new, :create] do
       resources :games, only: [:create, :edit, :update, :destroy]

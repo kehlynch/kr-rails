@@ -31,7 +31,7 @@ class Announcements
 
   attr_reader :announcements
 
-  delegate :each, :map, :select, :find, to: :announcements
+  delegate :each, :map, :select, :find, :any?, to: :announcements
 
   def initialize(announcements, game)
     @game = game

@@ -25,6 +25,7 @@ class GamesController < ApplicationController
     @tricks = TricksPresenter.new(@game, @players)
     @player = @players.first
     @message = MessagePresenter.new(@game, @action, @player).message
+    @waiting = @game.next_player.id != @player.id
     @player.active = true
   end
 
@@ -56,6 +57,10 @@ class GamesController < ApplicationController
           new_game = game.match.deal_game
           path = edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
         end
+    end
+    
+    if game_params[:action] != 'finished'
+      ActionCable.server.broadcast("MessageChannel", sent_by: "Kat", body: "hello")
     end
 
     redirect_to path

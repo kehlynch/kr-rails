@@ -17,6 +17,7 @@
 //= require jquery3
 //= require popper
 //= require bootstrap-sprockets
+//= require cable
 
 function submitGame(checkbox) {
   console.log("submitGame");
@@ -131,3 +132,26 @@ function pageClicked() {
 }
 
 attachClickers()
+this.App = {};
+
+App.cable = ActionCable.createConsumer();  
+App.messages = App.cable.subscriptions.create('MessagesChannel', {  
+  received: function(data) {
+    console.log("received");
+    console.log(data);
+    if ($("#reload-on-match-msg").data()) {
+      // const matchId = $("#reload-on-game-msg").data().matchId;
+      location.reload();
+    }
+    // $("#messages").removeClass('hidden')
+    // return $('#messages').append(this.renderMessage(data));
+  },
+
+  renderMessage: function(data) {
+    return "<p> <b>" + data.user + ": </b>" + data.message + "</p>";
+  }
+});
+
+$(document).ready(function() {
+  $("#js-message-box").scrollTop($("#js-message-box")[0].scrollHeight)
+})

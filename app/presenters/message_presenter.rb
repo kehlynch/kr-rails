@@ -185,7 +185,7 @@ class MessagePresenter
   # TODO rename this
   def add_click_to_continue
     if @game.next_player_human?
-      @msg << "Waiting for #{@game.next_player.name}, refresh page to continue..."
+      @msg << "Waiting for #{@game.next_player.name}"
     else
       @msg << "Click to continue."
     end

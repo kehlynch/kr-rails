@@ -54,6 +54,10 @@ class GamePlayer
     team.announced?(slug)
   end
 
+  def announced_individually?(slug)
+    @game.announcements.any? { |a| a.player_id == id && a.slug == slug }
+  end
+
   def defence?
     team&.defence?
   end
@@ -110,7 +114,8 @@ class GamePlayer
   
   def pick_announcements(_valid_announcements)
     bird_required = @game.bids.bird_required? && @game.bids.highest&.player_id == id
-    AnnouncementPicker.new(hand: hand, bird_required: bird_required).pick
+    bird_announced_by_player = ['pagat', 'uhu', 'kakadu'].any? { |a| announced_individually?(a) }
+    AnnouncementPicker.new(hand: hand, bird_required: bird_required && !bird_announced_by_player).pick
   end
 
   def pick_card
