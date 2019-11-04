@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">
-      <% if (@game.next_player.id == player.id) && !player.active? %>
+      <% if (@game.next_player&.id == player.id) && !player.active? %>
         <div class="spinner-grow spinner-grow-sm text-secondary mb-1" role="status">
           <span class="sr-only">Loading...</span>
         </div>

@@ -18,6 +18,7 @@ class MatchesController < ApplicationController
     end
 
     if match_params[:human_count].to_i == 1
+      match.players.reload
       game = match.deal_game
 
       redirect_to edit_match_player_game_path(match, human_player, game)

@@ -25,7 +25,7 @@ class GamesController < ApplicationController
     @tricks = TricksPresenter.new(@game, @players)
     @player = @players.first
     @message = MessagePresenter.new(@game, @action, @player).message
-    @waiting = @game.next_player.id != @player.id
+    @waiting = @game.next_player&.id != @player.id
     @player.active = true
   end
 
