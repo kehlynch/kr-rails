@@ -64,11 +64,9 @@ class GamesController < ApplicationController
 
     player = PlayersPresenter.new(game, params[:player_id].to_i).first
     message = MessagePresenter.new(game, game.stage, player).message
-    announce(game, action: :info, message: message, stage: game.stage, next_player: game.next_player.id, current_trick_index: game.current_trick&.trick_index)
+    announce(game, action: :info, message: message, stage: game.stage, next_player: game.next_player&.id, current_trick_index: game.current_trick&.trick_index)
 
-    if params[:player_id].to_i == game.next_player.id
-      broadcast_player_info(game)
-    end
+    broadcast_player_info(game)
   end
 
   def destroy
@@ -82,7 +80,7 @@ class GamesController < ApplicationController
 
   def broadcast_player_info(game)
     player = Player.find(params[:player_id])
-    my_move = game.next_player.id == player.id
+    my_move = game.next_player&.id == player.id
     announce_player(player, my_move: my_move)
     case game.stage
       when 'make_bid'
@@ -94,12 +92,14 @@ class GamesController < ApplicationController
       # when 'pick_whole_talon'
       # when 'resolve_talon'
       # when 'resolve_whole_talon'
-      when 'play_card'
-        game_player = GamePlayer.new(player, game)
-        hand = HandPresenter.new(game_player.hand).sorted.map { |c| {slug: c.slug, legal: c.legal?} }
-        announce_player(player, hand: hand)
       # when 'next_trick'
       # when 'finished'
+    end
+
+    if ['play_card', 'resolve_talon', 'make_announcement', 'finished'].include?(game.stage)
+      game_player = GamePlayer.new(player, game)
+      hand = HandPresenter.new(game_player.hand).sorted.map { |c| {slug: c.slug, legal: c.legal?} }
+      announce_player(player, hand: hand)
     end
   end
 

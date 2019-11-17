@@ -25,6 +25,11 @@ function addValidBid(slug) {
   $(`#js-valid-bids`).append(button)
 }
 
+function addValidBids(slugs) {
+  $(`#js-valid-bids`).empty();
+  slugs.forEach(addValidBid)
+}
+
 function setWonBid(slug, declarerPosition) {
   [0, 1, 2, 3].forEach((player) => {
     $(`#js-player-${player}-bids`).empty();

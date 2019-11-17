@@ -27,16 +27,19 @@ function submitGame(checkbox) {
   document.getElementById('gameForm').submit();
 }
 
+function nextHand() {
+  document.getElementById('gameForm').submit();
+  // reload();
+}
+
 function showScores() {
-  document.getElementById('js-trick-container').style.display = 'none';
-  document.getElementById('js-score-container').style.display = 'block';
-  document.getElementById('js-points-container').style.display = 'none';
+  $('#js-score-container').removeClass('d-none');
+  $('#js-points-container').addClass('d-none');
 }
 
 function showPoints() {
-  document.getElementById('js-trick-container').style.display = 'none';
-  document.getElementById('js-score-container').style.display = 'none';
-  document.getElementById('js-points-container').style.display = 'block';
+  $('#js-points-container').removeClass('d-none');
+  $('#js-score-container').addClass('d-none');
 }
 
 function attachClickers() {
@@ -48,7 +51,12 @@ function pageClicked() {
   if ( gameStage == 'next_trick' || gameStage == 'pick_whole_talon') {
     document.getElementById('gameForm').submit();
   } else if (gameStage == 'play_card') {
-    revealTrick(currentTrickIndex());
+    if (myMove()) {
+      revealTrick(currentTrickIndex());
+    } else {
+      // I think this is just to start the first trick if we're not declarer
+      document.getElementById('gameForm').submit();
+    }
   } else if (!myMove()) {
     if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king' || gameStage == 'make_bid' || gameStage == 'make_announcement') {
       document.getElementById('gameForm').submit();

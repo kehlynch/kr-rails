@@ -1,4 +1,4 @@
-<div class="points-container center-container" id="js-points-container">
+<div class="points-container center-container <%= visible ? '' : 'd-none' %>" id="js-points-container">
   <div class="points-container-grid">
     <% @players.each do |p| %>
       <div class="d-flex justify-content-center">

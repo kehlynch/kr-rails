@@ -73,6 +73,7 @@ class PlayerTeam
   end
 
   def game_points
+    return 0 unless @game.finished?
     bid_points = winner? ? @bid.points : -@bid.points
 
     defence_count = @defence ? @players.length : 4 - @players.length

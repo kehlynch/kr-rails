@@ -3,7 +3,7 @@
 
 function addPlayerInfo(data) {
   if (data.valid_bids) {
-    data.valid_bids.forEach(addValidBid)
+    addValidBids(data.valid_bids)
   } else if (data.valid_announcements) {
     addValidAnnouncements(data.valid_announcements);
   } else if (data.hand) {
@@ -20,6 +20,7 @@ function showPickedTalon(index) {
 }
 
 function createSubscriptions() {
+  console.log("creating subscriptions");
   this.App = {};
   App.cable = ActionCable.createConsumer();  
   App.messages = App.cable.subscriptions.create({channel: 'MessagesChannel', id: gameId()}, {  

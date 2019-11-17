@@ -36,7 +36,6 @@ function addValidAnnouncement(slug) {
 function addValidAnnouncements(slugs) {
   $(`#js-valid-announcement-buttons`).empty();
   slugs.forEach(addValidAnnouncement)
-  $("#js-valid-announcements").removeClass("d-none");
 }
 
 function toggleAnnouncement(slug) {

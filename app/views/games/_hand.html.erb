@@ -8,8 +8,13 @@
     </div>
   <% end %>
 </div>
-<% if human_resolve_talon?(@game, @player) %>
-  <div class="center-container">
-    <%= form.submit 'put down cards', disabled: true, id: 'talon-submit', class: 'btn btn-outline-dark new-game-button' %>
-  </div>
-<% end %>
+<div class="center-container">
+  <%=
+    form.submit(
+      'put down cards',
+      disabled: true,
+      id: 'talon-submit',
+      class: "btn btn-outline-dark new-game-button #{human_resolve_talon?(@game, @player) ? '' : 'd-none'}"
+    )
+  %>
+</div>
