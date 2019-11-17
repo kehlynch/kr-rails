@@ -1,4 +1,4 @@
-<div class="row pl-4 pr-4 justify-content-center hand-container">
+<div class="row pl-4 pr-4 justify-content-center hand-container"  id="js-hand">
   <% @player.hand.each do |card| %>
     <div class="card-container hand">
       <% if hand_card_pickable?(@game, @player, @action) %>

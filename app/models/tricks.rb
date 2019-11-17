@@ -1,4 +1,5 @@
 class Tricks
+  include Announcer
   attr_reader :tricks
   delegate :select, :last, :[], to: :tricks
   def initialize(tricks, game)
@@ -33,6 +34,7 @@ class Tricks
     player = next_player
     add_trick! if !current_trick
     current_trick.add_card(card_slug, player) if card_slug
+    announce(@game, action: 'play_card', player: player.id, card_slug: card_slug)
     @tricks.reload
   end
 

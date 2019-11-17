@@ -3,7 +3,7 @@ class Hand
 
   attr_reader :cards
 
-  delegate :empty?, :find, :length, :each, :select, :filter, :sort_by, to: :cards
+  delegate :empty?, :find, :length, :each, :select, :filter, :sort_by, :map, to: :cards
 
   def initialize(cards, game)
     @cards = cards

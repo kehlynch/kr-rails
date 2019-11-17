@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-body">
+  <div class="card-body" id="player-<%= player.position %>" >
     <h5 class="card-title">
       <% if (@game.next_player&.id == player.id) && !player.active? %>
         <div class="spinner-grow spinner-grow-sm text-secondary mb-1" role="status">
@@ -8,27 +8,33 @@
       <% end %>
       <%= player.name(false) %>
     </h5>
-    <% if player.forehand? %>
-      <h6 class="card-subtitle mb-2 text-muted">Forehand</h6>
-    <% end %>
-    <% if player.human? && !player.active? %>
-      <h6>
-        <%= link_to 'human', edit_match_player_game_path(@match_id, player.id, @game), target: '_blank', class:'card-subtitle mb-2 text-muted' %>
-      </h6>
-    <% end %>
-    <% if player.role == 'declarer' %>
-      <h6 class="card-subtitle mb-2 text-muted">Declarer</h6>
-    <% end %>
-    <% if player.known_partner %>
-      <h6 class="card-subtitle mb-2 text-muted">Partner</h6>
-    <% end %>
-    <h6 class="card-subtitle mb-2 text-muted">
-      <%= player.announcements_text %>
-    </h6>
-    <% if @action == 'make_bid' %>
-      <% player.bids.each do |bid| %>
-        <p class="card-text"><%= bid %></p>
+    <div id="player-<%= player.position %>-top-info">
+      <% if player.forehand? %>
+        <h6 class="card-subtitle mb-2 text-muted">Forehand</h6>
       <% end %>
-    <% end %>
+      <% if player.human? && !player.active? %>
+        <h6>
+          <%= link_to 'human', edit_match_player_game_path(@match_id, player.id, @game), target: '_blank', class:'card-subtitle mb-2 text-muted' %>
+        </h6>
+      <% end %>
+      <% if player.role == 'declarer' %>
+        <h6 class="card-subtitle mb-2 text-muted">Declarer</h6>
+      <% end %>
+      <% if player.known_partner %>
+        <h6 class="card-subtitle mb-2 text-muted">Partner</h6>
+      <% end %>
+    </div>
+    <div id="js-player-<%= player.position %>-announcements">
+      <h6 class="card-subtitle mb-2 text-muted">
+        <%= player.announcements_text %>
+      </h6>
+    </div>
+    <div id="js-player-<%= player.position %>-bids">
+      <% if @action == 'make_bid' %>
+        <% player.bids.each do |bid| %>
+          <h6 class="card-subtitle mb-2 text-muted"><%= bid %></h6>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </div>

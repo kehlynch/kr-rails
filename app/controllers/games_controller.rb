@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  include Announcer
   helper_method :game
 
   def create
@@ -25,13 +26,15 @@ class GamesController < ApplicationController
     @tricks = TricksPresenter.new(@game, @players)
     @player = @players.first
     @message = MessagePresenter.new(@game, @action, @player).message
-    @waiting = @game.next_player&.id != @player.id
     @player.active = true
+    @my_move = @game.next_player&.id == @player.id
+    @waiting = !@my_move
   end
 
   def update
     game = find_game
-    path = edit_match_player_game_path(params[:match_id], params[:player_id], game)
+    # path = edit_match_player_game_path(params[:match_id], params[:player_id], game)
+    player = Player.find(params[:player_id])
     case game_params[:action]
       when 'make_bid'
         game.make_bid!(game_params[:make_bid])
@@ -55,15 +58,17 @@ class GamesController < ApplicationController
       when 'finished'
         if game.finished?
           new_game = game.match.deal_game
-          path = edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
+          redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
         end
     end
-    
-    if game_params[:action] != 'finished'
-      ActionCable.server.broadcast("MessageChannel", sent_by: "Kat", body: "hello")
-    end
 
-    redirect_to path
+    player = PlayersPresenter.new(game, params[:player_id].to_i).first
+    message = MessagePresenter.new(game, game.stage, player).message
+    announce(game, action: :info, message: message, stage: game.stage, next_player: game.next_player.id)
+
+    if params[:player_id].to_i == game.next_player.id
+      broadcast_player_info(game)
+    end
   end
 
   def destroy
@@ -74,6 +79,29 @@ class GamesController < ApplicationController
   end
 
   private
+
+  def broadcast_player_info(game)
+    player = Player.find(params[:player_id])
+    my_move = game.next_player.id == player.id
+    announce_player(player, my_move: my_move)
+    case game.stage
+      when 'make_bid'
+        announce_player(player, valid_bids: game.bids.valid_bids)
+      when 'make_announcement'
+        announce_player(player, valid_announcements: game.announcements.valid_announcements)
+      # when 'pick_king'
+      # when 'pick_talon'
+      # when 'pick_whole_talon'
+      # when 'resolve_talon'
+      # when 'resolve_whole_talon'
+      when 'play_card'
+        game_player = GamePlayer.new(player, game)
+        hand = HandPresenter.new(game_player.hand).sorted.map { |c| {slug: c.slug, legal: c.legal?} }
+        announce_player(player, hand: hand)
+      # when 'next_trick'
+      # when 'finished'
+    end
+  end
 
   def find_game
     Game.find(params[:id])

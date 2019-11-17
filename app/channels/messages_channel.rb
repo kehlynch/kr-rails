@@ -1,6 +1,7 @@
 class MessagesChannel < ApplicationCable::Channel
 	def subscribed
-		stream_from match_channel
+    game = Game.find(params[:id])
+    stream_for game
 	end
 
 	def receive
@@ -9,10 +10,10 @@ class MessagesChannel < ApplicationCable::Channel
 		ActionCable.server.broadcast(match_channel, message: 'message received!', head: :ok)
 	end
 
-  private
+  # private
 
-  def match_channel
-    "MessageChannel"
-    # "MessageChannel_#{params[:match_id]}"
-  end
+  # def match_channel
+  #   "MessageChannel"
+  #   # "MessageChannel_#{params[:match_id]}"
+  # end
 end

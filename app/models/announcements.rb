@@ -1,4 +1,6 @@
 class Announcements
+  include Announcer
+
   PASS = 'pass'
   PAGAT = 'pagat'
   UHU = 'uhu'
@@ -50,6 +52,8 @@ class Announcements
   def valid_announcements
     player = next_player
 
+    return [] unless player # announcing not started
+    
     valid = SLUGS
 
     if player.defence? || !@game.king
@@ -80,9 +84,10 @@ class Announcements
   private
 
   def add_announcements!(slugs)
-    player_id = next_player.id
+    player = next_player
     slugs.each do |slug|
-      @announcements << Announcement.create(slug: slug, game_id: @game.id, player_id: player_id)
+      @announcements << Announcement.create(slug: slug, game_id: @game.id, player_id: player.id)
+      announce(@game, action: 'announcement', player: player.position, announcement: slug)
     end
   end
 end

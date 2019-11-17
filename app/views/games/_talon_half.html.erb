@@ -1,4 +1,4 @@
-<%= hidden_field_tag("game[pick_talon]", index, id: "talon_#{index}", type: "checkbox") %>
+<input hidden=true id="talon_<%= index %>" name="game[pick_talon]" type="checkbox" value="<%= index %>" />
 <% cards.each do |card| %>
   <div class="card-container">
     <%= card_tag(card.slug) %>

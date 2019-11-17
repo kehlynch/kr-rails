@@ -1,4 +1,4 @@
-<div class="talon-container center-container">
+<div class="talon-container center-container <%= visible ? "" : "d-none" %>" id="js-talon">
   <% talon.each_with_index do |cards, index| %>
     <%= talon_half(cards, index, @game, @action) %>
   <% end %>

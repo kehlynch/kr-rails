@@ -1,4 +1,5 @@
 class Bids
+  include Announcer
   PASS = 'pass'
   RUFER = 'rufer'
   SOLO = 'solo'
@@ -49,6 +50,10 @@ class Bids
       bid_slug = next_bidder.pick_bid(valid_bids)
       add_bid!(bid_slug)
     end
+
+    if finished?
+      announce(@game, action: 'bid_won', slug: highest.slug, declarer: declarer.position)
+    end
   end
 
   def valid_bids
@@ -57,7 +62,7 @@ class Bids
 
       return RUFER_SLUGS if highest&.slug == RUFER
 
-      raise 'bidding finished'
+			return []
     else
       return [PASS] if @bids.any? { |b| b.slug == PASS && b.player == next_bidder }
 
@@ -137,6 +142,8 @@ class Bids
   private
 
   def add_bid!(bid_slug)
-    @bids << Bid.create(slug: bid_slug, game_id: @game.id, player_id: next_bidder.id)
+    player = next_bidder
+    @bids << Bid.create(slug: bid_slug, game_id: @game.id, player_id: player.id)
+    announce(@game, action: 'bid', player: player.position, bid: bid_slug)
   end
 end

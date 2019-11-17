@@ -1,4 +1,5 @@
 class Game < ApplicationRecord
+  include Announcer
   belongs_to :match
   has_many :cards
   has_many :_announcements, class_name: 'Announcement'
@@ -84,11 +85,14 @@ class Game < ApplicationRecord
 
   def pick_king!(king_slug)
     self.king = king_slug || declarer.pick_king
+    announce(self, action: :king, king_slug: self.king)
+
     save
   end
 
   def pick_talon!(talon_half_index)
     talon.pick_talon!(talon_half_index, declarer)
+    announce(self, action: :talon, talon_half_index: talon_half_index)
 
     update(talon_picked: talon_half_index)
   end
@@ -149,7 +153,7 @@ class Game < ApplicationRecord
   end
 
   def declarer_human?
-    declarer.human?
+    declarer&.human?
   end
 
   def partner

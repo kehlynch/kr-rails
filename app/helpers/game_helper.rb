@@ -9,8 +9,8 @@ module GameHelper
       name,
       alt: name,
       type: 'button',
-      class: 'btn btn-outline-dark js-submit-game',
-      onclick: "submitGame(#{slug})"
+      class: 'btn btn-outline-dark',
+      onclick: "submitBid(#{slug})"
     )
   end
   
@@ -19,8 +19,8 @@ module GameHelper
       name,
       alt: name,
       type: 'button',
-      class: 'announcement-button btn btn-outline-dark js-submit-game',
-      onclick: "toggleAnnouncement(#{slug})"
+      class: 'announcement-button btn btn-outline-dark',
+      onclick: "toggleAnnouncement('#{slug}')"
     )
   end
 
@@ -34,7 +34,8 @@ module GameHelper
     content_tag(
       :div,
       onclick: onclick,
-      class: "talon-half-container #{pickable_class} #{picked_class}"
+      class: "talon-half-container #{pickable_class} #{picked_class}",
+      id: "js-talon-half-#{index}"
     ) do
       render('talon_half', cards: cards, index: index)
     end
@@ -52,7 +53,7 @@ module GameHelper
     pickable = hand_card_pickable?(game, player, action)
     pickable_class = pickable ? 'pickable' : ''
     illegal_class = pickable && !card.legal? ? 'illegal' : ''
-    classes = "js-submit-game #{pickable_class} #{illegal_class}"
+    classes = "#{pickable_class} #{illegal_class}"
     onclick = pickable && card.legal? && card_action(card.slug, action)
     card_tag(card.slug, classes: classes, onclick: onclick)
   end
@@ -60,7 +61,7 @@ module GameHelper
   def king_card_button(card_slug, player, game)
     own_king = player.hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
     pickable = player.declarer? ? 'pickable' : ''
-    classes = "js-submit-game #{pickable} #{own_king}"
+    classes = "#{pickable} #{own_king}"
     onclick = card_action(card_slug, 'pick_king')
     card_tag(card_slug, classes: classes, onclick: onclick)
   end

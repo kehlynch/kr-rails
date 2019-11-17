@@ -1,5 +1,7 @@
-<%= form_with model: @game, url: match_player_game_path(@match_id, @player_id, @game.id), local: true, html: {id: "gameForm"}, class: 'game-container' do |form| %>
-  <input hidden=true name="game[action]" value=<%= @action %> id="js-stage" data-stage=<%= @action %> data-human-player=<%= @game.next_player_human? %> data-bid-slug=<%= @player.declarer? && @bids.winning_bid_slug %> />
+<%= form_with model: @game, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
+  <input id="js-state" hidden=true data-stage=<%= @action %> data-my-move=<%= @my_move %> data-won-bid=<%= @player.declarer? && @bids.winning_bid_slug %> data-player-id=<%= @player.id %> data-game-id=<%= @game.id %> />
+  <input id="js-stage" hidden=true name="game[action]" value=<%= @action %> />
+
   <% if @waiting %>
     <input hidden=true id="reload-on-match-msg" data-match-id=<%= @match_id %> />
   <% end %>
@@ -8,23 +10,15 @@
 
   <%= render 'players', form: form %>
 
-  <% if @action == 'make_bid' && @game.next_player&.id == @player.id %>
-    <%= render 'bid', player: @player %>
-  <% end %>
+  <%= render 'bid', player: @player, visible: @action == 'make_bid' && @my_move %>
 
-  <% if @action == 'make_announcement' && @game.next_player.id == @player.id %>
-    <%= render 'announcement', player: @player, form: form %>
-  <% end %>
+  <%= render 'announcement', player: @player, visible: @action == 'make_announcement' && @my_move, form: form %>
 
   <%= render 'hand', form: form %>
 
-  <% if @action == 'pick_king' %>
-    <%= render 'kings'  %>
-  <% end %>
+  <%= render 'kings', visible: @action == 'pick_king'  %>
 
-  <% if ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
-    <%= render 'talon', talon: @game.talon %>
-  <% end %>
+  <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
 
   <% if ['play_card', 'next_trick', 'finished'].include?(@action) %>
     <%= render 'trick', cards: @tricks.trick_cards, form: form %>

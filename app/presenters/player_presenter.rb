@@ -11,10 +11,7 @@ class PlayerPresenter
   end
 
   def hand
-    display_order = ['trump', 'heart', 'spade', 'diamond', 'club']
-    @player.hand.sort_by do |c|
-      [display_order.index(c.suit), -c.value]
-    end
+    HandPresenter.new(@player.hand).sorted
   end
 
   def active?
@@ -46,9 +43,9 @@ class PlayerPresenter
   end
 
   def role
-    return 'declarer' if @game.declarer == @player
+    return 'declarer' if @game.declarer&.id == @player.id
 
-    return 'partner' if @game.partner == @player
+    return 'partner' if @game.partner&.id == @player.id
 
     return ''
   end
