@@ -48,6 +48,9 @@ function createSubscriptions() {
       if (action == 'play_card') {
         addTrickCard(data.card_slug, data.trick_index, data.player)
       }
+      if (action == 'score') {
+        addScore(data.scores)
+      }
 
       if (action == 'info') {
         setNextPlayer(data.next_player);

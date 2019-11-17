@@ -4,7 +4,7 @@ function addTrickCard(slug, trickIndex, playerPosition) {
   const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg">`;
   getOrAddTrick(trickIndex).append(`<div class="card-container trick-card-container position-${playerPosition}">${card}</div>`);
   if ($(`#js-trick-${trickIndex}`).find("img").length == 4) {
-    $(`#js-next-trick-${trickIndex}`).removeClass('d-none');
+    // TODO alert to click for next trick
   }
 }
 
@@ -19,9 +19,7 @@ function getOrAddTrick(trickIndex) {
 
 function addTrick(trickIndex, id) {
   const visibleClass = trickIndex == 0 ? '' : 'd-none';
-  const button = `<button name="button" type="button" class="btn btn-outline-dark" onclick="revealTrick('${trickIndex + 1}')">Next trick</button>`
-  const buttonContainer = `<div class="next-trick-button-container d-none" id="js-next-trick-${trickIndex}">${button}</div>`
-  $("#js-tricks").prepend(`<div class="trick-container ${visibleClass}" id="${id}">${buttonContainer}</div>`)
+  $("#js-tricks").prepend(`<div class="trick-container ${visibleClass}" id="${id}"></div>`)
 }
 
 function revealTrick(trickIndex) {

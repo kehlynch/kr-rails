@@ -66,7 +66,13 @@ class GamesController < ApplicationController
     message = MessagePresenter.new(game, game.stage, player).message
     announce(game, action: :info, message: message, stage: game.stage, next_player: game.next_player&.id, current_trick_index: game.current_trick&.trick_index)
 
+    announce(game, action: :info, message: message, stage: game.stage, next_player: game.next_player&.id, current_trick_index: game.current_trick&.trick_index)
+
     broadcast_player_info(game)
+
+    if game.finished?
+      broadcast_scores(game, params[:player_id].to_i)
+    end
   end
 
   def destroy
@@ -77,6 +83,22 @@ class GamesController < ApplicationController
   end
 
   private
+
+  def broadcast_scores(game, player_id)
+    players = PlayersPresenter.new(game, player_id).map do |player|
+      {
+        name: player.name,
+        won_tricks_count: player.won_tricks_count,
+        points: player.points,
+        team_points: player.team_points,
+        game_points: player.game_points,
+        icon: winner_icon(player),
+        winner: player.winner?
+      }
+    end
+
+    announce(game, action: :score, scores: players)
+  end
 
   def broadcast_player_info(game)
     player = Player.find(params[:player_id])

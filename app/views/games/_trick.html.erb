@@ -6,14 +6,4 @@
         <% end %>
     </div>
   <% end %>
-  <div class="next-trick-button-container <%= cards.compact.length == 4 ? '' : 'd-none' %>", id="js-next-trick-<%= trick_index %>">
-    <%=
-      button_tag(
-        'Next trick',
-        type: 'button',
-        class: "btn btn-outline-dark",
-        onclick: "revealTrick('#{trick_index + 1}')"
-      )
-    %>
-  </div>
 </div>

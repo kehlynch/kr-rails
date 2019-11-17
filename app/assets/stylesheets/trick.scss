@@ -28,14 +28,6 @@ $west-row: 2;
   display: contents;
 }
 
-.next-trick-button-container {
-  grid-column: 2;
-  grid-row: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .trick-card-container {
   // human player - south
   &.position-0 {
