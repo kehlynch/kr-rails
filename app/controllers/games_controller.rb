@@ -82,6 +82,11 @@ class GamesController < ApplicationController
     player = Player.find(params[:player_id])
     my_move = game.next_player&.id == player.id
     announce_player(player, my_move: my_move)
+
+    if game.partner_known_by?(player.id)
+      announce_player(player, partner: game.partner.position)
+    end
+
     case game.stage
       when 'make_bid'
         announce_player(player, valid_bids: game.bids.valid_bids)

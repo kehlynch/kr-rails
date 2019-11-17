@@ -39,7 +39,7 @@ function setWonBid(slug, declarerPosition) {
   // delete made bids
   $(`#player-${declarerPosition}-bids`).empty();
   // add declarer indicator
-  $(`#player-${declarerPosition}-top-info`).append(`<h6 class="card-subtitle mb-2 text-muted">Declarer</h6>`);
+  $(`#js-player-${declarerPosition}-declarer-indicator`).removeClass('d-none');
   $("#js-valid-bids").empty();
   setState('won-bid', slug);
   // TODO I think this breaks in multiplayer - we'll need to start identifying players by ID?

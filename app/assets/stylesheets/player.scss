@@ -41,3 +41,36 @@ $row-start: 2;
     align-self: center;
   }
 }
+
+.forehand-indicator {
+  display: inline-block;
+  background-color: green;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  &:after {
+    content: 'F';
+  }
+}
+
+.declarer-indicator {
+  display: inline-block;
+  background-color: blue;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  &:after {
+    content: 'D';
+  }
+}
+
+.partner-indicator {
+  display: inline-block;
+  background-color: purple;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  &:after {
+    content: 'P';
+  }
+}

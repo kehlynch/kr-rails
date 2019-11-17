@@ -8,6 +8,8 @@ function addPlayerInfo(data) {
     addValidAnnouncements(data.valid_announcements);
   } else if (data.hand) {
     updateHand(data.hand);
+  } else if (data.partner) {
+    $(`#js-player-${data.partner}-partner-indicator`).removeClass('d-none');
   }
 }
 

@@ -168,6 +168,21 @@ class Game < ApplicationRecord
     tricks.finished?
   end
 
+  def partner_known_by?(player_id)
+    return false unless bids.finished?
+
+    return true if partner&.id == player_id
+
+    king_in_talon = talon.find { |c| c.slug == king }
+    return true if king_in_talon && bids.highest.talon?
+
+    king_played = cards.find do |c|
+      c.trick_id.present? && c.slug == king
+    end.present?
+
+    return king_played
+  end
+
   private
 
 end

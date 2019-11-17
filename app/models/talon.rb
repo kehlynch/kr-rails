@@ -1,11 +1,13 @@
 class Talon
 
-  attr_reader :talon
+  attr_reader :talon, :cards
 
   delegate :each_with_index, to: :talon
+  delegate :find, to: :cards
 
   def initialize(cards, game)
     @game_id = game.id
+    @cards = cards
 
     @talon = cards.select do |c|
       c.talon_half.present? 
