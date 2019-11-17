@@ -1,11 +1,9 @@
 <div class="trick-container" id="js-trick-container">
-  <% cards.each_with_index do |card, i| %>
-    <div class="trick-card-container">
-      <div class="card-container">
+  <% cards.each_with_index do |card, position| %>
+    <div class="card-container trick-card-container position-<%= position %>">
         <% if card %>
-          <%= card_tag(card.slug, classes: "trickcard", landscape: [1,3].include?(i)) %>
+          <%= card_tag(card.slug, classes: "trickcard", landscape: [1,3].include?(position)) %>
         <% end %>
-      </div>
     </div>
   <% end %>
 </div>

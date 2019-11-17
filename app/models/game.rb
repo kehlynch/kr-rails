@@ -133,7 +133,7 @@ class Game < ApplicationRecord
       return announcements.next_player
     elsif ['pick_king', 'pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(stage)
       return declarer
-    elsif ['play_card', 'play_card'].include?(stage)
+    elsif ['play_card', 'play_card', 'next_trick'].include?(stage)
       return tricks.next_player
     elsif stage == 'finished'
       return nil

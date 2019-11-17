@@ -1,0 +1,3 @@
+function addTrickCard(slug, playerId) {
+
+}

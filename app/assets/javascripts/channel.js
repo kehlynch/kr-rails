@@ -42,6 +42,9 @@ function createSubscriptions() {
       if (action == 'announcement') {
         addAnnouncement(data.announcement, data.player)
       }
+      if (action == 'play_card') {
+        addTrickCard(data.card_slug, data.player)
+      }
 
       if (action == 'info') {
         setNextPlayer(data.next_player);

@@ -25,38 +25,33 @@ $west-row: 2;
   grid-auto-flow: column;
 }
 
-// human player - south
-.trick-card-container:nth-of-type(1) {
-  grid-column: $south-column;
-  grid-row: $south-row;
-}
-
-// east
-.trick-card-container:nth-of-type(2) {
-  grid-column: $east-column;
-  grid-row: $east-row;
-  .card-container {
+.trick-card-container {
+  // human player - south
+  &.position-0 {
+    grid-column: $south-column;
+    grid-row: $south-row;
+  }
+  // east
+  &.position-1 {
+    grid-column: $east-column;
+    grid-row: $east-row;
     height: 3.75rem;
     width: 6.875rem;
+    align-self: center;
   }
-  align-self: center;
-}
-
-// north
-.trick-card-container:nth-of-type(3) {
-  grid-column: $north-column;
-  grid-row: $north-row;
-}
-
-// west
-.trick-card-container:nth-of-type(4) {
-  grid-column: $west-column;
-  grid-row: $west-row;
-  .card-container {
-    height: 3.75rem;
-    width: 6.875rem;
+  // north
+  &.position-2 {
+    grid-column: $north-column;
+    grid-row: $north-row;
   }
-  align-self: center;
+  // west
+  &.position-3 {
+    grid-column: $west-column;
+    grid-row: $west-row;
+      height: 3.75rem;
+      width: 6.875rem;
+    align-self: center;
+  }
 }
 
 .trick-button {

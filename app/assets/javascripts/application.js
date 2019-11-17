@@ -21,8 +21,7 @@
 
 function submitGame(checkbox) {
   if (checkbox) {
-    checkbox.checked = true;
-    console.log("submitGame", checkbox);
+    $(checkbox).prop('checked', true)
   }
   document.getElementById('gameForm').submit();
 }

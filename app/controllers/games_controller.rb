@@ -51,7 +51,7 @@ class GamesController < ApplicationController
       when 'resolve_whole_talon'
         game.resolve_talon!(game_params[:resolve_whole_talon])
       when 'play_card'
-        card_slug = game_params[:play_card][0] if game_params[:play_card] 
+        card_slug = game_params[:play_card][0] if game_params[:play_card]
         game.play_current_trick!(card_slug)
       when 'next_trick'
         game.play_next_trick!
