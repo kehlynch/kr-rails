@@ -18,7 +18,7 @@
           <td><%= player.points %></td>
           <td><%= player.team_points %></td>
           <td><%= player.game_points %></td>
-          <td><%= winner_icon(player) %></td>
+          <td class="<%= player.winner? ? 'score-winner' : '' %>"></td>
         </tr>
       <% end %>
     </tbody>

@@ -1,0 +1,12 @@
+<input
+  id="js-state"
+  hidden=true
+  data-stage=<%= @action %>
+  data-my-move=<%= @my_move %>
+  data-won-bid=<%= @bids.winning_bid_slug %>
+  data-is-declarer=<%= @player.declarer?  %>
+  data-player-id=<%= @player.id %>
+  data-player-position=<%= @player.position %>
+  data-game-id=<%= @game.id %>
+  data-current-trick=<%= @game.current_trick&.trick_index %>
+/>

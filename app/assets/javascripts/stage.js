@@ -38,13 +38,10 @@ function changeStage(stage) {
     $("#js-valid-bids").addClass("d-none");
     $("#js-kings").addClass("d-none");
     $("#js-talon").addClass("d-none");
-    if (myMove) {
-      $("#js-valid-announcements").removeClass("d-none");
-    }
   }
 
   if (stage == 'play_card') {
-    removeAnnouncements;
+    removeAnnouncements();
     $("#js-tricks").removeClass("d-none");
     $("#js-valid-announcements").addClass("d-none");
     $("#js-valid-bids").addClass("d-none");
@@ -55,6 +52,6 @@ function changeStage(stage) {
   if (stage == 'finished') {
     $("#js-tricks").addClass("d-none");
     $("#js-finished-buttons").removeClass("d-none");
-    showHandScores();
+    showScores();
   }
 }

@@ -1,36 +1,23 @@
-function stage() {
-  return state().stage;
-}
+function stage() { return state().stage; }
 
-function wonBid() {
-  return state().wonBid;
-}
+function wonBid() { return state().wonBid; }
 
-function isDeclarer() {
-  return state().isDeclarer == 'true';
-}
+function isDeclarer() { return state().isDeclarer == 'true'; }
 
-function myMove() {
-  return state().myMove == 'true';
-}
+function myMove() { return state().myMove == 'true'; }
+
+function gameId() { return state().gameId; }
+
+function playerId() { return state().playerId; }
+
+function playerPosition() { return state().playerPosition; }
+
+function currentTrickIndex() { return state().currentTrick; }
+
+function visibleTrickIndex() { return state().visibleTrick; }
 
 function meToPlayCard() {
   return myMove() && (currentTrickIndex() == visibleTrickIndex());
-}
-function playerId() {
-  return state().playerId;
-}
-
-function gameId() {
-  return state().gameId;
-}
-
-function currentTrickIndex() {
-  return state().currentTrick;
-}
-
-function visibleTrickIndex() {
-  return state().visibleTrick;
 }
 
 function state() {

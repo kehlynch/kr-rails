@@ -29,26 +29,22 @@ $west-row: 2;
 }
 
 .trick-card-container {
-  // human player - south
-  &.position-0 {
+  &.south {
     grid-column: $south-column;
     grid-row: $south-row;
   }
-  // east
-  &.position-1 {
+  &.east {
     grid-column: $east-column;
     grid-row: $east-row;
     height: 3.75rem;
     width: 6.875rem;
     align-self: center;
   }
-  // north
-  &.position-2 {
+  &.north {
     grid-column: $north-column;
     grid-row: $north-row;
   }
-  // west
-  &.position-3 {
+  &.west {
     grid-column: $west-column;
     grid-row: $west-row;
       height: 3.75rem;

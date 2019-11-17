@@ -3,6 +3,11 @@ module GameHelper
     return "" unless player.winner?
     return "⭐️"
   end
+
+  def player_compass_position(player_pos, active_player_pos)
+    index = (active_player_pos - player_pos) % 4
+    ['south', 'east', 'north', 'west'][index]
+  end
   
   def bid_button(slug, name)
     button_tag(

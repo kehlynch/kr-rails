@@ -1,5 +1,5 @@
 <%= form_with model: @game, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
-  <input id="js-state" hidden=true data-stage=<%= @action %> data-my-move=<%= @my_move %> data-won-bid=<%= @bids.winning_bid_slug %> data-is-declarer=<%= @player.declarer? %> data-player-id=<%= @player.id %> data-game-id=<%= @game.id %> data-current-trick=<%= @game.current_trick&.trick_index %> />
+  <%= render 'state' %>
   <input id="js-stage" hidden=true name="game[action]" value=<%= @action %> />
 
   <% if @waiting %>

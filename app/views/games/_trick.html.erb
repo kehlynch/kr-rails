@@ -1,9 +1,10 @@
 <div class="trick-container <%= visible ? '' : 'd-none' %>" id="js-trick-<%= trick_index %>">
   <% cards.each_with_index do |card, position| %>
-    <div class="card-container trick-card-container position-<%= position %>">
-        <% if card %>
-          <%= card_tag(card.slug, classes: "trickcard", landscape: [1,3].include?(position)) %>
-        <% end %>
+    <% compass = player_compass_position(position, @player.position) %>
+    <div class="card-container trick-card-container <%= compass %>">
+      <% if card %>
+        <%= card_tag(card.slug, classes: "trickcard", landscape: ['east', 'west'].include?(compass)) %>
+      <% end %>
     </div>
   <% end %>
 </div>

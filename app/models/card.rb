@@ -70,6 +70,9 @@ class Card < ApplicationRecord
       return true if player.forced_cards.include?(slug)
       return false
     end
+    
+    p '****illegal_cards'
+    p player.illegal_cards
 
     return false if player.illegal_cards.include?(slug)
 

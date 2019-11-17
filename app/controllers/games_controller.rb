@@ -57,8 +57,8 @@ class GamesController < ApplicationController
         raise 'not doing next_trick anymore'
       when 'finished'
         if game.finished?
-          new_game = game.match.deal_game
-          redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
+          # new_game = game.match.deal_game
+          # redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
         end
     end
 
@@ -92,7 +92,6 @@ class GamesController < ApplicationController
         points: player.points,
         team_points: player.team_points,
         game_points: player.game_points,
-        icon: winner_icon(player),
         winner: player.winner?
       }
     end
@@ -109,18 +108,20 @@ class GamesController < ApplicationController
       announce_player(player, partner: game.partner.position)
     end
 
-    case game.stage
-      when 'make_bid'
-        announce_player(player, valid_bids: game.bids.valid_bids)
-      when 'make_announcement'
-        announce_player(player, valid_announcements: game.announcements.valid_announcements)
-      # when 'pick_king'
-      # when 'pick_talon'
-      # when 'pick_whole_talon'
-      # when 'resolve_talon'
-      # when 'resolve_whole_talon'
-      # when 'next_trick'
-      # when 'finished'
+    if my_move
+      case game.stage
+        when 'make_bid'
+          announce_player(player, valid_bids: game.bids.valid_bids)
+        when 'make_announcement'
+          announce_player(player, valid_announcements: game.announcements.valid_announcements)
+        # when 'pick_king'
+        # when 'pick_talon'
+        # when 'pick_whole_talon'
+        # when 'resolve_talon'
+        # when 'resolve_whole_talon'
+        # when 'next_trick'
+        # when 'finished'
+      end
     end
 
     if ['play_card', 'resolve_talon', 'make_announcement', 'finished'].include?(game.stage)

@@ -14,12 +14,12 @@ function addAnnouncement(slug, player) {
   $(`#js-player-${player}-announcements`).append(`<h6 class="card-subtitle mb-2 text-muted">${name}</h6>`)
 }
 
-function removeAnnouncements(player) {
+function removePlayerAnnouncements(player) {
   $(`#js-player-${player}-announcements`).empty();
 }
 
 function removeAnnouncements() {
-  [0, 1, 2, 3].forEach((p) => removeAnnouncements(p));
+  [0, 1, 2, 3].forEach((p) => removePlayerAnnouncements(p));
 }
 
 // announcement picking buttons
@@ -36,6 +36,7 @@ function addValidAnnouncement(slug) {
 function addValidAnnouncements(slugs) {
   $(`#js-valid-announcement-buttons`).empty();
   slugs.forEach(addValidAnnouncement)
+  $("#js-valid-announcements").removeClass("d-none");
 }
 
 function toggleAnnouncement(slug) {

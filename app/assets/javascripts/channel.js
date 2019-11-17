@@ -49,7 +49,7 @@ function createSubscriptions() {
         addTrickCard(data.card_slug, data.trick_index, data.player)
       }
       if (action == 'score') {
-        addScore(data.scores)
+        addScores(data.scores)
       }
 
       if (action == 'info') {

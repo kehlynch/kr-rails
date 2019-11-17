@@ -2,7 +2,8 @@ function addTrickCard(slug, trickIndex, playerPosition) {
   console.log('addTrickCard', slug, playerPosition);
   const imageFile = [1, 3].includes(playerPosition) ? `landscape_${slug}` : slug;
   const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg">`;
-  getOrAddTrick(trickIndex).append(`<div class="card-container trick-card-container position-${playerPosition}">${card}</div>`);
+  const compass = compassPosition(playerPosition)
+  getOrAddTrick(trickIndex).append(`<div class="card-container trick-card-container ${compass}">${card}</div>`);
   if ($(`#js-trick-${trickIndex}`).find("img").length == 4) {
     // TODO alert to click for next trick
   }
@@ -10,7 +11,6 @@ function addTrickCard(slug, trickIndex, playerPosition) {
 
 function getOrAddTrick(trickIndex) {
   const id = `js-trick-${trickIndex}`
-  // initialize as invisible, reveal with nextTrick button, unless 1st trick
   if ($(`#${id}`).length == 0) {
     addTrick(trickIndex, id);
   }
@@ -18,6 +18,7 @@ function getOrAddTrick(trickIndex) {
 }
 
 function addTrick(trickIndex, id) {
+  // initialize as invisible, reveal with nextTrick button, unless 1st trick
   const visibleClass = trickIndex == 0 ? '' : 'd-none';
   $("#js-tricks").prepend(`<div class="trick-container ${visibleClass}" id="${id}"></div>`)
 }
@@ -30,4 +31,10 @@ function revealTrick(trickIndex) {
   getOrAddTrick(trickIndex).removeClass('d-none');
   setState('visible-trick', trickIndex);
   updateHandPickable();
+}
+
+function compassPosition(pos) {
+  const compassPoints = ['south', 'east', 'north', 'west'];
+  const index = Math.abs(playerPosition() - pos) % 4;
+  return compassPoints[index]
 }

@@ -15,6 +15,9 @@ body {
   grid-column: 2 / span 3;
   grid-row: 3 / span 3;
   align-self: center;
+  table {
+    display: contents;
+  }
 }
 
 .new-game-button-container {
