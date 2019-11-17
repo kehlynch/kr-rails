@@ -1,0 +1,13 @@
+<div id="js-tricks" class="tricks-container <%= visible ? '' : 'd-none' %>">
+  <% tricks.each_with_index do |trick, i| %>
+    <%=
+      render(
+        'trick',
+        cards: trick.cards,
+        trick_index: trick.trick_index,
+        visible: i == 0,
+        form: form
+      )
+    %>
+  <% end %>
+</div>

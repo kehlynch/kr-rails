@@ -1,4 +1,4 @@
-<div class="trick-container" id="js-trick-container">
+<div class="trick-container <%= visible ? '' : 'd-none' %>" id="js-trick-<%= trick_index %>">
   <% cards.each_with_index do |card, position| %>
     <div class="card-container trick-card-container position-<%= position %>">
         <% if card %>
@@ -6,4 +6,14 @@
         <% end %>
     </div>
   <% end %>
+  <div class="next-trick-button-container <%= cards.compact.length == 4 ? '' : 'd-none' %>", id="js-next-trick-<%= trick_index %>">
+    <%=
+      button_tag(
+        'Next trick',
+        type: 'button',
+        class: "btn btn-outline-dark",
+        onclick: "revealTrick('#{trick_index + 1}')"
+      )
+    %>
+  </div>
 </div>

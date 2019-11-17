@@ -14,12 +14,23 @@ function myMove() {
   return state().myMove == 'true';
 }
 
+function meToPlayCard() {
+  return myMove() && (currentTrickIndex() == visibleTrickIndex());
+}
 function playerId() {
   return state().playerId;
 }
 
 function gameId() {
   return state().gameId;
+}
+
+function currentTrickIndex() {
+  return state().currentTrick;
+}
+
+function visibleTrickIndex() {
+  return state().visibleTrick;
 }
 
 function state() {

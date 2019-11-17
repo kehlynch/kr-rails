@@ -2,18 +2,11 @@ class TricksPresenter
 
   attr_reader :tricks
 
-  delegate :current_trick_finished?, to: :tricks
+  delegate :current_trick_finished?, :each_with_index, :[], to: :tricks
 
-  def initialize(game, players)
+  def initialize(game)
     @tricks = game.tricks
-    @players = players
-  end
-
-  def trick_cards
-    cards = @tricks.current_trick_cards
-
-    @players.map do |p|
-      cards.find { |c| c.player.id == p.id }
-    end
+      .sort_by { |t| -t.trick_index }
+      .map { |t| TrickPresenter.new(t) }
   end
 end

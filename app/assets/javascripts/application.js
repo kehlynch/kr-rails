@@ -23,6 +23,7 @@ function submitGame(checkbox) {
   if (checkbox) {
     $(checkbox).prop('checked', true)
   }
+  console.log('submitGame', checkbox);
   document.getElementById('gameForm').submit();
 }
 
@@ -46,10 +47,10 @@ function pageClicked() {
   const gameStage = stage();
   if ( gameStage == 'next_trick' || gameStage == 'pick_whole_talon') {
     document.getElementById('gameForm').submit();
-  // } else if ( gameStage == 'finished') {
-  //   showScores();
+  } else if (gameStage == 'play_card') {
+    revealTrick(currentTrickIndex());
   } else if (!myMove()) {
-    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king' || gameStage == 'make_bid' || gameStage == 'play_card' || gameStage == 'make_announcement') {
+    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king' || gameStage == 'make_bid' || gameStage == 'make_announcement') {
       document.getElementById('gameForm').submit();
     }
   }

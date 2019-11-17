@@ -26,7 +26,9 @@
     </div>
     <div id="js-player-<%= player.position %>-announcements">
       <h6 class="card-subtitle mb-2 text-muted">
-        <%= player.announcements_text %>
+        <% if @action == 'make_announcement' %>
+          <%= player.announcements_text %>
+        <% end %>
       </h6>
     </div>
     <div id="js-player-<%= player.position %>-bids">

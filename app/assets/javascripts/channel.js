@@ -43,13 +43,14 @@ function createSubscriptions() {
         addAnnouncement(data.announcement, data.player)
       }
       if (action == 'play_card') {
-        addTrickCard(data.card_slug, data.player)
+        addTrickCard(data.card_slug, data.trick_index, data.player)
       }
 
       if (action == 'info') {
         setNextPlayer(data.next_player);
         changeStage(data.stage);
         addMessage(data.message);
+        setState('current-trick', data.current_trick_index);
       }
     },
   });

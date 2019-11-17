@@ -1,5 +1,5 @@
 <%= form_with model: @game, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
-  <input id="js-state" hidden=true data-stage=<%= @action %> data-my-move=<%= @my_move %> data-won-bid=<%= @bids.winning_bid_slug %> data-is-declarer=<%= @player.declarer? %> data-player-id=<%= @player.id %> data-game-id=<%= @game.id %> />
+  <input id="js-state" hidden=true data-stage=<%= @action %> data-my-move=<%= @my_move %> data-won-bid=<%= @bids.winning_bid_slug %> data-is-declarer=<%= @player.declarer? %> data-player-id=<%= @player.id %> data-game-id=<%= @game.id %> data-current-trick=<%= @game.current_trick&.trick_index %> />
   <input id="js-stage" hidden=true name="game[action]" value=<%= @action %> />
 
   <% if @waiting %>
@@ -20,9 +20,7 @@
 
   <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
 
-  <% if ['play_card', 'next_trick', 'finished'].include?(@action) %>
-    <%= render 'trick', cards: @tricks.trick_cards, form: form %>
-  <% end %>
+  <%= render 'tricks', tricks: @tricks, form: form, visible: ['play_card', 'next_trick', 'finished'].include?(@action) %>
 
   <% if @game.stage == 'finished' %>
     <%= render 'score' %>

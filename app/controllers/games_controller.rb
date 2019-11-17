@@ -23,7 +23,7 @@ class GamesController < ApplicationController
     @match_players = Player.where(match_id: @match_id)
     @player_id = params[:player_id].to_i
     @players = PlayersPresenter.new(@game, @player_id)
-    @tricks = TricksPresenter.new(@game, @players)
+    @tricks = TricksPresenter.new(@game)
     @player = @players.first
     @message = MessagePresenter.new(@game, @action, @player).message
     @player.active = true
@@ -52,9 +52,9 @@ class GamesController < ApplicationController
         game.resolve_talon!(game_params[:resolve_whole_talon])
       when 'play_card'
         card_slug = game_params[:play_card][0] if game_params[:play_card]
-        game.play_current_trick!(card_slug)
+        game.play_tricks!(card_slug)
       when 'next_trick'
-        game.play_next_trick!
+        raise 'not doing next_trick anymore'
       when 'finished'
         if game.finished?
           new_game = game.match.deal_game
@@ -64,7 +64,7 @@ class GamesController < ApplicationController
 
     player = PlayersPresenter.new(game, params[:player_id].to_i).first
     message = MessagePresenter.new(game, game.stage, player).message
-    announce(game, action: :info, message: message, stage: game.stage, next_player: game.next_player.id)
+    announce(game, action: :info, message: message, stage: game.stage, next_player: game.next_player.id, current_trick_index: game.current_trick&.trick_index)
 
     if params[:player_id].to_i == game.next_player.id
       broadcast_player_info(game)

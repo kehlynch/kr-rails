@@ -14,8 +14,7 @@ $east-row: 2;
 $west-column: 1;
 $west-row: 2;
 
-.trick-container {
-  // testing
+.tricks-container {
   grid-column: $container-column-start / span 3;
   grid-row: $container-row-start / span 3;
   display: grid;
@@ -23,6 +22,18 @@ $west-row: 2;
   grid-template-columns: repeat(3, 6.875rem);
   grid-template-rows: 1fr 1fr 1fr;
   grid-auto-flow: column;
+}
+
+.trick-container {
+  display: contents;
+}
+
+.next-trick-button-container {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .trick-card-container {

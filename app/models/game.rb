@@ -59,7 +59,7 @@ class Game < ApplicationRecord
     # return 'first_trick' if tricks.first_trick?
     #
     unless tricks.finished?
-      return 'next_trick' if tricks.current_trick&.finished?
+      # return 'next_trick' if tricks.current_trick&.finished?
 
       return 'play_card'
     end
@@ -110,12 +110,8 @@ class Game < ApplicationRecord
     update(talon_resolved: true)
   end
 
-  def play_current_trick!(card_slug = nil)
-    tricks.play_current_trick!(card_slug)
-  end
-
-  def play_next_trick!
-    tricks.play_next_trick!
+  def play_tricks!(card_slug = nil)
+    tricks.play_tricks!(card_slug)
   end
 
   def human_player
