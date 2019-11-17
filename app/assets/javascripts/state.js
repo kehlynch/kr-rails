@@ -6,6 +6,10 @@ function wonBid() {
   return state().wonBid;
 }
 
+function isDeclarer() {
+  return state().isDeclarer == 'true';
+}
+
 function myMove() {
   return state().myMove == 'true';
 }

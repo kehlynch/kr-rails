@@ -28,7 +28,7 @@ class PlayerPresenter
   end
 
   def announcements_text
-    @player.announcements.map { |b| AnnouncementPresenter.new(b.slug).shorthand }.join(" ")
+    @player.announcements.map { |a| AnnouncementPresenter.new(a.slug).shorthand }.join(" ")
   end
 
   def won_tricks_count

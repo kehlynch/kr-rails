@@ -10,6 +10,7 @@ class AnnouncementPresenter
   }
 
   ANNOUNCEMENT_SHORTNAMES = {
+    Announcements::PASS => '-',
     Announcements::PAGAT => 'I',
     Announcements::UHU => 'II',
     Announcements::KAKADU => 'III',

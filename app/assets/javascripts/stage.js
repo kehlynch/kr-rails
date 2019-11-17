@@ -36,6 +36,7 @@ function changeStage(stage) {
   }
 
   if (stage == 'play_card') {
+    removeAnnouncements;
     $("#js-valid-announcements").addClass("d-none");
     $("#js-valid-bids").addClass("d-none");
     $("#js-kings").addClass("d-none");
