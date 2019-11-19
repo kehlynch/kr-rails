@@ -12,7 +12,7 @@ class GamePlayer
   
   def hand
     cards = @game.cards.select do |c|
-      c.player_id == id && c.played_index.nil? && !c.discard
+      c.player_id == id && c.trick_id.nil? && !c.discard
     end
 
     Hand.new(cards, @game)

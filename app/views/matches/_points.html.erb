@@ -6,23 +6,26 @@
       </div>
     <% end %>
     <div class=""></div>
-    <% match_points(@match_games, @player).each_with_index do |points, i| %>
-      <% next unless @match_games[i].finished? %>
-      <% points.each_with_index do |player_points, player_i| %>
-        <div class="d-flex justify-content-center game-point <%= points_classes(@players[player_i], @match_games[i]) %>" >
-          <div class="game-point-inner">
-            <%= player_points %>
+    <div style="display: contents" id="js-points">
+      <% @match.games.select(&:finished?).map(&:summary).each do |summary| %>
+        <% summary[:players].each do |player| %>
+          <div class="d-flex justify-content-center game-point <%= points_classes(player) %>" >
+            <div class="game-point-inner">
+              <%= player[:points] %>
+            </div>
           </div>
+        <% end %>
+        <div class="game-shorthands">
+          <span class="bid-shorthand <%= 'vs-three' if summary[:vs_three] %> <%= 'off' if summary[:off] %>">
+            <%= summary[:bid] %>
+          </span>
+          <% summary[:announcements].each do |a| %>
+            <span class="<%= announcement_classes(a) %>">
+              <%= a[:announcement] %>
+            </span>
+          <% end %>
         </div>
       <% end %>
-      <div class="game-shorthands">
-        <div class="bid-shorthand <%= bid_classes(@match_games[i]) %>">
-          <%= bid_shorthand(@match_games[i]) %>
-        </div>
-        <div class="announcement-shorthands">
-          <%= announcement_shorthands(@match_games[i]) %>
-        </div>
-      </div>
-    <% end %>
+    </div>
   </div>
 </div>

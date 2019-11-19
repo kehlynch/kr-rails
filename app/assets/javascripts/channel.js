@@ -50,6 +50,7 @@ function createSubscriptions() {
       }
       if (action == 'score') {
         addScores(data.scores)
+        addGameSummaries(data.game_summaries)
       }
 
       if (action == 'info') {

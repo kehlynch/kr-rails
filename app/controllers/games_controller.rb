@@ -15,12 +15,12 @@ class GamesController < ApplicationController
 
   def edit
     @match_id = params[:match_id]
+    @match = MatchPresenter.new(Match.find(@match_id))
+
     @game = find_game
     @action = @game.stage
     @bids = BidsPresenter.new(@game)
     @announcements = AnnouncementsPresenter.new(@game)
-    @match_games = Match.find(@match_id).games
-    @match_players = Player.where(match_id: @match_id)
     @player_id = params[:player_id].to_i
     @players = PlayersPresenter.new(@game, @player_id)
     @tricks = TricksPresenter.new(@game)
@@ -57,8 +57,8 @@ class GamesController < ApplicationController
         raise 'not doing next_trick anymore'
       when 'finished'
         if game.finished?
-          # new_game = game.match.deal_game
-          # redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
+          new_game = game.match.deal_game
+          redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
         end
     end
 
@@ -71,7 +71,8 @@ class GamesController < ApplicationController
     broadcast_player_info(game)
 
     if game.finished?
-      broadcast_scores(game, params[:player_id].to_i)
+      match = Match.find(params[:match_id])
+      broadcast_scores(game, match, params[:player_id].to_i)
     end
   end
 
@@ -84,8 +85,8 @@ class GamesController < ApplicationController
 
   private
 
-  def broadcast_scores(game, player_id)
-    players = PlayersPresenter.new(game, player_id).map do |player|
+  def broadcast_scores(game, match, player_id)
+    scores = PlayersPresenter.new(game, player_id).map do |player|
       {
         name: player.name,
         won_tricks_count: player.won_tricks_count,
@@ -96,7 +97,9 @@ class GamesController < ApplicationController
       }
     end
 
-    announce(game, action: :score, scores: players)
+    game_summaries = MatchPresenter.new(match).games.map(&:summary)
+
+    announce(game, action: :score, scores: scores, game_summaries: game_summaries)
   end
 
   def broadcast_player_info(game)

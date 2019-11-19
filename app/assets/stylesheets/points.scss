@@ -12,6 +12,7 @@
   grid-row-gap: 0.4rem;
 
   .game-point {
+    padding: 2px;
     color: red;
     .game-point-inner {
       padding: 0 0.4rem;
@@ -52,22 +53,20 @@
         }
       }
     }
-    .announcement-shorthands {
-      display: inline-block;
-      span {
-        margin-left: 2px;
-        &.declared {
-          border-bottom: 1px solid black;
-        }
-        &.off {
-          text-decoration: line-through;
-        }
-        &.defence {
-          &:after {
-            content: "D";
-            vertical-align: super;
-            font-size: smaller;
-          }
+    span {
+      margin-left: 2px;
+      &.declared {
+        border-bottom: 1px solid black;
+        padding: 0 2px;
+      }
+      &.off {
+        text-decoration: line-through;
+      }
+      &.defence {
+        &:after {
+          content: "D";
+          vertical-align: super;
+          font-size: smaller;
         }
       }
     }

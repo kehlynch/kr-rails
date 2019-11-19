@@ -2,7 +2,7 @@ class Players
 
   attr_reader :players
 
-  delegate :[], :each, :map, :select, :reject, :find, :max_by, to: :players
+  delegate :[], :each, :map, :select, :reject, :find, :max_by, :first, :each_with_index, to: :players
 
   def initialize(game)
     @game = game

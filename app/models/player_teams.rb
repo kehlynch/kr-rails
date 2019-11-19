@@ -2,7 +2,7 @@ class PlayerTeams
 
   attr_reader :declarers, :defence, :teams
 
-  delegate :find, :each, to: :teams
+  delegate :find, :each, :map, to: :teams
 
   def initialize(game)
     @game = game
