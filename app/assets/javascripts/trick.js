@@ -1,11 +1,8 @@
 function addTrickCard(slug, trickIndex, playerPosition) {
-  const imageFile = [1, 3].includes(playerPosition) ? `landscape_${slug}` : slug;
-  const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg">`;
   const compass = compassPosition(playerPosition)
+  const imageFile = ['east', 'west'].includes(compass) ? `landscape_${slug}` : slug;
+  const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg">`;
   getOrAddTrick(trickIndex).append(`<div class="card-container trick-card-container ${compass}">${card}</div>`);
-  if ($(`#js-trick-${trickIndex}`).find("img").length == 4) {
-    // TODO alert to click for next trick
-  }
 }
 
 function getOrAddTrick(trickIndex) {
@@ -33,7 +30,12 @@ function revealTrick(trickIndex) {
 }
 
 function compassPosition(pos) {
+  // https://web.archive.org/web/20090717035140if_/javascript.about.com/od/problemsolving/a/modulobug.htm
+  Number.prototype.mod = function(n) {
+    return ((this%n)+n)%n;
+  }
   const compassPoints = ['south', 'east', 'north', 'west'];
-  const index = Math.abs(playerPosition() - pos) % 4;
+  const index = (pos - playerPosition()).mod(4);
+  console.log("compassPosition", pos, playerPosition(), index, compassPoints[index]);
   return compassPoints[index]
 }

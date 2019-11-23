@@ -2,7 +2,13 @@ class TricksPresenter
 
   attr_reader :tricks
 
-  delegate :current_trick_finished?, :each_with_index, :[], to: :tricks
+  delegate(
+    :[],
+    :current_trick_finished?,
+    :each_with_index,
+    :length,
+    to: :tricks
+  )
 
   def initialize(game)
     @tricks = game.tricks

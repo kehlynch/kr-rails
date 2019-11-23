@@ -92,7 +92,7 @@ class MessagePresenter
   def announcement_msg(announcement)
     announcement_name = AnnouncementPresenter.new(announcement.slug).name
     player = announcement.player
-    announcement_text = announcement.slug == 'pass' ? 'pass' : "announces #{announcement_name}"
+    announcement_text = announcement.slug == 'pass' ? 'passes' : "announces #{announcement_name}"
     ["#{player.name} #{announcement_text}"]
   end
 

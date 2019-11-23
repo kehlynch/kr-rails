@@ -3,7 +3,6 @@ class MatchesController < ApplicationController
     @matches = Match.select { |m| m.players.length < 4 }
   end
 
-
   def new
     @match = Match.new
     @human_count_select = human_count_select

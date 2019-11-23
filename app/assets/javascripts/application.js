@@ -25,7 +25,7 @@ function submitGame(checkbox) {
 }
 
 function nextHand() {
-  const url = `/matches/${matchId()}/players/${playerId()}/games`
+  const url = `/matches/${matchId()}/players/${playerId()}/games/${gameId()}/next`
   const csrf_token = $('meta[name="csrf-token"]').attr('content');
   const csrf_input = `<input type="hidden" name="authenticity_token" value=${csrf_token} />`
   const form = `<form action=${url} method="post">${csrf_input}</form>`

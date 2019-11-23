@@ -1,6 +1,12 @@
 class TrickPresenter
   attr_reader :trick
-  delegate :trick_index, to: :trick
+  delegate(
+    :finished?,
+    :trick_index,
+    :winning_card,
+    :won_card,
+    to: :trick
+  )
   def initialize(trick)
     @trick = trick
   end

@@ -1,10 +1,11 @@
 class PlayersController < ApplicationController
   def show
-    # ActionCable.server.broadcast("MessageChannel_#{params[:match_id]}", sent_by: "Kat", body: "hello")
     @match = Match.find(params[:match_id])
+    @player = Player.find(params[:id])
     @missing_players = 4 - @match.players.length
     if @missing_players == 0
       game = @match.games.last || @match.deal_game
+      MatchesChannel.broadcast_to(match, ready: true, game_id: game.id); 
       redirect_to edit_match_player_game_path(@match, params[:id], game)
     end
   end
@@ -20,9 +21,10 @@ class PlayersController < ApplicationController
     position = match.players.max_by(&:position).position + 1
     player = Player.create(player_params.merge({match_id: match_id, human: true, position: position}))
     match.players.reload
-    if player.match.players.length == 4
+    if match.players.length == 4
       game = match.games.last || match.deal_game
 
+      MatchesChannel.broadcast_to(match, ready: true, game_id: game.id); 
       path = edit_match_player_game_path(match, player, game)
     else
       path = match_player_path(match, player)

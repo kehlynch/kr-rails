@@ -114,8 +114,8 @@ class Broadcaster
       hand = HandPresenter.new(game_player.hand).sorted.map { |c| {slug: c.slug, legal: c.legal?} }
       params[:hand] = hand
     end
-    PlayersChannel.broadcast_to(
-      Player.find(player.id),
+    broadcast_to_player(
+      player,
       **params
     )
   end
@@ -135,12 +135,20 @@ class Broadcaster
 
       game_summaries = MatchPresenter.new(@game.match, player.id).games.select(&:finished?).map(&:summary)
 
-      PlayersChannel.broadcast_to(
-        Player.find(player.id),
+      broadcast_to_player(
+        player,
         scores: scores,
         game_summaries: game_summaries
       )
     end
+  end
+
+  def broadcast_to_player(player, **params)
+    MessagesChannel.broadcast_to(
+      @game,
+      player_id: player.id,
+      **params
+    )
   end
 end
 

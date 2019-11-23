@@ -1,5 +1,5 @@
 <div class="container">
-  <input hidden=true id="reload-on-match-msg" data-match-id=<%= @match.id %> />
+  <input hidden=true id="js-reload-on-match-ready" data-match-id=<%= @match.id %> data-player-id=<%= @player.id %>/>
   <div>
     <h3>Waiting for <%= @missing_players %> more players...</h3>
   </div>

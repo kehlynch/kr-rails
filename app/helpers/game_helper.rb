@@ -8,7 +8,7 @@ module GameHelper
     index = (player_pos - active_player_pos) % 4
     ['south', 'east', 'north', 'west'][index]
   end
-  
+
   def bid_button(slug, name)
     button_tag(
       name,

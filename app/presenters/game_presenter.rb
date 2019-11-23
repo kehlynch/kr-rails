@@ -26,7 +26,8 @@ class GamePresenter
   def initialize(game, active_player_id)
     @game = game
     @active_player_id = active_player_id
-    @players = game.players.map { |p| PlayerPresenter.new(p, game) }
+    # @players = game.players.map { |p| PlayerPresenter.new(p, game) }
+    @players = PlayersPresenter.new(game, active_player_id)
     @announcements = game.announcements.map { |a| AnnouncementPresenter.new(game) }
   end
 

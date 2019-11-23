@@ -3,9 +3,8 @@
     <%=
       render(
         'trick',
-        cards: trick.cards,
-        trick_index: trick.trick_index,
-        visible: i == 0,
+        trick: trick,
+        visible: show_penultimate ? i == 1 : i == 0,
         form: form
       )
     %>

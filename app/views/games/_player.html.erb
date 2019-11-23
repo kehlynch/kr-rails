@@ -2,7 +2,7 @@
   <div class="card-body" id="player-<%= player.position %>" >
     <h5 class="card-title">
       <div
-        class="spinner-grow spinner-grow-sm text-secondary mb-1v <%= (@game.next_player&.id == player.id) && !@my_move ? '' : 'd-none' %> "
+        class="spinner-grow spinner-grow-sm text-secondary mb-1v <%= @game.next_player&.id == player.id ? '' : 'd-none' %> "
         role="status"
         id="js-player-<%= player.position %>-waiting"
       >

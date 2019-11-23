@@ -26,6 +26,10 @@ class Trick < ApplicationRecord
     winning_card.player if finished?
   end
 
+  def won_card
+    winning_card if finished?
+  end
+
   def winning_card
     cards.max_by do |card|
       # convert to integers to avoid failing array comparison

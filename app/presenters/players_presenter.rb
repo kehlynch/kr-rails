@@ -2,7 +2,15 @@ class PlayersPresenter
   attr_reader :game, :player_presenters
 
   delegate :human_player, to: :game
-  delegate :first, :each, :each_with_index, :[], :map, to: :player_presenters
+  delegate(
+    :[],
+    :each,
+    :each_with_index,
+    :find,
+    :first,
+    :map,
+    to: :player_presenters
+  )
 
   def initialize(game, player_id)
     @game = game
