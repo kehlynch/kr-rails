@@ -8,18 +8,22 @@ const ANNOUNCEMENT_NAMES = {
   'valat': 'Valat'
 }
 
+const ANNOUNCEMENT_SHORTNAMES = {
+  'pagat': 'I',
+  'uhu': 'II',
+  'kakadu': 'III',
+  'king': 'K',
+  'forty_five': '45',
+  'valat': 'V'
+}
+
 // announcement indicators under players
 function addAnnouncement(slug, player) {
-  const name = ANNOUNCEMENT_NAMES[slug]
-  $(`#js-player-${player}-announcements`).append(`<h6 class="card-subtitle mb-2 text-muted">${name}</h6>`)
-}
-
-function removePlayerAnnouncements(player) {
-  $(`#js-player-${player}-announcements`).empty();
-}
-
-function removeAnnouncements() {
-  [0, 1, 2, 3].forEach((p) => removePlayerAnnouncements(p));
+  console.log("addAnnouncement", slug, player);
+  const name = ANNOUNCEMENT_SHORTNAMES[slug]
+  if (name) {
+    $(`#js-player-${player}-announcements`).find('h6').append(` ${name}`);
+  }
 }
 
 // announcement picking buttons
@@ -40,9 +44,7 @@ function addValidAnnouncements(slugs) {
 }
 
 function toggleAnnouncement(slug) {
-  console.log("toggleAnnouncement", slug);
   const checkbox = $(`#valid-announcement-${slug}`)
-  console.log("toggleAnouncement", checkbox);
   if (slug == 'pass') {
     $('#js-valid-announcements').find('input').each((i, checkbox) => {
       $(checkbox).prop('checked', false)
@@ -58,10 +60,8 @@ function toggleAnnouncement(slug) {
   checkbox.next().toggleClass('active');
 
   var selected = $('#js-valid-announcements').find('input[type="checkbox"]:checked').length
-  console.log('selected', selected);
   const birdBidNeeded = wonBid() == 'besser_rufer' && activeBirdBids() == 0 && isDeclarer();
   const disabled = selected == 0 || birdBidNeeded;
-  console.log("disabled", disabled);
   $('#js-announcements-submit').prop('disabled', disabled);
 }
 

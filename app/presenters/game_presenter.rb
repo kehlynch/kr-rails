@@ -1,14 +1,47 @@
 class GamePresenter
-  attr_reader :game
-  delegate :finished?, :winners, :declarer, :bids, :player_teams, to: :game
+  attr_reader :game, :players
 
-  def initialize(game)
+  delegate(
+    :announcements,
+    :bids,
+    :cards,
+    :current_trick,
+    :declarer,
+    :declarer_human?,
+    :finished?,
+    :id,
+    :king,
+    :next_player,
+    :next_player_human?,
+    :partner,
+    :player_teams,
+    :stage,
+    :talon,
+    :talon_picked,
+    :tricks,
+    :winners,
+    to: :game
+  )
+
+  def initialize(game, active_player_id)
     @game = game
-    @players = game.players
+    @active_player_id = active_player_id
+    @players = game.players.map { |p| PlayerPresenter.new(p, game) }
+    @announcements = game.announcements.map { |a| AnnouncementPresenter.new(game) }
   end
 
-  def forehand
-    PlayerPresenter.new(@game.forehand, @game)
+  def model; @game end
+  def forehand; @players.find { |p| p.forehand? } end
+  def active_player; @players.find { |p| p.id == @active_player_id } end
+
+  def talon_pickable?
+    declarer&.id == @active_player_id && stage == 'pick_talon'
+  end
+
+  def valid_announcements
+    @game.announcements.valid_announcements.map do |slug|
+      [slug, AnnouncementPresenter.new(slug).name]
+    end
   end
 
   def summary
@@ -16,7 +49,7 @@ class GamePresenter
 
     {
       bid: bid_shorthand,
-      vs_three: vs_three,
+      vs_three:  @game.player_teams.defence.length == 3 && @game.bids&.highest&.talon?,
       off: !@game.winners.include?(@game.declarer),
       announcements: announcements_summary,
       players: players_summary,
@@ -28,7 +61,7 @@ class GamePresenter
       .match
       .games
       .select { |g| g.id <= @game.id }
-      .map { |g| GamePresenter.new(g) }
+      .map { |g| GamePresenter.new(g, @active_player_id) }
       .map(&:raw_points)
       .reduce([0, 0, 0, 0]) do |points, acc|
         acc.each_with_index.map { |p, i| p + points[i] }
@@ -63,21 +96,9 @@ class GamePresenter
     end.compact
   end
 
-
-  def vs_three
-    ['solo', 'solo_dreier'].include?(@game.bids.highest&.slug) && @game.player_teams.defence.length == 3
-  end
-
   def bid_shorthand
     winning_bid = @game.bids.highest
     BidPresenter.new(winning_bid.slug).shorthand
-  end
-
-  def bid_classes
-    classes = []
-    classes << 'vs-three' if ['solo', 'solo_dreier'].include?(game.bids.highest&.slug) && @game.player_teams.defence.length == 3
-    classes << 'off' if !@game.winners.include?(@game.declarer)
-    classes.join(' ')
   end
 
   def raw_points

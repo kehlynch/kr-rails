@@ -2,7 +2,20 @@ class PlayerPresenter
   attr_reader :player
   attr_accessor :active
 
-  delegate :declarer?, :forehand?, :human?, :position, :id, :announcements, :points, :team_points, :game_points, :winner?, to: :player
+  delegate(
+    :announcements,
+    :declarer?,
+    :forehand?,
+    :game_points,
+    :human?,
+    :id,
+    :points,
+    :position,
+    :team_points,
+    :winner?,
+    :won_tricks,
+    to: :player
+  )
 
   def initialize(player, game)
     @player = player
@@ -28,7 +41,11 @@ class PlayerPresenter
   end
 
   def announcements_text
-    @player.announcements.map { |a| AnnouncementPresenter.new(a.slug).shorthand }.join(" ")
+    @player
+      .announcements
+      .select { |a| a.slug != 'pass' }
+      .map { |a| AnnouncementPresenter.new(a.slug).shorthand }
+      .join(" ")
   end
 
   def won_tricks_count

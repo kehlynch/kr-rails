@@ -1,34 +1,27 @@
 //= require_tree .
 //= require jquery3
 
-function addPlayerInfo(data) {
-  if (data.valid_bids) {
-    addValidBids(data.valid_bids)
-  } else if (data.valid_announcements) {
-    addValidAnnouncements(data.valid_announcements);
-  } else if (data.hand) {
-    updateHand(data.hand);
-  } else if (data.partner) {
-    $(`#js-player-${data.partner}-partner-indicator`).removeClass('d-none');
-  }
-}
-
 function addKing(slug) {
   $("#js-king").append(`<img alt="diamond_8" class="kr-card " src="/assets/${slug}.jpg">`)
 }
 
-function showPickedTalon(index) {
-  $(`#js-talon-half-${index}`).addClass("picked");
-}
-
 function createSubscriptions() {
-  console.log("creating subscriptions");
+  console.log("createSubscriptions", gameId(), playerId());
   this.App = {};
   App.cable = ActionCable.createConsumer();  
   App.messages = App.cable.subscriptions.create({channel: 'MessagesChannel', id: gameId()}, {  
     received: function(data) {
       console.log("recvd from messages channel", data);
       const action = data.action;
+
+      if (data.message) {
+        addMessage(data.message);
+      }
+
+      if (data.instruction) {
+        $('#instruction').empty()
+        $('#instruction').append(data.instruction);
+      }
 
       if (action == 'bid') {
         addBid(data.bid, data.player)
@@ -56,7 +49,6 @@ function createSubscriptions() {
       if (action == 'info') {
         setNextPlayer(data.next_player);
         changeStage(data.stage);
-        addMessage(data.message);
         setState('current-trick', data.current_trick_index);
       }
     },
@@ -71,6 +63,7 @@ function createSubscriptions() {
 }
 
 $(document).ready(function() {
+  console.log("document ready");
   scrollMessageBox();
   createSubscriptions();
 })

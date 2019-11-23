@@ -7,11 +7,10 @@ class Talon
 
   def initialize(cards, game)
     @game_id = game.id
-    @cards = cards
-
     @talon = cards.select do |c|
       c.talon_half.present? 
     end.sort_by(&:id).group_by(&:talon_half).values
+    @cards = @talon.flatten
   end
 
   def pick_whole_talon!(player)

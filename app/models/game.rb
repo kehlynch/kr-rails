@@ -1,5 +1,4 @@
 class Game < ApplicationRecord
-  include Announcer
   belongs_to :match
   has_many :cards
   has_many :_announcements, class_name: 'Announcement'
@@ -30,7 +29,7 @@ class Game < ApplicationRecord
   end
 
   def player_teams
-    @player_teams ||= PlayerTeams.new(self)
+    PlayerTeams.new(self)
   end
 
   def announcements
@@ -56,11 +55,7 @@ class Game < ApplicationRecord
 
     return 'make_announcement' if bids.highest&.slug != Bids::TRISCHAKEN && !announcements.finished?
 
-    # return 'first_trick' if tricks.first_trick?
-    #
     unless tricks.finished?
-      # return 'next_trick' if tricks.current_trick&.finished?
-
       return 'play_card'
     end
 
@@ -75,7 +70,7 @@ class Game < ApplicationRecord
     player_teams.team_for(player)
   end
 
-  def make_bid!(bid_slug)
+  def make_bid!(bid_slug = nil)
     bids.make_bid!(bid_slug)
   end
 
@@ -85,14 +80,12 @@ class Game < ApplicationRecord
 
   def pick_king!(king_slug)
     self.king = king_slug || declarer.pick_king
-    announce(self, action: :king, king_slug: self.king)
 
     save
   end
 
   def pick_talon!(talon_half_index)
     talon.pick_talon!(talon_half_index, declarer)
-    announce(self, action: :talon, talon_half_index: talon_half_index)
 
     update(talon_picked: talon_half_index)
   end

@@ -6,9 +6,9 @@ function isDeclarer() { return state().isDeclarer == 'true'; }
 
 function myMove() { return state().myMove == 'true'; }
 
-function gameId() { return state().gameId; }
-
 function playerId() { return state().playerId; }
+
+function matchId() { return state().matchId; }
 
 function playerPosition() { return state().playerPosition; }
 
@@ -26,11 +26,21 @@ function state() {
   return state;
 }
 
-function setNextPlayer(nextPlayerId) {
-  setState('my-move', playerId() == nextPlayerId)
+function gameId() {
+  const element = document.getElementById('js-state-game-id');
+  return element ? element.dataset.gameId : null;
 }
 
 function setState(key, value) {
-  console.log("setState", key, value);
   $('#js-state').attr(`data-${key}`, value);
 }
+
+function updateSubscriptionsOnGameChange() {
+  $('#js-state-game-id').on('change', () => {
+    createSubscriptions();
+  });
+}
+
+$(document).ready(function() {
+  updateSubscriptionsOnGameChange();
+})

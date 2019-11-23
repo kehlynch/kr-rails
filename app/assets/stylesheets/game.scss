@@ -41,15 +41,22 @@ body {
   max-width: 130vh;
 }
 
-.finished-buttons {
+.instruction {
   grid-column: 3 / span 3;
   grid-row: 1;
+  align-self: start;
+  width: 100%;
+}
+
+.finished-buttons {
+  grid-column: 1 / span 3;
+  grid-row: 7;
   display: grid;
   grid-template-columns: auto auto auto;
   grid-gap: 2px;
 
   grid-template-rows: auto;
-  justify-self: flex-end;
+  align-items: flex-end;
 }
 
 .kings-container {

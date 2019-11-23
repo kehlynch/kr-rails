@@ -20,16 +20,16 @@
 //= require cable
 
 function submitGame(checkbox) {
-  if (checkbox) {
-    $(checkbox).prop('checked', true)
-  }
-  console.log('submitGame', checkbox);
+  if (checkbox) { $(checkbox).prop('checked', true) }
   document.getElementById('gameForm').submit();
 }
 
 function nextHand() {
-  document.getElementById('gameForm').submit();
-  // reload();
+  const url = `/matches/${matchId()}/players/${playerId()}/games`
+  const csrf_token = $('meta[name="csrf-token"]').attr('content');
+  const csrf_input = `<input type="hidden" name="authenticity_token" value=${csrf_token} />`
+  const form = `<form action=${url} method="post">${csrf_input}</form>`
+  $(form).appendTo('body').submit(); 
 }
 
 function showScores() {
@@ -48,19 +48,19 @@ function attachClickers() {
 
 function pageClicked() {
   const gameStage = stage();
-  if ( gameStage == 'next_trick' || gameStage == 'pick_whole_talon') {
-    document.getElementById('gameForm').submit();
-  } else if (gameStage == 'play_card') {
+  
+  console.log("pageClicked()", gameStage, myMove());
+  if (gameStage == 'play_card') {
     if (myMove()) {
       revealTrick(currentTrickIndex());
     } else {
-      // I think this is just to start the first trick if we're not declarer
-      document.getElementById('gameForm').submit();
+      // just to start the first trick if we're not declarer
+      $('#gameForm').submit();
     }
-  } else if (!myMove()) {
-    if ( gameStage == 'pick_talon' || gameStage == 'resolve_talon' || gameStage == 'pick_king' || gameStage == 'make_bid' || gameStage == 'make_announcement') {
-      document.getElementById('gameForm').submit();
-    }
+  } else if (gameStage == 'pick_whole_talon') {
+    $('#gameForm').submit();
+  } else if (gameStage && !myMove() && gameStage != 'finished') {
+    $('#gameForm').submit();
   }
 }
 

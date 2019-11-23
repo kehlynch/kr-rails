@@ -1,5 +1,5 @@
-<% @players.each_with_index do |player, i| %>
-  <div class="player-container number-<%= i + 1 %>">
-    <%= render 'player', player: player %>
+<% @players.each do |p| %>
+  <div class="player-container <%= player_compass_position(p.position, @player.position) %> <%= p.name %>">
+    <%= render 'player', player: p %>
   </div>
 <% end %>

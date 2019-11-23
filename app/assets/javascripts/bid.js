@@ -26,8 +26,10 @@ function addValidBid(slug) {
 }
 
 function addValidBids(slugs) {
+  console.log("addValidBids");
   $(`#js-valid-bids`).empty();
   slugs.forEach(addValidBid)
+  $('#js-valid-bids').removeClass("d-none");
 }
 
 function setWonBid(slug, declarerPosition) {
@@ -47,7 +49,6 @@ function setWonBid(slug, declarerPosition) {
 }
 
 function submitBid(bidSlug) {
-  console.log("submitBid", bidSlug);
   submitGame(bidSlug);
   $("#js-valid-bids").empty();
 }

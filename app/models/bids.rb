@@ -1,5 +1,4 @@
 class Bids
-  include Announcer
   PASS = 'pass'
   RUFER = 'rufer'
   SOLO = 'solo'
@@ -44,16 +43,11 @@ class Bids
     @players = game.players
   end
 
-  def make_bid!(bid_slug)
-    add_bid!(bid_slug) if bid_slug
-    until !next_bidder || next_bidder.human? || finished?
-      bid_slug = next_bidder.pick_bid(valid_bids)
-      add_bid!(bid_slug)
-    end
+  def make_bid!(bid_slug = nil)
+    return nil if finished? || (next_bidder.human? && !bid_slug)
 
-    if finished?
-      announce(@game, action: 'bid_won', slug: highest.slug, declarer: declarer.position)
-    end
+    bid_slug = bid_slug || next_bidder.pick_bid(valid_bids)
+    add_bid!(bid_slug)
   end
 
   def valid_bids
@@ -142,8 +136,8 @@ class Bids
   private
 
   def add_bid!(bid_slug)
-    player = next_bidder
-    @bids << Bid.create(slug: bid_slug, game_id: @game.id, player_id: player.id)
-    announce(@game, action: 'bid', player: player.position, bid: bid_slug)
+    bid = Bid.create(slug: bid_slug, game_id: @game.id, player_id: next_bidder.id)
+    @bids << bid
+    return bid
   end
 end

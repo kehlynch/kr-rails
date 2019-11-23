@@ -1,6 +1,4 @@
 class Announcements
-  include Announcer
-
   PASS = 'pass'
   PAGAT = 'pagat'
   UHU = 'uhu'
@@ -41,12 +39,11 @@ class Announcements
     @players = @game.players
   end
 
-  def make_announcements!(announcement_slugs)
-    add_announcements!(announcement_slugs) if announcement_slugs.present?
-    until !next_player || next_player.human? || finished?
-      announcement_slugs = next_player.pick_announcements(valid_announcements)
-      add_announcements!(announcement_slugs)
-    end
+  def make_announcements!(slugs = [])
+    return nil if finished? || (next_player.human? && !slugs.present?)
+    
+    slugs = next_player.pick_announcements(valid_announcements) if slugs.blank?
+    add_announcements!(slugs)
   end
 
   def valid_announcements
@@ -70,7 +67,7 @@ class Announcements
   end
 
   def started?
-    return @announcements.empty?
+    return !@announcements.empty?
   end
 
   def next_player
@@ -85,9 +82,10 @@ class Announcements
 
   def add_announcements!(slugs)
     player = next_player
-    slugs.each do |slug|
-      @announcements << Announcement.create(slug: slug, game_id: @game.id, player_id: player.id)
-      announce(@game, action: 'announcement', player: player.position, announcement: slug)
+    announcements = slugs.map do |slug|
+      Announcement.create(slug: slug, game_id: @game.id, player_id: player.id)
     end
+    @announcements += announcements
+    return announcements
   end
 end

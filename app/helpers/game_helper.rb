@@ -5,7 +5,7 @@ module GameHelper
   end
 
   def player_compass_position(player_pos, active_player_pos)
-    index = (active_player_pos - player_pos) % 4
+    index = (player_pos - active_player_pos) % 4
     ['south', 'east', 'north', 'west'][index]
   end
   
@@ -30,9 +30,8 @@ module GameHelper
   end
 
   def talon_half(cards, index, game, action)
-    is_pickable = game.declarer_human? && action == 'pick_talon'
-    pickable_class = is_pickable ? "pickable" : ""
-    onclick = game.declarer_human? ? "submitGame(talon_#{index})" : ""
+    pickable_class = game.talon_pickable? ? "pickable" : ""
+    onclick = game.talon_pickable? ? "submitGame(talon_#{index})" : ""
 
     picked_class = game.talon_picked == index ? "picked" : ""
 

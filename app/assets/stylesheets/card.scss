@@ -4,6 +4,11 @@
   &.king-indicator {
     height: 3.4rem;
     width: auto;
+    &.in-talon {
+      &:after {
+        content: "TALON"
+      }
+    }
     .kr-card {
       border-width: 1px;
       border-radius: 3px;

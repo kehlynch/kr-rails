@@ -25,7 +25,8 @@ class BidPresenter
     @slug = slug
   end
 
-  def name
+  def name(declared = false)
+    return BID_NAMES[Bids::RUFER] if declared && @slug == Bids::CALL_KING
     BID_NAMES[@slug] if @slug
   end
 

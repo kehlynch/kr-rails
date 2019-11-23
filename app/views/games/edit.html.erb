@@ -1,10 +1,10 @@
-<%= form_with model: @game, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
+<%= form_with model: @game.model, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
   <%= render 'state' %>
   <input id="js-stage" hidden=true name="game[action]" value=<%= @action %> />
 
-  <% if @waiting %>
-    <input hidden=true id="reload-on-match-msg" data-match-id=<%= @match_id %> />
-  <% end %>
+  <div class="instruction alert alert-primary" role="alert" id="instruction">
+    <%= @instruction %>
+  </div>
 
   <%= render 'message', message: @message %>
 

@@ -6,7 +6,12 @@
   data-won-bid=<%= @bids.winning_bid_slug %>
   data-is-declarer=<%= @player.declarer?  %>
   data-player-id=<%= @player.id %>
+  data-match-id=<%= @match_id %>
   data-player-position=<%= @player.position %>
-  data-game-id=<%= @game.id %>
   data-current-trick=<%= @game.current_trick&.trick_index %>
+/>
+<input
+  id="js-state-game-id"
+  hidden=true
+  data-game-id=<%= @game.id %>
 />

@@ -1,5 +1,4 @@
 function addTrickCard(slug, trickIndex, playerPosition) {
-  console.log('addTrickCard', slug, playerPosition);
   const imageFile = [1, 3].includes(playerPosition) ? `landscape_${slug}` : slug;
   const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg">`;
   const compass = compassPosition(playerPosition)
@@ -24,7 +23,6 @@ function addTrick(trickIndex, id) {
 }
 
 function revealTrick(trickIndex) {
-  console.log("revealTrick", trickIndex);
   // hide the other tricks 
   $("#js-tricks").find('.trick-container').addClass('d-none');
   // reveal the first trick (cos we prepend)
