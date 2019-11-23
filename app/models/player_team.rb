@@ -9,9 +9,11 @@ class PlayerTeam
     @bid = bid
     @defence = defence
     @king = king
-    # @announcements = Announcement.where(game_id: game.id, player_id: players.map(&:id))
     @last_trick = @game.tricks.last
-    @announcements = AnnouncementPointsContext.new(@game).points_for(self)
+  end
+
+  def announcement_points_lookup
+    @announcement_points_lookup ||= AnnouncementPointsContext.new(@game).points_for(self)
   end
 
   def include?(player)
@@ -31,15 +33,15 @@ class PlayerTeam
   end
 
   def announcement_own_points
-    @announcements.values.sum
+    announcement_points_lookup.values.sum
   end
 
   def made_announcement?(slug)
-    @announcements[slug] > 0
+    announcement_points_lookup[slug] > 0
   end
 
   def lost_announcement?(slug)
-    @announcements[slug] < 0
+    announcement_points_lookup[slug] < 0
   end
 
   def winner?

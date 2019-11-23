@@ -29,7 +29,7 @@ class Game < ApplicationRecord
   end
 
   def player_teams
-    PlayerTeams.new(self)
+    @player_teams ||= PlayerTeams.new(self)
   end
 
   def announcements

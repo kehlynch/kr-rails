@@ -18,11 +18,6 @@ function createSubscriptions() {
         addMessage(data.message);
       }
 
-      if (data.instruction) {
-        $('#instruction').empty()
-        $('#instruction').append(data.instruction);
-      }
-
       if (action == 'bid') {
         addBid(data.bid, data.player)
       }
@@ -40,10 +35,6 @@ function createSubscriptions() {
       }
       if (action == 'play_card') {
         addTrickCard(data.card_slug, data.trick_index, data.player)
-      }
-      if (action == 'score') {
-        addScores(data.scores)
-        addGameSummaries(data.game_summaries)
       }
 
       if (action == 'info') {

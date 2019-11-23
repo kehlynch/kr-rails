@@ -5,11 +5,10 @@ class MessagePresenter
   delegate :declarer, to: :bids
   delegate :current_trick, :current_trick_finished?, :first_trick?, to: :tricks
 
-  def initialize(game, active_player)
+  def initialize(game)
     @game = game
     @bids = game.bids
     @tricks = game.tricks
-    @active_player = PlayerPresenter.new(active_player, game)
     @msg = []
   end
 
@@ -39,26 +38,20 @@ class MessagePresenter
   end
 
   def forehand_msg
-    forehand_active? ? 'You are forehand.' : "#{@game.forehand.name} is forehand"
+    "#{@game.forehand.name} is forehand"
   end
 
   def bid_msg(bid)
     bid_name = BidPresenter.new(bid.slug).name(true)
     player = bid.player
-    active = player.id == @active_player.id
-    player_name = active ? "You" : player.name
-    bid_text = if bid.slug == 'pass'
-             active ? 'pass' : 'passes'
-           else
-             active ? "bid #{bid_name}" : "bids #{bid_name}"
-           end
-    ["#{player_name} #{bid_text}"]
+    bid_text = bid.slug == 'pass' ?  'passes' : "bids #{bid_name}"
+    ["#{player.name} #{bid_text}"]
   end
 
   def bids_finished_msg
     msg = []
-    msg << "#{declarer_name} win#{s_if_needed(declarer)} bidding with #{winning_bid_name}."
-    msg << next_after_bids_msg
+    msg << "#{declarer_name} wins bidding with #{winning_bid_name}."
+    msg += next_after_bids_msg
   end
 
   def next_after_bids_msg
@@ -69,14 +62,14 @@ class MessagePresenter
   end
 
   def pick_king_msg
-    "#{declarer_name} to pick king."
+    ["#{declarer_name} to pick king."]
   end
 
   def king_picked_msg
     msg = []
     if @game.king
       king_name = CardPresenter.new(@game.king).name
-      msg << "#{declarer_name} pick#{s_if_needed(declarer)} #{king_name}."
+      msg << "#{declarer_name} picks #{king_name}."
       msg += next_after_king_msg
     end
     return msg
@@ -89,30 +82,22 @@ class MessagePresenter
   end
 
   def talon_picked_msg
-    ["#{declarer_name} pick#{s_if_needed(declarer)} #{ActiveSupport::Inflector.ordinalize(talon_picked + 1)} half of talon."]
+    ["#{declarer_name} picks #{ActiveSupport::Inflector.ordinalize(talon_picked + 1)} half of talon."] + first_announcement_msg
   end
 
   def first_announcement_msg
-    ["#{declarer_name} start#{s_if_needed(declarer)} announcements"]
+    ["#{declarer_name} starts announcements"]
   end
 
   def announcement_msg(announcement)
     announcement_name = AnnouncementPresenter.new(announcement.slug).name
     player = announcement.player
-    active = player.id == @active_player.id
-    player_name = active ? "You" : player.name
-    announcement_text = if announcement.slug == 'pass'
-             active ? 'pass' : 'passes'
-           else
-             active ? "announcement #{announcement_name}" : "announcements #{announcement_name}"
-           end
-    ["#{player_name} #{announcement_text}"]
+    announcement_text = announcement.slug == 'pass' ? 'pass' : "announces #{announcement_name}"
+    ["#{player.name} #{announcement_text}"]
   end
 
   def first_trick_msg
     lead = @tricks.lead_player
-    return ["You lead first trick"] if lead.id == @active_player.id
-
     return ["#{lead.name} leads first trick"]
   end
 
@@ -121,7 +106,6 @@ class MessagePresenter
 
     winner = trick.won_player
     number = ActiveSupport::Inflector.ordinalize(trick.trick_index + 1)
-    return ["You win #{number} trick"] if winner.id == @active_player.id
 
     ["#{winner.name} wins #{number} trick"]
   end
@@ -138,18 +122,20 @@ class MessagePresenter
   end
 
   def pick_whole_talon_msg
-    ["#{declarer_name} take#{s_if_needed(declarer)} the whole talon."]
+    ["#{declarer_name} takes the whole talon."]
   end
 
   def finished_msg
     ["Winners: #{winners.map { |w| player_name(w) }.join(', ')}"]
   end
 
-  def instruction_msg
-    if @game.next_player&.id == @active_player.id
-      return active_instruction_msg
+  def instruction_msg(player)
+    if @game.next_player&.id == player.id
+      return active_instruction_msg(player)
     elsif @game.next_player_human?
       return "Waiting for #{@game.next_player.name}"
+    elsif @game.finished?
+      return finished_msg.first
     else
       return "Click to continue."
     end
@@ -157,7 +143,8 @@ class MessagePresenter
 
   private
 
-  def active_instruction_msg
+  def active_instruction_msg(player)
+    return 'click for next trick' if !player.played_in_current_trick? && current_trick && current_trick.trick_index != 0
     {
       'make_bid' => 'Make a bid.',
       'pick_king' => 'Pick a king.',
@@ -170,21 +157,8 @@ class MessagePresenter
     }[@game.stage]
   end
 
-
-  def declarer_active?
-    @active_player.role == 'declarer'
-  end
-
-  def forehand_active?
-    @game.forehand.id == @active_player.id
-  end
-
   def declarer_name
-    declarer_active? ? 'You' : PlayerPresenter.new(declarer, @game).name
-  end
-
-  def s_if_needed(player)
-    player.id == @active_player.id ? '' : 's'
+    PlayerPresenter.new(declarer, @game).name
   end
 
   def winning_bid_name

@@ -51,7 +51,7 @@ class Announcements
 
     return [] unless player # announcing not started
     
-    valid = SLUGS
+    valid = SLUGS.clone.clone
 
     if player.defence? || !@game.king
       valid.delete(KING)

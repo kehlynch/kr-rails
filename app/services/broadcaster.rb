@@ -1,8 +1,7 @@
 class Broadcaster
-  def initialize(game, active_player)
+  def initialize(game)
     @game = game
-    @player = active_player
-    @message = MessagePresenter.new(game, active_player)
+    @message = MessagePresenter.new(game)
   end
 
   def bid(bid:)
@@ -71,13 +70,28 @@ class Broadcaster
     )
   end
 
-  def player_info
+  def info
     @game.reload
-    params = {}
-    my_move = @game.next_player&.id == @player.id
-    params[:my_move] = my_move
+    MessagesChannel.broadcast_to(
+      @game,
+      action: :info,
+      stage: @game.stage,
+      next_player: @game.next_player&.position,
+      current_trick_index: @game.current_trick&.trick_index
+    )
 
-    if @game.partner_known_by?(@player.id)
+    @game.players.select(&:human?).each do |player|
+      player_info(player)
+    end
+  end
+
+  def player_info(player)
+    params = {}
+    my_move = @game.next_player&.id == player.id
+    params[:my_move] = my_move
+    params[:instruction] = @message.instruction_msg(player)
+
+    if @game.partner_known_by?(player.id)
       partner = @game.partner ? @game.partner.position : 'talon'
       params[:partner] = partner
     end
@@ -96,53 +110,37 @@ class Broadcaster
     params[:resolve_talon] = my_move if ['resolve_talon', 'resolve_whole_talon'].include?(@game.stage)
 
     if ['play_card', 'resolve_talon', 'resolve_whole_talon', 'make_announcement', 'finished'].include?(@game.stage)
-      game_player = GamePlayer.new(@player, @game)
+      game_player = GamePlayer.new(player, @game)
       hand = HandPresenter.new(game_player.hand).sorted.map { |c| {slug: c.slug, legal: c.legal?} }
       params[:hand] = hand
     end
-    announce_player(**params)
-  end
-
-
-  def info
-    p '***info'
-    @game.reload
-    MessagesChannel.broadcast_to(
-      @game,
-      action: :info,
-      stage: @game.stage,
-      next_player: @game.next_player&.position,
-      current_trick_index: @game.current_trick&.trick_index,
-      instruction: @message.instruction_msg
+    PlayersChannel.broadcast_to(
+      Player.find(player.id),
+      **params
     )
   end
 
   def scores
-    scores = PlayersPresenter.new(@game, @player.id).map do |player|
-      {
-        name: player.name,
-        won_tricks_count: player.won_tricks_count,
-        points: player.points,
-        team_points: player.team_points,
-        game_points: player.game_points,
-        winner: player.winner?
-      }
+    @game.players.select(&:human?).each do |player|
+      scores = PlayersPresenter.new(@game, player.id).map do |player|
+        {
+          name: player.name,
+          won_tricks_count: player.won_tricks_count,
+          points: player.points,
+          team_points: player.team_points,
+          game_points: player.game_points,
+          winner: player.winner?
+        }
+      end
+
+      game_summaries = MatchPresenter.new(@game.match, player.id).games.select(&:finished?).map(&:summary)
+
+      PlayersChannel.broadcast_to(
+        Player.find(player.id),
+        scores: scores,
+        game_summaries: game_summaries
+      )
     end
-
-    game_summaries = MatchPresenter.new(@game.match, @player.id).games.map(&:summary)
-
-    MessagesChannel.broadcast_to(
-      @game,
-      action: :score,
-      scores: scores,
-      game_summaries: game_summaries
-    )
-  end
-
-  private
-
-  def announce_player(**params)
-    PlayersChannel.broadcast_to(@player, **params)
   end
 end
 

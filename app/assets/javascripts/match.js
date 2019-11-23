@@ -32,11 +32,11 @@ function bidShorthand(summary) {
 }
 
 function addAnnouncementShorthand(announcement) {
-  const off_cls = announcement.off ? 'off' : ''
-  const defence_cls = announcement.defence ? 'defence' : ''
-  const declarer_cls = announcement.declarer ? 'declarer' : '';
+  const off_cls = announcement.off ? 'off' : '';
+  const defence_cls = announcement.defence ? 'defence' : '';
+  const declared_cls = announcement.declared ? 'declared' : '';
   $('#js-points').children().last().append(
-    `<span class="${off_cls} ${defence_cls} ${declarer_cls}">
+    `<span class="${off_cls} ${defence_cls} ${declared_cls}">
       ${announcement.announcement}
     </span>`
   )

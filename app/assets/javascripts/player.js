@@ -1,5 +1,6 @@
 function addPlayerInfo(data) {
   const lookup = {
+    'instruction': setInstruction,
     'valid_bids': addValidBids,
     'valid_announcements': addValidAnnouncements,
     'partner': setPartner,
@@ -7,11 +8,18 @@ function addPlayerInfo(data) {
     'hand': updateHand,
     'pick_king': setKingsPickable,
     'pick_talon': setTalonPickable,
-    'resolve_talon': setTalonResolvable
+    'resolve_talon': setTalonResolvable,
+    'scores': addScores,
+    'game_summaries': addGameSummaries
   }
   Object.entries(lookup).forEach(([k, f]) => {
     if (data.hasOwnProperty(k)) { f(data[k]) };
   })
+}
+
+function setInstruction(inst) {
+  $('#instruction').empty();
+  $('#instruction').append(inst);
 }
 
 function setMyMove(myMove) {

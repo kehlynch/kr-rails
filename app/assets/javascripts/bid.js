@@ -26,7 +26,7 @@ function addValidBid(slug) {
 }
 
 function addValidBids(slugs) {
-  console.log("addValidBids");
+  console.log("addValidBids", slugs);
   $(`#js-valid-bids`).empty();
   slugs.forEach(addValidBid)
   $('#js-valid-bids').removeClass("d-none");

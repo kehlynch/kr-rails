@@ -5,8 +5,6 @@ module MatchHelper
   end
 
   def points_classes(data)
-    p '***points_classes'
-    p data
     data
       .slice(:forehand, :winner, :declarer)
       .reject { |k, v| v }

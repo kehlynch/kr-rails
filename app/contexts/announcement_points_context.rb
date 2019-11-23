@@ -5,7 +5,7 @@ class AnnouncementPointsContext
   end
 
   def points_for(team)
-    {
+    @points_for ||= {
       'pagat' => bird_points(1, team),
       'uhu' => bird_points(2, team),
       'kakadu' => bird_points(3, team),

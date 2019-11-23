@@ -49,7 +49,7 @@ class GamePresenter
 
     {
       bid: bid_shorthand,
-      vs_three:  @game.player_teams.defence.length == 3 && @game.bids&.highest&.talon?,
+      vs_three:  @game.player_teams.defence.length == 3 && @game.bids&.highest&.king?,
       off: !@game.winners.include?(@game.declarer),
       announcements: announcements_summary,
       players: players_summary,

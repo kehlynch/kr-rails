@@ -29,6 +29,7 @@ function revealTrick(trickIndex) {
   getOrAddTrick(trickIndex).removeClass('d-none');
   setState('visible-trick', trickIndex);
   updateHandPickable();
+  setInstruction('Play a card');
 }
 
 function compassPosition(pos) {

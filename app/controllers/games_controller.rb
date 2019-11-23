@@ -20,13 +20,13 @@ class GamesController < ApplicationController
 
     @game = GamePresenter.new(find_game, @player_id)
     @players = @game.players
+    @player = @players.first
     @action = @game.stage
     @bids = BidsPresenter.new(@game)
     @tricks = TricksPresenter.new(@game)
-    @player = @players.first
-    message_presenter = MessagePresenter.new(@game, @player)
+    message_presenter = MessagePresenter.new(@game)
     @message = message_presenter.message
-    @instruction = message_presenter.instruction_msg
+    @instruction = message_presenter.instruction_msg(@player)
 
     @player.active = true
     @my_move = @game.next_player&.id == @player.id
@@ -41,7 +41,7 @@ class GamesController < ApplicationController
       redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
     end
 
-    runner = Runner.new(game, find_player)
+    runner = Runner.new(game)
     runner.advance!(**game_params)
   end
 

@@ -3,9 +3,9 @@
 # Pass it an action from the active player and it
 # will make all the computer player moves happen and announce the results
 class Runner
-  def initialize(game, active_player)
+  def initialize(game)
     @game = game
-    @broadcaster = Broadcaster.new(game, active_player)
+    @broadcaster = Broadcaster.new(game)
   end
   
   def advance!(action:, **params)
@@ -38,7 +38,6 @@ class Runner
     end
 
     @broadcaster.info
-    @broadcaster.player_info
 
     if @game.finished?
       @broadcaster.scores

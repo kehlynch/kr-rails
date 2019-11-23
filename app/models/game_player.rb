@@ -18,6 +18,12 @@ class GamePlayer
     Hand.new(cards, @game)
   end
 
+  def played_in_current_trick?
+    return false unless @game.tricks.current_trick
+
+    @game.tricks.current_trick.cards.map(&:player_id).include?(id)
+  end
+
   def won_tricks
     @game.tricks.select { |t| t.won_player&.id == id }
   end
