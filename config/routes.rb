@@ -2,7 +2,6 @@
 
 Rails.application.routes.draw do
   mount ActionCable.server => '/channels'
-  resources :assets, only: :index
 
   resources :matches, only: [:create, :new, :index] do
     resources :players, only: [:show, :new, :create] do
