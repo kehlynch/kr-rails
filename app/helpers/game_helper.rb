@@ -85,7 +85,9 @@ module GameHelper
   def card_action(card_slug, action)
     checkbox_id = "#{action}_#{card_slug}"
     function =
-      if ['play_card', 'pick_king'].include?(action)
+      if action == 'play_card'
+        'playCard'
+      elsif action == 'pick_king'
         'submitGame'
       elsif ['resolve_talon', 'resolve_whole_talon'].include?(action)
         'toggleCard'

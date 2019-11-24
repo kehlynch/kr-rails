@@ -9,7 +9,7 @@ function addCard(slug, legal, active) {
   const id = `${stage()}_${slug}`
   // TODO toggling talon putdowns
   const talonStage = ['resolve_talon', 'resolve_whole_talon'].includes(stage());
-  const action = talonStage ? 'toggleCard' : 'submitGame';
+  const action = talonStage ? 'toggleCard' : 'playCard';
   const pickableClass = meToPlayCard() ? 'pickable' : '';
   const legalClass = legal ? '' : 'illegal';
   const onclick = legal ? `${action}(${id})` : '';
@@ -27,6 +27,10 @@ function updateHandPickable() {
   if (meToPlayCard()) {
     $("#js-hand").find("img").addClass("pickable")
   } else {
-    $("#js-hand").find("img").removeClass("pickable")
+    makeHandUnpickable();
   }
+}
+
+function makeHandUnpickable() {
+  $("#js-hand").find("img").removeClass("pickable")
 }
