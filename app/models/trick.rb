@@ -3,7 +3,8 @@ class Trick < ApplicationRecord
   has_many :cards, -> { order(:played_index) }
 
   def add_card(slug, player)
-    card = player.hand.find_card(slug)
+    card = Card.find_by(game_id: game.id, player_id: player.id, slug: slug)
+    raise "card #{slug} not found for player #{player.name}. Added to trick #{cards.map(&:slug)}" if not card
     card.update(played_index: next_played_index, trick_id: id)
 
     cards.reload
