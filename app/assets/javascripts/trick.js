@@ -1,7 +1,8 @@
 function addTrickCard(slug, trickIndex, playerPosition) {
-  const compass = compassPosition(playerPosition)
-  const imageFile = ['east', 'west'].includes(compass) ? `landscape_${slug}` : slug;
-  const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg">`;
+  const compass = compassPosition(playerPosition);
+  const landscape = ['east', 'west'].includes(compass);
+  const imagePath = cardImagePath(slug, landscape);
+  const card = `<img alt="${slug}" class="kr-card trickcard" src="${imagePath}">`;
   getOrAddTrick(trickIndex).append(`<div class="card-container trick-card-container ${compass}">${card}</div>`);
 }
 

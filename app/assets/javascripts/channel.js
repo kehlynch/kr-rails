@@ -2,7 +2,8 @@
 //= require jquery3
 
 function addKing(slug) {
-  $("#js-king").append(`<img alt="diamond_8" class="kr-card " src="/assets/${slug}.jpg">`)
+  const path = cardImagePath(slug);
+  $("#js-king").append(`<img alt="diamond_8" class="kr-card " src="${path}"`)
 }
 
 function createSubscriptions() {
