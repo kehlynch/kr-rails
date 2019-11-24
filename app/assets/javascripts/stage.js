@@ -38,4 +38,5 @@ function changeStage(stage) {
     $("#js-finished-buttons").removeClass("d-none");
     showScores();
   }
+  setInProgress(false);
 }

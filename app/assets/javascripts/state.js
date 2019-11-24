@@ -6,6 +6,8 @@ function isDeclarer() { return state().isDeclarer == 'true'; }
 
 function myMove() { return state().myMove == 'true'; }
 
+function inProgress() { return state().inProgress == 'true'; }
+
 function playerId() { return state().playerId; }
 
 function matchId() { return state().matchId; }
@@ -33,6 +35,10 @@ function gameId() {
 
 function setState(key, value) {
   $('#js-state').attr(`data-${key}`, value);
+}
+
+function setInProgress(value) {
+  $('#js-state').attr(`data-in-progress`, value);
 }
 
 function updateSubscriptionsOnGameChange() {

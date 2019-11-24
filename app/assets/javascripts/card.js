@@ -3,7 +3,10 @@ function cardImagePath(slug, landscape) {
 }
 
 function playCard(checkboxId) {
-  submitGame(checkboxId);
-  $(checkboxId).parent().remove();
-  makeHandUnpickable();
+  if (!inProgress()) {
+    setInProgress(true);
+    submitGame(checkboxId);
+    $(checkboxId).parent().remove();
+    makeHandUnpickable();
+  }
 }

@@ -48,6 +48,8 @@ function attachClickers() {
 
 function pageClicked() {
   const gameStage = stage();
+
+  if (inProgress()) { return; }
   
   console.log("pageClicked()", gameStage, myMove());
   if (gameStage == 'play_card') {
