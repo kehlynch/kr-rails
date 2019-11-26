@@ -1,5 +1,4 @@
 class TricksPresenter
-
   attr_reader :tricks
 
   delegate(

@@ -1,31 +1,24 @@
 class Tricks
   attr_reader :tricks
-  delegate :select, :last, :[], :sort_by, :each, to: :tricks
+  delegate :select, :first, :last, :[], :sort_by, :each, to: :tricks
   def initialize(tricks, game)
     @game = game
-    @tricks = tricks.order(:id)
+    @tricks = tricks.sort_by(&:id)
     @players = game.players
-    @bids = game.bids 
-  end
-
-  def first_trick?
-    @tricks.length == 0
+    @bids = game.bids
   end
 
   def finished?
     @tricks.length == 12 && current_trick&.finished?
   end
 
-  def play_card!(card_slug = nil)
+  def play_card!(card = nil)
     player = next_player
-    return nil if finished? || (player&.human? && !card_slug)
+    fail "card not from next player #{card}" if card && card.player.id != player.id
+    return nil if finished? || (player&.human? && !card)
 
-    card_slug = card_slug || player.pick_card.slug
-    add_trick! if !current_trick || current_trick.finished?
-    card = current_trick.add_card(card_slug, player) if card_slug
-    @tricks.reload
-    add_trick! if current_trick.finished? && !finished?
-    return card
+    card ||= player.pick_card
+    add_card!(card)
   end
 
   def current_trick
@@ -36,6 +29,14 @@ class Tricks
     current_trick&.finished?
   end
 
+  def playable_trick_index
+    return 0 unless current_trick
+
+    return @tricks.length - 1 unless current_trick.finished?
+
+    return @tricks.length
+  end
+
   def lead_player
     @tricks[-2]&.won_player || @bids.lead
   end
@@ -44,12 +45,11 @@ class Tricks
     return nil if finished?
 
     # start of first trick - forehand player always leads for now
-    return @players.forehand if !current_trick
+    return @bids.lead unless current_trick
 
-    # this shouldn't happen with the current setup, but it keeps changing so I'm leaving it in for now
     return current_trick.won_player if current_trick.finished?
 
-    return @tricks[-2].won_player if !current_trick.started?
+    # return @tricks[-2].won_player if !current_trick.started?
 
     # mid trick - find next player
     @players.next_from(current_trick.last_player)
@@ -57,9 +57,14 @@ class Tricks
 
   private
 
+  def add_card!(card)
+    add_trick! if !current_trick || current_trick.finished?
+    current_trick.add_card(card)
+    # add_trick! if current_trick.finished? && !finished?
+  end
+
   def add_trick!
-    Trick.create(game_id: @game.id, trick_index: next_index)
-    @tricks.reload
+    @tricks << Trick.create(game_id: @game.id, trick_index: next_index)
   end
 
   def human_player

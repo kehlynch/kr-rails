@@ -5,12 +5,12 @@ function updateHand(cards) {
   })
 }
 
-function addCard(slug, legal, active) {
+function addCard(slug, legal) {
   const id = `${stage()}_${slug}`
   // TODO toggling talon putdowns
   const talonStage = ['resolve_talon', 'resolve_whole_talon'].includes(stage());
   const action = talonStage ? 'toggleCard' : 'playCard';
-  const pickableClass = meToPlayCard() ? 'pickable' : '';
+  const pickableClass = meToPlayHandCard() ? 'pickable' : '';
   const legalClass = legal ? '' : 'illegal';
   const onclick = legal ? `${action}(${id})` : '';
   const input = (`<input hidden=true id="${id}" name="game[${stage()}][]" type="checkbox" value="${slug}" />`);
@@ -23,9 +23,13 @@ function addCard(slug, legal, active) {
   }
 }
 
+function cardAction(slug, legal) {
+  const action = talonStage ? 'toggleCard' : 'playCard';
+}
+
 function updateHandPickable() {
-  if (meToPlayCard()) {
-    $("#js-hand").find("img").addClass("pickable")
+  if (meToPlayHandCard()) {
+    makeHandPickable();
   } else {
     makeHandUnpickable();
   }
@@ -33,4 +37,8 @@ function updateHandPickable() {
 
 function makeHandUnpickable() {
   $("#js-hand").find("img").removeClass("pickable")
+}
+
+function makeHandPickable() {
+  $("#js-hand").find("img").addClass("pickable")
 }

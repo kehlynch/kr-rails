@@ -7,6 +7,7 @@ function addTrickCard(slug, trickIndex, playerPosition) {
 
 function getOrAddTrick(trickIndex) {
   const id = `js-trick-${trickIndex}`
+
   if ($(`#${id}`).length == 0) {
     addTrick(trickIndex, id);
   }
@@ -15,11 +16,13 @@ function getOrAddTrick(trickIndex) {
 
 function addTrick(trickIndex, id) {
   // initialize as invisible, reveal with nextTrick button, unless 1st trick
+  console.log("addTrick", trickIndex, id);
   const visibleClass = trickIndex == 0 ? '' : 'd-none';
   $("#js-tricks").prepend(`<div class="trick-container ${visibleClass}" id="${id}"></div>`)
 }
 
 function revealTrick(trickIndex) {
+  console.log('revealTrick', trickIndex);
   // hide the other tricks 
   $("#js-tricks").find('.trick-container').addClass('d-none');
   // reveal the first trick (cos we prepend)

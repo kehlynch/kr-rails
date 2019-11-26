@@ -44,7 +44,7 @@ function createSubscriptions() {
       if (action == 'info') {
         setNextPlayer(data.next_player);
         changeStage(data.stage);
-        setState('current-trick', data.current_trick_index);
+        setState('current-trick', data.playable_trick_index);
       }
     },
   });

@@ -18,8 +18,11 @@ function currentTrickIndex() { return state().currentTrick; }
 
 function visibleTrickIndex() { return state().visibleTrick; }
 
-function meToPlayCard() {
-  return myMove() && (currentTrickIndex() == visibleTrickIndex());
+function meToPlayHandCard() {
+  if (!myMove()) { return false; }
+  if (stage() == 'play_card') { return (currentTrickIndex() == visibleTrickIndex()); }
+  if (['resolve_talon', 'resolve_whole_talon'].includes(stage())) { return true; };
+  return false;
 }
 
 function state() {

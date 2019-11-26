@@ -53,7 +53,7 @@ class Game < ApplicationRecord
       end
     end
 
-    return 'make_announcement' if bids.highest&.slug != Bids::TRISCHAKEN && !announcements.finished?
+    return 'make_announcement' if bids.highest&.announcements? && !announcements.finished?
 
     unless tricks.finished?
       return 'play_card'

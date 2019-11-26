@@ -53,5 +53,6 @@ function setTalonPickable(pickable) {
 function setTalonResolvable(resolvable) {
   if (resolvable) {
     $("#js-talon").addClass("d-none");
+    makeHandPickable();
   }
 }

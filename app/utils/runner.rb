@@ -69,7 +69,9 @@ class Runner
   end
 
   def advance_tricks!(card_slug)
-    card = @game.tricks.play_card!(card_slug)
+    p '***advance_tricks', 
+    card = Card.find_by(game_id: @game.id, slug: card_slug)
+    card = @game.tricks.play_card!(card)
     while card
       @broadcaster.card_played(card: card)
       card = @game.tricks.play_card!

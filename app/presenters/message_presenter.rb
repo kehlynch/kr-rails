@@ -3,7 +3,7 @@ class MessagePresenter
 
   delegate :winners, :talon_picked, to: :game
   delegate :declarer, to: :bids
-  delegate :current_trick, :current_trick_finished?, :first_trick?, to: :tricks
+  delegate :current_trick, :current_trick_finished?, to: :tricks
 
   def initialize(game)
     @game = game
@@ -58,7 +58,8 @@ class MessagePresenter
     return pick_king_msg if @bids.pick_king?
     return pick_talon_msg if @bids.talon_cards_to_pick == 3
     return pick_whole_talon_msg if @bids.talon_cards_to_pick == 6
-    return first_announcement_msg
+    return first_announcement_msg if @bids.highest&.announcements?
+    return first_trick_msg
   end
 
   def pick_king_msg
@@ -78,7 +79,8 @@ class MessagePresenter
   def next_after_king_msg
     return pick_talon_msg if @bids.talon_cards_to_pick == 3
     return pick_whole_talon_msg if @bids.talon_cards_to_pick == 6
-    return first_announcement_msg
+    return first_announcement_msg if @bids.highest&.announcements?
+    return first_trick_msg
   end
 
   def talon_picked_msg
@@ -97,7 +99,7 @@ class MessagePresenter
   end
 
   def first_trick_msg
-    lead = @tricks.lead_player
+    lead = @bids.lead
     return ["#{lead.name} leads first trick"]
   end
 
@@ -144,7 +146,10 @@ class MessagePresenter
   private
 
   def active_instruction_msg(player)
-    return 'click for next trick' if !player.played_in_current_trick? && current_trick && current_trick.trick_index != 0
+    if current_trick && (current_trick.finished? || (!player.played_in_current_trick? && current_trick.trick_index != 0))
+      return 'click for next trick'
+    end
+
     {
       'make_bid' => 'Make a bid.',
       'pick_king' => 'Pick a king.',

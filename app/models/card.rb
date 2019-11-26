@@ -64,18 +64,21 @@ class Card < ApplicationRecord
   def legal?
     return simple_legal_putdown? if ['resolve_talon', 'resolve_whole_talon'].include?(game.stage)
 
-    return trischaken_legal? if game.bids.highest&.trischaken?
+    return legal_for_trick?
+  end
+
+  def legal_for_trick?
+    return negative_legal? if game.bids.highest&.negative?
 
     if player.forced_cards.any?
       return true if player.forced_cards.include?(slug)
+
       return false
     end
-    
-    p player.illegal_cards
 
     return false if player.illegal_cards.include?(slug)
 
-    return true if !current_trick&.started?
+    return true if current_trick.finished?
 
     return true if suit == led_suit
 
@@ -88,14 +91,14 @@ class Card < ApplicationRecord
     return true
   end
 
-  def trischaken_legal?
+  def negative_legal?
     led = game.current_trick&.led_card
 
     winning = game.current_trick&.winning_card
 
     if !led
       # leading pagat
-      return false if slug == 'trump_1' && player.trumps.length > 1
+      return false if slug == 'trump_1' && player.trumps.length > 1 && game.bids.highest&.trischaken?
 
       return true
     end

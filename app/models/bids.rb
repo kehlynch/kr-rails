@@ -6,8 +6,8 @@ class Bids
   BESSER_RUFER = 'besser_rufer'
   SOLO_DREIER = 'solo_dreier'
 
-  # PICCOLO = 'piccolo'
-  # BETTEL = 'bettel'
+  PICCOLO = 'piccolo'
+  BETTEL = 'bettel'
   # PICCOLO_OUVERT = 'piccolo_ouvert'
   # BETTEL_OUVERT = 'piccolo_ouvert'
 
@@ -15,7 +15,7 @@ class Bids
   TRISCHAKEN = 'trischaken'
   SECHSERDREIER = 'sechserdreier'
 
-  FIRST_ROUND_SLUGS = [PASS, RUFER, SOLO, BESSER_RUFER, DREIER, SOLO_DREIER]
+  FIRST_ROUND_SLUGS = [PASS, RUFER, SOLO, PICCOLO, BESSER_RUFER, BETTEL, DREIER, SOLO_DREIER]
   RUFER_SLUGS = [CALL_KING, TRISCHAKEN, SECHSERDREIER]
 
   RANKED_SLUGS = FIRST_ROUND_SLUGS + RUFER_SLUGS
@@ -29,7 +29,9 @@ class Bids
     SECHSERDREIER => 3,
     BESSER_RUFER => 1,
     SOLO => 2,
+    PICCOLO => 2,
     DREIER => 3,
+    BETTEL => 3,
     SOLO_DREIER => 6
   }
 
@@ -122,7 +124,7 @@ class Bids
 
   def lead
     # this will change for Bettle etc
-    @players.forehand
+    highest&.declarer_leads? ? declarer : @players.forehand
   end
 
   def next_bidder

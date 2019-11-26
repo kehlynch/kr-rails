@@ -4,9 +4,11 @@ const BID_NAMES = {
   'pass': 'Pass',
   'rufer': 'Rufer',
   'solo': 'Solo',
+  'piccolo': 'Piccolo',
   'besser_rufer': 'Besser Rufer',
   'dreier': 'Dreier',
   'solo_dreier': 'Solo Dreier',
+  'bettel': 'Bettel',
   'call_king': 'Call a king',
   'trischaken': 'Trischaken',
   'sechserdreier': 'Sechserdreier'

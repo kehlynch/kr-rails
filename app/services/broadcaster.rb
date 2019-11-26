@@ -77,7 +77,7 @@ class Broadcaster
       action: :info,
       stage: @game.stage,
       next_player: @game.next_player&.position,
-      current_trick_index: @game.current_trick&.trick_index
+      playable_trick_index: @game.tricks.playable_trick_index
     )
 
     @game.players.select(&:human?).each do |player|
@@ -122,14 +122,14 @@ class Broadcaster
 
   def scores
     @game.players.select(&:human?).each do |player|
-      scores = PlayersPresenter.new(@game, player.id).map do |player|
+      scores = PlayersPresenter.new(@game, player.id).map do |p|
         {
-          name: player.name,
-          won_tricks_count: player.won_tricks_count,
-          points: player.points,
-          team_points: player.team_points,
-          game_points: player.game_points,
-          winner: player.winner?
+          name: p.name,
+          won_tricks_count: p.won_tricks_count,
+          points: p.points,
+          team_points: p.team_points,
+          game_points: p.game_points,
+          winner: p.winner?
         }
       end
 

@@ -7,7 +7,7 @@ module MatchHelper
   def points_classes(data)
     data
       .slice(:forehand, :winner, :declarer)
-      .reject { |k, v| v }
+      .select { |k, v| v }
       .compact
       .keys
       .map(&:to_s)

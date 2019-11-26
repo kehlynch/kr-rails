@@ -8,7 +8,7 @@
   data-player-id=<%= @player.id %>
   data-match-id=<%= @match_id %>
   data-player-position=<%= @player.position %>
-  data-current-trick=<%= @game.current_trick&.trick_index %>
+  data-current-trick=<%= @game.tricks.playable_trick_index %>
 />
 <input
   id="js-state-game-id"

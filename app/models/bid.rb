@@ -24,6 +24,24 @@ class Bid < ApplicationRecord
     Bids::TRISCHAKEN == slug
   end
 
+  def announcements?
+    ![Bids::PICCOLO, Bids::BETTEL, Bids::TRISCHAKEN].include?(slug)
+  end
+
+  def negative?
+    [Bids::PICCOLO, Bids::BETTEL, Bids::TRISCHAKEN].include?(slug)
+  end
+
+  def declarer_leads?
+    [Bids::BETTEL].include?(slug)
+  end
+
+  def contracted_trick_count
+    return 1 if slug == Bids::PICCOLO
+    return 0 if slug == Bids::BETTEL
+    return nil
+  end
+
   # breaking this out - it might cause issues if I change the way
   # bids are created. There's a bid_index on the model that's not
   # being set or used - could use that here

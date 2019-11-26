@@ -10,7 +10,9 @@ class CardPicker
     if @bird_announced && legal_cards.any?(&:trump?)
       return legal_cards.select(&:trump?).sample if perc(80)
     end
-    legal_cards.sample
+    card = legal_cards.sample
+    raise 'no legal card' unless card
+    return card
   end
 
   private

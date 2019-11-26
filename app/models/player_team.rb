@@ -45,6 +45,8 @@ class PlayerTeam
   end
 
   def winner?
+    return contracted_trick_count_won?(@bid.contracted_trick_count) if @bid&.contracted_trick_count
+
     return points >= 35 if @defence
 
     return points >= 36
@@ -69,7 +71,7 @@ class PlayerTeam
   end
 
   def score_talon?
-    return !@defence if @bid&.slug == 'solo' && @talon.find { |c| c.slug == @king }
+    return !@defence if @bid&.slug == Bids::SOLO && @talon.find { |c| c.slug == @king }
 
     return @defence
   end
@@ -86,4 +88,13 @@ class PlayerTeam
   end
   
   private
+
+  def contracted_trick_count_won?(trick_count)
+    p '---contracted_trick_count_won', trick_count, tricks.length
+    if @defence
+      tricks.length != (12 - trick_count)
+    else
+      tricks.length == trick_count
+    end
+  end
 end
