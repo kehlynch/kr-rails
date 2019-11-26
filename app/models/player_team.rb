@@ -13,7 +13,7 @@ class PlayerTeam
   end
 
   def announcement_points_lookup
-    @announcement_points_lookup ||= AnnouncementPointsContext.new(@game).points_for(self)
+    @announcement_points_lookup ||= @bid.announcements? ? AnnouncementPointsContext.new(@game).points_for(self) : {}
   end
 
   def include?(player)
@@ -25,11 +25,14 @@ class PlayerTeam
   end
 
   def announcement_points
-    if @defence
-      announcement_own_points - @game.player_teams.declarers.announcement_own_points
-    else
-      announcement_own_points - @game.player_teams.defence.announcement_own_points
-    end
+    points =
+      if @defence
+        announcement_own_points - @game.player_teams.declarers.announcement_own_points
+      else
+        announcement_own_points - @game.player_teams.defence.announcement_own_points
+      end
+
+    @bid.announcements_doubled? ? 2 * points : points
   end
 
   def announcement_own_points
@@ -37,11 +40,11 @@ class PlayerTeam
   end
 
   def made_announcement?(slug)
-    announcement_points_lookup[slug] > 0
+    (announcement_points_lookup[slug] || 0) > 0
   end
 
   def lost_announcement?(slug)
-    announcement_points_lookup[slug] < 0
+    (announcement_points_lookup[slug] || 0) < 0
   end
 
   def winner?

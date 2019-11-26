@@ -1,5 +1,4 @@
 class Bid < ApplicationRecord
-
   belongs_to :game
 
   validates :slug, inclusion: { in: Bids::RANKED_SLUGS }
@@ -26,6 +25,10 @@ class Bid < ApplicationRecord
 
   def announcements?
     ![Bids::PICCOLO, Bids::BETTEL, Bids::TRISCHAKEN].include?(slug)
+  end
+
+  def announcements_doubled?
+    [Bids::SOLO, Bids::SOLO_DREIER].include?(slug)
   end
 
   def negative?

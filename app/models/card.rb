@@ -78,7 +78,7 @@ class Card < ApplicationRecord
 
     return false if player.illegal_cards.include?(slug)
 
-    return true if current_trick.finished?
+    return true if !current_trick || current_trick&.finished?
 
     return true if suit == led_suit
 

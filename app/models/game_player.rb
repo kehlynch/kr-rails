@@ -151,6 +151,8 @@ class GamePlayer
     @forced = []
     @illegal = []
 
+    p 'init_forced', trick_index
+
     init_forced_bird(1) if pagat?
     init_forced_bird(2) if uhu?
     init_forced_bird(3) if kakadu?
@@ -159,7 +161,7 @@ class GamePlayer
       init_forced_called_king
     end
   end
-  
+
   def init_forced_bird(number)
     slug = "trump_#{number}"
     if trick_index == (12 - number)
@@ -167,7 +169,8 @@ class GamePlayer
     else
       trick = @game.tricks.current_trick
       return unless trick
-      must_play_trump = trick.led_suit == 'trump' || (trick.started? && !hand.cards_in_led_suit?) || hand.trumps.length == hand.length
+
+      must_play_trump = !trick.finished? && (trick.led_suit == 'trump' || (trick.started? && !hand.cards_in_led_suit?) || hand.trumps.length == hand.length)
       @illegal << slug unless must_play_trump && hand.trumps.length == bird_count
     end
   end
@@ -219,6 +222,6 @@ class GamePlayer
   end
 
   def trick_index
-    @game.current_trick&.trick_index || 0
+    @game.tricks.playable_trick_index
   end
 end
