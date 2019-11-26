@@ -41,7 +41,8 @@ function setState(key, value) {
 }
 
 function setInProgress(value) {
-  $('#js-state').attr(`data-in-progress`, value);
+  setState('data-in-progress', value);
+  $('#js-in-progress-spinner').toggleClass('d-none', !value);
 }
 
 function updateSubscriptionsOnGameChange() {

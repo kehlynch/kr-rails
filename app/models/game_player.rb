@@ -168,9 +168,15 @@ class GamePlayer
       @forced << slug if hand.trump_legal?
     else
       trick = @game.tricks.current_trick
-      return unless trick
 
-      must_play_trump = !trick.finished? && (trick.led_suit == 'trump' || (trick.started? && !hand.cards_in_led_suit?) || hand.trumps.length == hand.length)
+      must_play_trump =
+        trick &&
+        !trick.finished? &&
+        (
+          trick.led_suit == 'trump' ||
+          (trick.started? && !hand.cards_in_led_suit?) ||
+          hand.trumps.length == hand.length
+        )
       @illegal << slug unless must_play_trump && hand.trumps.length == bird_count
     end
   end
