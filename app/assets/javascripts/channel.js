@@ -39,6 +39,9 @@ function createSubscriptions() {
       }
       if (action == 'play_card') {
         addTrickCard(data.card_slug, data.trick_index, data.player)
+        if (data.won_card) {
+          setWonCard(data.won_card)
+        }
       }
 
       if (action == 'info') {
@@ -49,18 +52,10 @@ function createSubscriptions() {
     },
   });
 
-  // App.playerMessages = App.cable.subscriptions.create({channel: 'PlayersChannel', player_id: playerId(), game_id: gameId()}, {
-  //   received: function(data) {
-  //     console.log("recvd from player channel", data);
-  //     addPlayerInfo(data)
-  //   },
-  // });
-
   // for refreshing show page
   const showPageMatchId = $('#js-reload-on-match-ready').attr('data-match-id');
   const showPagePlayerId = $('#js-reload-on-match-ready').attr('data-player-id');
   if (showPageMatchId) {
-    console.log("subscribing to match channel");
     App.matchMessages = App.cable.subscriptions.create({channel: 'MatchesChannel', id:  showPageMatchId}, {  
       received: function(data) {
         console.log("recvd from match channel", data);
@@ -73,7 +68,6 @@ function createSubscriptions() {
 }
 
 $(document).ready(function() {
-  console.log("document ready");
   scrollMessageBox();
   createSubscriptions();
 })

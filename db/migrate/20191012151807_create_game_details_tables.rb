@@ -36,7 +36,7 @@ class CreateGameDetailsTables < ActiveRecord::Migration[5.2]
     create_table :bids do |t|
       t.string :slug
       t.integer :bid_index
-      
+
       t.references :game
       t.references :player
     end

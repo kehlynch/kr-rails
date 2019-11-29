@@ -52,6 +52,30 @@
           font-size: smaller;
         }
       }
+      &.kontra {
+        &:after {
+          margin-left: -4px;
+          content: "x2";
+          vertical-align: sub;
+          font-size: smaller;
+        }
+      }
+      &.rekontra {
+        &:after {
+          margin-left: -4px;
+          content: "x4";
+          vertical-align: sub;
+          font-size: smaller;
+        }
+      }
+      &.subkontra {
+        &:after {
+          margin-left: -4px;
+          content: "x8";
+          vertical-align: sub;
+          font-size: smaller;
+        }
+      }
     }
     span {
       margin-left: 2px;

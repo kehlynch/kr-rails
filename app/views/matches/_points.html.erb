@@ -16,12 +16,12 @@
           </div>
         <% end %>
         <div class="game-shorthands">
-          <span class="bid-shorthand <%= 'vs-three' if summary[:vs_three] %> <%= 'off' if summary[:off] %>">
-            <%= summary[:bid] %>
+          <span class="bid-shorthand <%= bid_classes(summary[:bid]) %>">
+            <%= summary[:bid][:shorthand] %>
           </span>
           <% summary[:announcements].each do |a| %>
             <span class="<%= announcement_classes(a) %>">
-              <%= a[:announcement] %>
+              <%= a[:shorthand] %>
             </span>
           <% end %>
         </div>

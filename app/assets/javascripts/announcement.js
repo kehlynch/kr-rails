@@ -19,22 +19,33 @@ const ANNOUNCEMENT_SHORTNAMES = {
 
 // announcement indicators under players
 function addAnnouncement(slug, player) {
-  console.log("addAnnouncement", slug, player);
-  const name = ANNOUNCEMENT_SHORTNAMES[slug]
-  if (name) {
-    $(`#js-player-${player}-announcements`).find('h6').append(` ${name}`);
-  }
+  const name = announcementShortname(slug);
+  $(`#js-player-${player}-announcements`).find('h6').append(name);
 }
+
+function announcementShortname(slug) {
+  return ANNOUNCEMENT_SHORTNAMES[slug];
+}
+
+function announcementName(slug) {
+  return ANNOUNCEMENT_NAMES[slug] || kontraName(slug);
+}
+
+function kontraName(slug) {
+  const [name, kontrableSlug, id] = slug.split('-');
+  const kontrableName =  ANNOUNCEMENT_NAMES[kontrableSlug] || 'game';
+  return `${name} the ${kontrableName}`
+}
+
 
 // announcement picking buttons
 function addValidAnnouncement(slug) {
-  const name = ANNOUNCEMENT_NAMES[slug];
+  const name = announcementName(slug);
   const input = `<input hidden=true id="valid-announcement-${slug}" name="game[make_announcement][]" type="checkbox" value="${slug}" />`
 
   const button = `<button name="button" type="button" alt="${name}" class="announcement-button btn btn-outline-dark" onclick="toggleAnnouncement('${slug}')">${name}</button>`
   $(`#js-valid-announcement-buttons`).append(input)
   $(`#js-valid-announcement-buttons`).append(button)
-
 }
 
 function addValidAnnouncements(slugs) {

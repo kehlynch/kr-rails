@@ -55,16 +55,25 @@ class PlayerTeam
     return points >= 36
   end
 
-  def announced?(slug)
+  def announcements
     @game.announcements
-      .find { |a| a.slug == slug && players.map(&:id).include?(a.player_id) }
+      .select { |a| players.map(&:id).include?(a.player_id) }
+  end
+
+  def announced?(slug)
+    announcements
+      .find { |a| a.slug == slug }
       .present?
+  end
+
+  def announcement(slug)
+    announcements.find { |a| a.slug == slug }
   end
 
   def points
     cards = @players.map { |p| p.scorable_cards }.flatten
 
-    cards = cards + @talon if score_talon?
+    cards += @talon if score_talon?
 
     Points.points_for_cards(cards)
   end
@@ -81,19 +90,20 @@ class PlayerTeam
 
   def game_points
     return 0 unless @game.finished?
-    bid_points = winner? ? @bid.points : -@bid.points
+
+    p '---kontra_multiplier', @bid.kontra_multiplier
+    bid_points = (winner? ? @bid.points : -@bid.points) * @bid.kontra_multiplier
 
     defence_count = @defence ? @players.length : 4 - @players.length
     total_points = (bid_points + announcement_points) * defence_count
-    points_per_player = total_points/@players.length
+    points_per_player = total_points / @players.length
 
     return points_per_player
   end
-  
+
   private
 
   def contracted_trick_count_won?(trick_count)
-    p '---contracted_trick_count_won', trick_count, tricks.length
     if @defence
       tricks.length != (12 - trick_count)
     else

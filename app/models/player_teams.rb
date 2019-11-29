@@ -1,5 +1,4 @@
 class PlayerTeams
-
   attr_reader :declarers, :defence, :teams
 
   delegate :find, :each, :map, to: :teams
@@ -41,33 +40,29 @@ class PlayerTeams
     return trischaken_zero_trick_winners if trischaken_zero_trick_winners.any?
 
     highest = @game.players.map { |p| Points.individual_points_for(p) }.max
-    @game.players.select { |p| Points.individual_points_for(p) != highest }
+    @game.players.reject { |p| Points.individual_points_for(p) == highest }
   end
 
   def trischaken_zero_trick_winners
     @game.players.select { |p| Points.individual_points_for(p) == 0 }
   end
 
-  def game_points_for(player)
-    return trischaken_game_points_for(player) if @trischaken
-
-    team_for(player).game_points
-  end
-
   def trischaken_game_points_for(player)
     if trischaken_zero_trick_winners.include?(player)
-      (4 - winners.length)/winners.length
+      (4 - winners.length) / winners.length
     elsif winners.include?(player)
       loss = 1
-      return loss * 2 if !winners.include?(@game.forehand)
-      return loss * 2 if player.forehand_for?(@game.id)
+      return loss * 2 unless winners.include?(@game.forehand)
+
+      return loss * 2 if player.forehand?
+
       return loss
     elsif trischaken_zero_trick_winners.any?
       -1
     else
-      loss = -(winners.length/(4 - winners.length))
-      
-      return loss * 2 if player.forehand_for?(@game.id)
+      loss = -(winners.length / (4 - winners.length))
+
+      return loss * 2 if player.forehand?
 
       return loss
     end
@@ -102,29 +97,11 @@ class PlayerTeams
 
     team_for(player).points
   end
- 
+
   def game_points_for(player)
     return trischaken_game_points_for(player) if @trischaken
 
     team_for(player).game_points
-  end
-
-  def trischaken_game_points_for(player)
-    if trischaken_zero_trick_winners.include?(player)
-      (4 - winners.length)/winners.length
-    elsif winners.include?(player)
-      loss = 1
-      return loss * 2 if !winners.include?(@game.forehand)
-      return loss
-    elsif trischaken_zero_trick_winners.any?
-      -1
-    else
-      loss = -(winners.length/(4 - winners.length))
-      
-      return loss * 2 if player.forehand?
-
-      return loss
-    end
   end
 
   def partner

@@ -16,10 +16,6 @@ class Announcements
     VALAT
   ]
 
-  # CONTRA = 'contra'
-  # RECONTRA = 'recontra'
-  # SUBCONTRA = 'subcontra'
-
   POINTS = {
     PAGAT => [2, 1],
     UHU => [3, 1],
@@ -31,7 +27,14 @@ class Announcements
 
   attr_reader :announcements
 
-  delegate :each, :map, :select, :find, :any?, to: :announcements
+  delegate(
+    :any?,
+    :each,
+    :find,
+    :map,
+    :select,
+    to: :announcements
+  )
 
   def initialize(announcements, game)
     @game = game
@@ -40,8 +43,8 @@ class Announcements
   end
 
   def make_announcements!(slugs = [])
-    return nil if finished? || (next_player.human? && !slugs.present?)
-    
+    return nil if finished? || (next_player.human? && slugs.blank?)
+
     slugs = next_player.pick_announcements(valid_announcements) if slugs.blank?
     add_announcements!(slugs)
   end
@@ -50,14 +53,32 @@ class Announcements
     player = next_player
 
     return [] unless player # announcing not started
-    
+
     valid = SLUGS.clone.clone
 
     if player.defence? || !@game.king
       valid.delete(KING)
     end
 
+    valid = valid_kontras + valid
+
     valid + [PASS]
+  end
+
+  def valid_kontras
+    declarer_announcements = @game.player_teams.declarers.announcements
+    defence_announcements = @game.player_teams.declarers.announcements
+
+    bid_kontra = @game.bids.highest.kontra
+    bid_kontra_slug = @game.bids.highest.kontra_slug
+
+    if next_player.defence?
+      slugs = declarer_announcements.map(&:kontra_slug) + defence_announcements.map(&:rekontra_slug)
+      [nil, 4].include?(bid_kontra) ? slugs + [bid_kontra_slug] : slugs
+    else
+      slugs = defence_announcements.map(&:kontra_slug) + declarer_announcements.map(&:rekontra_slug)
+      bid_kontra == 2 ? slugs + [bid_kontra_slug] : slugs
+    end.compact
   end
 
   def finished?
@@ -83,9 +104,19 @@ class Announcements
   def add_announcements!(slugs)
     player = next_player
     announcements = slugs.map do |slug|
-      Announcement.create(slug: slug, game_id: @game.id, player_id: player.id)
+      add_announcement!(slug, player)
     end
     @announcements += announcements
     return announcements
+  end
+
+  def add_announcement!(slug, player)
+    add_kontra!(slug) if slug.include?('kontra')
+    Announcement.create(slug: slug, game_id: @game.id, player_id: player.id)
+  end
+
+  def add_kontra!(kontra_slug)
+    kontrable = Kontrable.find_kontrable(kontra_slug)
+    kontrable.update_kontra(kontra_slug)
   end
 end

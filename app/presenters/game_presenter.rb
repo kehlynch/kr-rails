@@ -26,14 +26,21 @@ class GamePresenter
   def initialize(game, active_player_id)
     @game = game
     @active_player_id = active_player_id
-    # @players = game.players.map { |p| PlayerPresenter.new(p, game) }
     @players = PlayersPresenter.new(game, active_player_id)
     @announcements = game.announcements.map { |a| AnnouncementPresenter.new(game) }
   end
 
-  def model; @game end
-  def forehand; @players.find { |p| p.forehand? } end
-  def active_player; @players.find { |p| p.id == @active_player_id } end
+  def model
+    @game
+  end
+
+  def forehand
+    @players.find { |p| p.forehand? }
+  end
+
+  def active_player
+    @players.find { |p| p.id == @active_player_id }
+  end
 
   def talon_pickable?
     declarer&.id == @active_player_id && stage == 'pick_talon'
@@ -49,11 +56,9 @@ class GamePresenter
     return nil unless @game.finished?
 
     {
-      bid: bid_shorthand,
-      vs_three:  @game.player_teams.defence.length == 3 && @game.bids&.highest&.king?,
-      off: !@game.winners.include?(@game.declarer),
+      bid: bid_summary,
       announcements: announcements_summary,
-      players: players_summary,
+      players: players_summary
     }
   end
 
@@ -64,8 +69,8 @@ class GamePresenter
       .select { |g| g.id <= @game.id }
       .map { |g| GamePresenter.new(g, @active_player_id) }
       .map(&:raw_points)
-      .reduce([0, 0, 0, 0]) do |points, acc|
-        acc.each_with_index.map { |p, i| p + points[i] }
+      .reduce([0, 0, 0, 0]) do |raw_points, acc|
+        acc.each_with_index.map { |p, i| p + raw_points[i] }
       end
 
     @players.each_with_index.map do |player, i|
@@ -86,26 +91,31 @@ class GamePresenter
 
   def announcement_summary(slug)
     @game.player_teams.map do |team|
-      if team.made_announcement?(slug) || team.lost_announcement?(slug)
-        {
-          announcement: AnnouncementPresenter.new(slug).shorthand,
-          off: team.lost_announcement?(slug),
-          defence: team.defence?,
-          declared: team.announced?(slug)
-        }
-      end
+      next unless team.made_announcement?(slug) || team.lost_announcement?(slug)
+
+      {
+        shorthand: AnnouncementPresenter.new(slug).shorthand,
+        kontra: team.announcement(slug).kontra,
+        off: team.lost_announcement?(slug),
+        defence: team.defence?,
+        declared: team.announced?(slug)
+      }
     end.compact
   end
 
-  def bid_shorthand
+  def bid_summary
     winning_bid = @game.bids.highest
-    BidPresenter.new(winning_bid.slug).shorthand
+    {
+      kontra: winning_bid.kontra,
+      off: !@game.winners.include?(@game.declarer),
+      shorthand: BidPresenter.new(winning_bid.slug).shorthand,
+      vs_three:  @game.player_teams.defence.length == 3 && @game.bids&.highest&.king?
+    }
   end
 
   def raw_points
-    return [] if not @game.finished?
+    return [] unless @game.finished?
+
     @players.map(&:game_points)
   end
-
-  private
 end

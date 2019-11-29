@@ -5,22 +5,36 @@ module MatchHelper
   end
 
   def points_classes(data)
-    data
-      .slice(:forehand, :winner, :declarer)
-      .select { |k, v| v }
-      .compact
-      .keys
-      .map(&:to_s)
-      .join(' ')
+    hash_to_strings(data, [:forehand, :declarer, :winner]).join(' ')
   end
 
   def announcement_classes(data)
-    data
-      .slice(:off, :defence, :declared)
+    class_list = hash_to_strings(data, [:off, :defence, :declared])
+    add_kontra_class(class_list, data[:kontra])
+  end
+
+  def bid_classes(data)
+    class_list = hash_to_strings(data, [:off, :vs_three])
+    add_kontra_class(class_list, data[:kontra])
+  end
+
+  def add_kontra_class(class_list, kontra)
+    class_list << kontra_class(kontra) if kontra_class(kontra)
+    class_list.join(' ')
+  end
+
+  def kontra_class(kontra)
+    { 2 => 'kontra', 4 => 'rekontra', 6 => 'subkontra' }[kontra]
+  end
+
+  private
+
+  def hash_to_strings(lookup, keys)
+    lookup
+      .slice(*keys)
       .select { |k, v| v }
       .compact
       .keys
       .map(&:to_s)
-      .join(' ')
   end
 end

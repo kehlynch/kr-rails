@@ -12,7 +12,10 @@ class AnnouncementPointsContext
       'king' => king_points(team),
       'forty_five' => forty_five_points(team),
       'valat' => valat_points(team)
-    }
+    }.map do |k, v|
+      multiplier = team.announcement(k)&.kontra_multiplier || 1
+      [k, multiplier * v]
+    end.to_h
   end
 
   private
@@ -28,6 +31,7 @@ class AnnouncementPointsContext
   def forty_five_points(team)
     if team.announced?(Announcements::FORTY_FIVE)
       return 2 if team.points >= 45
+
       return -2
     end
     return 0
@@ -37,9 +41,11 @@ class AnnouncementPointsContext
     made = team.tricks.length == 12
     if team.announced?(Announcements::VALAT)
       return 8 if made
+
       return -8
     end
     return 4 if made
+
     return 0
   end
 end

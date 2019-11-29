@@ -9,7 +9,7 @@ class GamePlayer
   def name
     @player.name
   end
-  
+
   def hand
     cards = @game.cards.select do |c|
       c.player_id == id && c.trick_id.nil? && !c.discard
@@ -100,15 +100,13 @@ class GamePlayer
     @game.winners.include?(self)
   end
 
-  def defence?
-    @game.player_teams.defence.include?(self)
-  end
-
   def pick_putdowns
     putdowns = []
     putdown_count = hand.length - 12
     until putdowns.length == putdown_count
-      putdowns << hand.filter { |c| c.legal_putdown?(hand, putdowns) }.sample
+      putdowns << hand.filter do |c|
+        c.legal_putdown?(hand, putdowns)
+      end.sample
     end
 
     return putdowns
@@ -117,7 +115,7 @@ class GamePlayer
   def pick_bid(valid_bids)
     BidPicker.new(bids: valid_bids, hand: hand).pick
   end
-  
+
   def pick_announcements(_valid_announcements)
     bird_required = @game.bids.bird_required? && @game.bids.highest&.player_id == id
     bird_announced_by_player = ['pagat', 'uhu', 'kakadu'].any? { |a| announced_individually?(a) }
@@ -151,8 +149,6 @@ class GamePlayer
     @forced = []
     @illegal = []
 
-    p 'init_forced', trick_index
-
     init_forced_bird(1) if pagat?
     init_forced_bird(2) if uhu?
     init_forced_bird(3) if kakadu?
@@ -162,6 +158,7 @@ class GamePlayer
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def init_forced_bird(number)
     slug = "trump_#{number}"
     if trick_index == (12 - number)
@@ -180,6 +177,7 @@ class GamePlayer
       @illegal << slug unless must_play_trump && hand.trumps.length == bird_count
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def init_forced_called_king
     if trick_index == 11

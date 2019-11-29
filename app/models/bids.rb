@@ -78,7 +78,7 @@ class Bids
   end
 
   def finished?
-    first_round_finished? && !(highest&.slug == RUFER)
+    first_round_finished? && (highest&.slug != RUFER)
   end
 
   def started?
@@ -109,9 +109,9 @@ class Bids
   end
 
   def highest
-    @bids.sort_by do |b|
-      "#{b.rank}#{b.player.forehand?}"
-    end.last
+    @bids.max_by do |b|
+      [b.rank, b.player.forehand?]
+    end
   end
 
   def highest_rank

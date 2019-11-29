@@ -1,4 +1,6 @@
 class Bid < ApplicationRecord
+  include Kontrable
+
   belongs_to :game
 
   validates :slug, inclusion: { in: Bids::RANKED_SLUGS }

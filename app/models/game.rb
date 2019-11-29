@@ -23,7 +23,7 @@ class Game < ApplicationRecord
   def players
     @players ||= Players.new(self)
   end
-  
+
   def talon
     @talon ||= Talon.new(cards, self)
   end
@@ -36,19 +36,22 @@ class Game < ApplicationRecord
     @announcements ||= Announcements.new(_announcements, self)
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def stage
     return 'make_bid' unless bids.finished?
 
     return 'pick_king' if bids.pick_king? && king.nil?
 
-    if !bids.talon_cards_to_pick.nil? 
+    unless bids.talon_cards_to_pick.nil?
       unless talon_picked
         return 'pick_whole_talon' if bids.talon_cards_to_pick == 6
+
         return 'pick_talon'
       end
 
       unless talon_resolved
         return 'resolve_whole_talon' if bids.talon_cards_to_pick == 6
+
         return 'resolve_talon'
       end
     end
@@ -61,6 +64,7 @@ class Game < ApplicationRecord
 
     return 'finished'
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def winners
     player_teams.winners
@@ -93,7 +97,7 @@ class Game < ApplicationRecord
   def pick_whole_talon!
     talon.pick_whole_talon!(declarer)
 
-    # TODO urgh - sort this out!
+    # TODO: using 3 to mean all 6, since this is an int field and used to refer to the talon_half_index - sort this out!
     update(talon_picked: 3)
   end
 

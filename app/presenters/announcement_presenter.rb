@@ -1,12 +1,12 @@
 class AnnouncementPresenter
   ANNOUNCEMENT_NAMES = {
-    Announcements::PASS => 'Pass',
-    Announcements::PAGAT => 'Pagat',
-    Announcements::UHU => 'Uhu',
-    Announcements::KAKADU => 'Kakadu',
-    Announcements::KING => 'King Ultimo',
+    Announcements::PASS => 'pass',
+    Announcements::PAGAT => 'pagat',
+    Announcements::UHU => 'uhu',
+    Announcements::KAKADU => 'kakadu',
+    Announcements::KING => 'king ultimo',
     Announcements::FORTY_FIVE => '45',
-    Announcements::VALAT => 'Valat'
+    Announcements::VALAT => 'valat'
   }
 
   ANNOUNCEMENT_SHORTNAMES = {
@@ -24,7 +24,16 @@ class AnnouncementPresenter
   end
 
   def name
+    p '---name', @slug
+    return kontra_name if @slug.include?('kontra')
+
     ANNOUNCEMENT_NAMES[@slug] if @slug
+  end
+
+  def kontra_name
+    name, kontrable_slug, _id = @slug.split('-')
+    kontrable_name = ANNOUNCEMENT_NAMES[kontrable_slug] || 'game'
+    "#{name} the #{kontrable_name}"
   end
 
   def shorthand

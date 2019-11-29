@@ -8,7 +8,7 @@ class Trick < ApplicationRecord
     cards.reload
     return card
   end
-  
+
   def find_card(slug)
     cards.find { |c| c.slug == slug }
   end

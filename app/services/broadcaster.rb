@@ -66,7 +66,8 @@ class Broadcaster
       player: card.player.position,
       card_slug: card.slug,
       trick_index: card.trick.trick_index,
-      message: @message.trick_msg(card.trick)
+      message: @message.trick_msg(card.trick),
+      won_card: card.trick.won_card&.slug
     )
   end
 

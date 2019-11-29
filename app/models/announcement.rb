@@ -1,8 +1,7 @@
 class Announcement < ApplicationRecord
+  include Kontrable
 
   belongs_to :game
-
-  validates :slug, inclusion: { in: Announcements::SLUGS + [Announcements::PASS] }
 
   def player
     game.players.find { |p| p.id == player_id }
@@ -10,5 +9,9 @@ class Announcement < ApplicationRecord
 
   def points
     Announcements::POINTS[slug]
+  end
+
+  def is_kontra?
+    slug.include?('kontra')
   end
 end
