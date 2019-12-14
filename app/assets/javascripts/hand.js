@@ -1,5 +1,7 @@
 function updateHand(cards) {
-  // $("#js-hand").empty()
+  if ( $('#js-hand').find('img').length != cards.length ) {
+    $("#js-hand").empty()
+  }
   cards.forEach((c) => {
     updateCard(c.slug, c.legal);
   })
@@ -15,15 +17,15 @@ function updateCard(slug, legal) {
   const classes = `kr-card ${pickableClass} ${legalClass}`
   const onclick = legal ? `${action}(${inputId})` : '';
 
-  addOrUpdateCard(inputId, slug, classes, onclick);
+  const inputName = `game[${stage()}][]`
+  addOrUpdateCard(slug, classes, onclick, inputId, inputName);
 
   if (talonStage && myMove()) {
     revealResolveTalonButton();
   }
 }
 
-function addOrUpdateCard(inputId, slug, classes, onclick) {
-  const inputName = `game[${stage()}][]`
+function addOrUpdateCard(slug, classes, onclick, inputId, inputName) {
   if ($(`#${inputId}`).length) {
     $(`#${inputId}`).attr('name', inputName);
     $(`#${inputId}`).next().attr('class', classes);
