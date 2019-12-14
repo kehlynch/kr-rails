@@ -3,7 +3,6 @@ class Card < ApplicationRecord
   belongs_to :trick, optional: true
   belongs_to :_player, class_name: 'Player', foreign_key: 'player_id', optional: true
 
-
   TRUMP_POINTS = {
     1 => 4,
     21 => 4,
@@ -67,6 +66,7 @@ class Card < ApplicationRecord
     return legal_for_trick?
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def legal_for_trick?
     return negative_legal? if game.bids.highest&.negative?
 
@@ -90,24 +90,26 @@ class Card < ApplicationRecord
 
     return true
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def negative_legal?
-    led = game.current_trick&.led_card
-
     winning = game.current_trick&.winning_card
 
-    if !led
+    if !current_trick || current_trick&.finished?
       # leading pagat
       return false if slug == 'trump_1' && player.trumps.length > 1 && game.bids.highest&.trischaken?
 
       return true
     end
 
+    led = game.current_trick&.led_card
+
     play_ups = player.suit_cards(winning.suit).select { |c| c.value > winning.value }
 
     if suit == led.suit
       return true if winning.suit != led.suit
-    
+
       return true if value > winning.value
 
       return true if play_ups.empty?
@@ -127,10 +129,11 @@ class Card < ApplicationRecord
 
     return true
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def legal_putdown?(hand, current_putdowns)
     return false if points == 4
-    
+
     return true if suit != 'trump'
 
     simple_legal_putdowns_in_hand = hand.filter { |c| c.suit != 'trump' && c.points != 4 }.length
@@ -139,7 +142,7 @@ class Card < ApplicationRecord
 
     return false if trumps_allowed <= 0
 
-    trumps_already_put_down = ( current_putdowns.filter { |h| h.suit == 'trump' } )
+    trumps_already_put_down = current_putdowns.filter { |h| h.suit == 'trump' }
 
     return false if trumps_already_put_down >= trumps_allowed
 
@@ -148,14 +151,13 @@ class Card < ApplicationRecord
 
   def simple_legal_putdown?
     return false if points == 4 || suit == 'trump'
-    
+
     return true
   end
 
-
   def only_legal_card
     if current_trick.trick_index == 12
-      return  if player_has_announced?(Announcements::KING) && hand.has_called_king?
+      return if player_has_announced?(Announcements::KING) && hand.has_called_king?
     end
 
     if player_has_announced?(Announcements::PAGAT) && hand.find_by(slug: 'trump_1').present?
