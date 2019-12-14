@@ -1,6 +1,7 @@
 module GameHelper
   def winner_icon(player)
     return "" unless player.winner?
+
     return "⭐️"
   end
 
@@ -18,7 +19,7 @@ module GameHelper
       onclick: "submitBid(#{slug})"
     )
   end
-  
+
   def announcement_button(slug, name)
     button_tag(
       name,
@@ -63,14 +64,14 @@ module GameHelper
   end
 
   def king_card_button(card_slug, player, game)
-    own_king = player.hand.find {|c| c.slug == card_slug}.nil? ? '' : 'own_king'
+    own_king = player.hand.find { |c| c.slug == card_slug }.nil? ? '' : 'own_king'
     pickable = player.declarer? ? 'pickable' : ''
     classes = "#{pickable} #{own_king}"
     onclick = card_action(card_slug, 'pick_king')
     card_tag(card_slug, classes: classes, onclick: onclick)
   end
 
-  def card_tag(card_slug, classes: classes = '', onclick: nil, landscape: false)
+  def card_tag(card_slug, classes: '', onclick: nil, landscape: false)
     filename = landscape ? "landscape_#{card_slug}.jpg" : "#{card_slug}.jpg"
     image_tag(
       filename,

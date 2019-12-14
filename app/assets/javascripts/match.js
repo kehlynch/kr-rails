@@ -6,7 +6,7 @@ function addGameSummaries(summaries) {
 function addGameSummary(summary) {
   summary.players.forEach(addPlayerPoints);
   $('#js-points').append(`<div class="game-shorthands"></div>`)
-  $('#js-points').children().last().append(bidShorthand(summary))
+  $('#js-points').children().last().append(bidShorthand(summary.bid))
   summary.announcements.forEach(addAnnouncementShorthand)
 }
 
@@ -23,11 +23,12 @@ function addPlayerPoints(player) {
   `)
 }
 
-function bidShorthand(summary) {
-  const vs_three_cls = summary.vs_three ? 'vs-three' : ''
-  const off_cls = summary.off ? 'off' : ''
-  return `<div class="bid-shorthand ${vs_three_cls} ${off_cls}">
-    ${summary.bid}
+function bidShorthand(bid) {
+  const vs_three_cls = bid.vs_three ? 'vs-three' : ''
+  const off_cls = bid.off ? 'off' : ''
+  const kontra_cls = kontraClass(bid.kontra);
+  return `<div class="bid-shorthand ${vs_three_cls} ${off_cls} ${kontra_cls}">
+    ${bid.shorthand}
   </div>`
 }
 
@@ -35,9 +36,14 @@ function addAnnouncementShorthand(announcement) {
   const off_cls = announcement.off ? 'off' : '';
   const defence_cls = announcement.defence ? 'defence' : '';
   const declared_cls = announcement.declared ? 'declared' : '';
+  const kontra_cls = kontraClass(announcement.kontra);
   $('#js-points').children().last().append(
-    `<span class="${off_cls} ${defence_cls} ${declared_cls}">
-      ${announcement.announcement}
+    `<span class="${off_cls} ${defence_cls} ${declared_cls} ${kontra_cls}">
+      ${announcement.shorthand}
     </span>`
   )
+}
+
+function kontraClass(kontra) {
+  return { 2: 'kontra', 4: 'rekontra', 8: 'subkontra' }[kontra];
 }

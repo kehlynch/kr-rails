@@ -29,7 +29,7 @@ Capybara/FeatureMethods:
 FactoryBot/StaticAttributeDefinedDynamically:
   Enabled: false
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Layout/EmptyComment:
@@ -38,13 +38,13 @@ Layout/EmptyComment:
 Layout/ExtraSpacing:
   AllowForAlignment: false
 
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   Enabled: true
 
 Layout/MultilineMethodCallBraceLayout:
@@ -116,7 +116,7 @@ Naming/PredicateName:
 Naming/RescuedExceptionsVariableName:
   Enabled: false
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 
 Naming/VariableNumber:
@@ -239,7 +239,7 @@ Style/YodaCondition:
 Style/TrivialAccessors:
   AllowPredicates: True
 
-Style/UnneededPercentQ:
+Style/RedundantPercentQ:
   Enabled: false
 
 Style/WordArray:

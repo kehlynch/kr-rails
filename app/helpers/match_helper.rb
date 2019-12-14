@@ -24,7 +24,7 @@ module MatchHelper
   end
 
   def kontra_class(kontra)
-    { 2 => 'kontra', 4 => 'rekontra', 6 => 'subkontra' }[kontra]
+    { 2 => 'kontra', 4 => 'rekontra', 8 => 'subkontra' }[kontra]
   end
 
   private
