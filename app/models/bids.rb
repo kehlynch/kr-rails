@@ -95,7 +95,7 @@ class Bids
   def talon_cards_to_pick
     return nil if !finished? || !highest&.talon?
 
-    return 6 if highest&.slug == SECHSERDREIER 
+    return 6 if highest&.slug == SECHSERDREIER
 
     return 3
   end
@@ -110,7 +110,7 @@ class Bids
 
   def highest
     @bids.max_by do |b|
-      [b.rank, b.player.forehand?]
+      [b.rank, b.player.forehand? ? 1 : 0]
     end
   end
 
