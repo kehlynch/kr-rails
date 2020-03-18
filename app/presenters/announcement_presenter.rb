@@ -24,7 +24,6 @@ class AnnouncementPresenter
   end
 
   def name
-    p '---name', @slug
     return kontra_name if @slug.include?('kontra')
 
     ANNOUNCEMENT_NAMES[@slug] if @slug

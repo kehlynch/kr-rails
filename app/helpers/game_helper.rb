@@ -59,7 +59,7 @@ module GameHelper
     pickable_class = pickable ? 'pickable' : ''
     illegal_class = pickable && !card.legal? ? 'illegal' : ''
     classes = "#{pickable_class} #{illegal_class}"
-    onclick = pickable && card.legal? && card_action(card.slug, action)
+    onclick = pickable && card.legal? && card_action(card.slug, action, "hand_#{card.slug}")
     card_tag(card.slug, classes: classes, onclick: onclick)
   end
 
@@ -83,8 +83,8 @@ module GameHelper
 
   private
 
-  def card_action(card_slug, action)
-    checkbox_id = "#{action}_#{card_slug}"
+  def card_action(card_slug, action, checkbox_id = nil)
+    checkbox_id ||= "#{action}_#{card_slug}"
     function =
       if action == 'play_card'
         'playCard'

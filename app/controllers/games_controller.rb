@@ -41,9 +41,6 @@ class GamesController < ApplicationController
 
     @show_penultimate_trick = !@player.played_in_current_trick? && @tricks.length > 1
 
-    p 'show_penultimate_trick', @show_penultimate_trick
-    p '@player.played_in_current_trick?', @player.played_in_current_trick?
-
     @player.active = true
     @my_move = @game.next_player&.id == @player.id
     @waiting = !@my_move

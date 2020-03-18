@@ -91,7 +91,6 @@ class PlayerTeam
   def game_points
     return 0 unless @game.finished?
 
-    p '---kontra_multiplier', @bid.kontra_multiplier
     bid_points = (winner? ? @bid.points : -@bid.points) * @bid.kontra_multiplier
 
     defence_count = @defence ? @players.length : 4 - @players.length

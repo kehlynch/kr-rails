@@ -42,6 +42,7 @@ function setState(key, value) {
 
 function setInProgress(value) {
   setState('data-in-progress', value);
+  value ? makeHandUnpickable() : makeHandPickable;
   $('#js-in-progress-spinner').toggleClass('d-none', !value);
 }
 
