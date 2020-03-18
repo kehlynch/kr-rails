@@ -14,7 +14,7 @@ class Tricks
 
   def play_card!(card = nil)
     player = next_player
-    fail "card not from next player #{card}" if card && card.player.id != player.id
+    return nil unless from_next_player?(card)
     return nil if finished? || (player&.human? && !card)
 
     card ||= player.pick_card
@@ -75,5 +75,9 @@ class Tricks
     return current_trick.trick_index + 1 if current_trick
 
     0
+  end
+
+  def from_next_player?(card)
+    card && card.player.id == next_player.id
   end
 end
