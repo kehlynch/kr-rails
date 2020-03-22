@@ -21,9 +21,12 @@ class BidsPresenter
   end
 
   def winning_bid_name
-    return 'Rufer' if winning_bid_slug == Bids::CALL_KING
-      
-    BidPresenter.new(winning_bid_slug).name
+    name = winning_bid_slug == Bids::CALL_KING ? 'Rufer' : BidPresenter.new(winning_bid_slug).name
+
+    kontra_level = @bids.highest&.kontra
+    return "#{name} ( x#{kontra_level} )" if kontra_level
+
+    return name
   end
 
   def winning_bid_slug
