@@ -1,11 +1,17 @@
 class MatchesController < ApplicationController
+
   def index
-    @matches = Match.order(created_at: :desc)
+    @matches = Match.order(created_at: :desc).limit(10)
   end
 
   def new
     @match = Match.new
     @human_count_select = human_count_select
+  end
+
+  def destroy
+    Match.find(params[:id]).destroy!
+    redirect_to matches_path
   end
 
   def create

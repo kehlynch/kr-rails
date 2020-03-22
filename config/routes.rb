@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/channels'
 
-  resources :matches, only: [:create, :new, :index] do
+  resources :matches, only: [:create, :new, :index, :destroy] do
     resources :players, only: [:show, :new, :create] do
       resources :games, only: [:create, :edit, :update, :destroy] do
         post :next

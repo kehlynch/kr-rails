@@ -18,4 +18,7 @@
       <%= link_to "Join", new_match_player_path(match), class: "btn btn-outline-dark" %>
     <% end %>
   </td>
+  <td>
+    <%= link_to "Delete", match_path(match), method: :delete, class: "btn btn-danger" %>
+  </td>
 </tr>
