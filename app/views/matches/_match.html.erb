@@ -16,6 +16,8 @@
   <td>
     <% if match.players.count < 4 %>
       <%= link_to "Join", new_match_player_path(match), class: "btn btn-outline-dark" %>
+    <% else %>
+      full
     <% end %>
   </td>
   <td>
