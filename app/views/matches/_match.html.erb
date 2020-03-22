@@ -1,0 +1,21 @@
+<tr>
+  <th scope="row"><%= match.id %></th>
+  <td><%= match_date(match) %></td>
+  <td><%= match.stage %></td>
+  <td>
+      <% match.players.each do |player| %>
+        <%=
+          render(
+            'player',
+            player: player,
+            link: player.human? && match_player_path(match, player)
+          )
+        %>
+    <% end %>
+  </td>
+  <td>
+    <% if match.players.count < 4 %>
+      <%= link_to "Join", new_match_player_path(match), class: "btn btn-outline-dark" %>
+    <% end %>
+  </td>
+</tr>

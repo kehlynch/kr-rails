@@ -14,4 +14,10 @@ class Match < ApplicationRecord
   def earlier_games(game_id)
     games.where('id < ?', game_id)
   end
+
+  def stage
+    return 'waiting' if players.count < 4
+
+    return 'in progress'
+  end
 end

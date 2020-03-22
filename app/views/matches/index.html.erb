@@ -1,12 +1,21 @@
 <div class="container">
   <h1>Games</h1>
-  <% @matches.each do |match| %>
-    <div class="row pb-2">
-      <div class="col">
-        <%= link_to "Join Game with #{match.players.find(&:human).name}", new_match_player_path(match), class: "btn btn-outline-dark" %>
-      </div>
-    </div>
-  <% end %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Started</th>
+        <th scope="col">Stage</th>
+        <th scope="col">Players</th>
+        <th scope="col">Join</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @matches.each do |match| %>
+        <%= render 'match', match: match %>
+      <% end %>
+    </tbody>
+  </table>
   <div class="row">
     <div class="col">
       <%= link_to "New Game", new_match_path, class: "btn btn-outline-dark" %>

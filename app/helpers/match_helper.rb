@@ -1,4 +1,9 @@
 module MatchHelper
+  def match_date(match)
+    match.created_at.strftime('%a %e %b, %H:%M')
+  end
+
+  # TODO what's all of this doing here - it's abut games
   def bid_shorthand(game)
     winning_bid = game.bids.highest
     BidPresenter.new(winning_bid.slug).shorthand
