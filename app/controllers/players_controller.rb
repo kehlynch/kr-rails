@@ -1,6 +1,7 @@
 class PlayersController < ApplicationController
+  before_action :lookup_match
+
   def show
-    @match = Match.find(params[:match_id])
     @player = Player.find(params[:id])
     @missing_players = 4 - @match.players.length
     if @missing_players == 0
@@ -11,30 +12,40 @@ class PlayersController < ApplicationController
   end
 
   def new
-    @match = Match.find(params[:match_id])
     @player = Player.new(match_id: params[:match_id])
   end
 
   def create
     match_id = params[:match_id]
-    match = Match.find(match_id)
-    position = match.players.max_by(&:position).position + 1
-    player = Player.create(player_params.merge({match_id: match_id, human: true, position: position}))
-    match.players.reload
-    if match.players.length == 4
-      game = match.games.last || match.deal_game
+    player_count = @match.players.length
 
-      MatchesChannel.broadcast_to(match, ready: true, game_id: game.id); 
-      path = edit_match_player_game_path(match, player, game)
+    if player_count > 3
+      flash[:error] = 'Sorry, 4 players are already in this game'
+      redirect_to matches_path
     else
-      path = match_player_path(match, player)
-    end
+      position = @match.players.max_by(&:position).position + 1
 
-    ActionCable.server.broadcast("MessageChannel", sent_by: "Kat", body: "hello")
-    redirect_to path
+      player = Player.create(player_params.merge({match_id: match_id, human: true, position: position}))
+      @match.players.reload
+      if @match.players.length == 4
+        game = @match.games.last || @match.deal_game
+
+        MatchesChannel.broadcast_to(@match, ready: true, game_id: game.id); 
+        path = edit_match_player_game_path(@match, player, game)
+      else
+        path = match_player_path(@match, player)
+      end
+
+      ActionCable.server.broadcast("MessageChannel", sent_by: "Kat", body: "hello")
+      redirect_to path
+    end
   end
 
   private
+
+  def lookup_match
+    @match = Match.find(params[:match_id])
+  end
 
   def player_params
     params.require(:player).permit(:name)

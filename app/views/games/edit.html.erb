@@ -1,53 +1,55 @@
-<%= form_with model: @game.model, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
-  <%= render 'state' %>
-  <input id="js-stage" hidden=true name="game[action]" value=<%= @action %> />
+<div class="game">
+	<%= form_with model: @game.model, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
+		<%= render 'state' %>
+		<input id="js-stage" hidden=true name="game[action]" value=<%= @action %> />
 
-  <div class="instruction alert alert-primary" role="alert" id="instruction">
-    <%= @instruction %>
-  </div>
+		<div class="instruction alert alert-primary" role="alert" id="instruction">
+			<%= @instruction %>
+		</div>
 
-  <div
-    class="center-container spinner-border text-primary d-none"
-    role="status"
-    id="js-in-progress-spinner"
-  >
-    <span class="sr-only">Loading...</span>
-  </div>
+		<div
+			class="center-container spinner-border text-primary d-none"
+			role="status"
+			id="js-in-progress-spinner"
+			>
+			<span class="sr-only">Loading...</span>
+		</div>
 
-  <%= render 'message', message: @message %>
+		<%= render 'message', message: @message %>
 
-  <%= render 'players', form: form %>
+		<%= render 'players', form: form %>
 
-  <%= render 'bid', player: @player, visible: @action == 'make_bid' && @my_move %>
+		<%= render 'bid', player: @player, visible: @action == 'make_bid' && @my_move %>
 
-  <%= render 'announcement', player: @player, visible: @action == 'make_announcement' && @my_move, form: form %>
+		<%= render 'announcement', player: @player, visible: @action == 'make_announcement' && @my_move, form: form %>
 
-  <%= render 'hand', form: form %>
+		<%= render 'hand', form: form %>
 
-  <%= render 'kings', visible: @action == 'pick_king'  %>
+		<%= render 'kings', visible: @action == 'pick_king'  %>
 
-  <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
+		<%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
 
-  <%= render 'tricks', tricks: @tricks, form: form, visible: @action == 'play_card', show_penultimate: @show_penultimate_trick %>
+		<%= render 'tricks', tricks: @tricks, form: form, visible: @action == 'play_card', show_penultimate: @show_penultimate_trick %>
 
-  <%= render 'score', visible: @game.stage == 'finished' %>
-  <%= render 'matches/points', visible: false %>
+		<%= render 'score', visible: @game.stage == 'finished' %>
+		<%= render 'matches/points', visible: false %>
 
-  <div class="new-game-button-container">
-    <%= link_to 'New game', new_match_path, class: 'btn btn-outline-dark new-game-button' %>
-  </div>
+		<div class="new-game-button-container">
+			<%= link_to 'New game', new_match_path, class: 'btn btn-outline-dark new-game-button' %>
+		</div>
 
-  <div class="finished-buttons <%= @game.stage == 'finished' ? '' : 'd-none' %>" id="js-finished-buttons">
-    <div>
-      <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
-    </div>
+		<div class="finished-buttons <%= @game.stage == 'finished' ? '' : 'd-none' %>" id="js-finished-buttons">
+			<div>
+				<%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
+			</div>
 
-    <div>
-      <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
-    </div>
+			<div>
+				<%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
+			</div>
 
-    <div>
-      <%= button_tag 'Next hand', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'nextHand()' %>
-    </div>
-  </div>
-<% end %>
+			<div>
+				<%= button_tag 'Next hand', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'nextHand()' %>
+			</div>
+		</div>
+	<% end %>
+</div>
