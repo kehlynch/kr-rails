@@ -31,6 +31,7 @@ class Announcements
     :any?,
     :each,
     :find,
+    :find_by,
     :map,
     :select,
     to: :announcements

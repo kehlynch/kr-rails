@@ -123,6 +123,8 @@ class GamePlayer
   end
 
   def pick_card
+    return nil unless hand.any?
+
     bird_announced = ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
     CardPicker.new(hand: hand, bird_announced: bird_announced).pick
   end

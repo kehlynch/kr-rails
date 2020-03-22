@@ -18,7 +18,7 @@ class Tricks
     return nil if finished? || (player&.human? && !card)
 
     card ||= player.pick_card
-    return nil unless from_next_player?(card)
+    return nil unless card && from_next_player?(card)
 
     add_card!(card)
   end
