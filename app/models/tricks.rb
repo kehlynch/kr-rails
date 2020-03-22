@@ -14,10 +14,12 @@ class Tricks
 
   def play_card!(card = nil)
     player = next_player
-    return nil unless from_next_player?(card)
+
     return nil if finished? || (player&.human? && !card)
 
     card ||= player.pick_card
+    return nil unless from_next_player?(card)
+
     add_card!(card)
   end
 
