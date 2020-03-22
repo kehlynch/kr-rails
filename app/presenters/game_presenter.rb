@@ -95,7 +95,7 @@ class GamePresenter
 
       {
         shorthand: AnnouncementPresenter.new(slug).shorthand,
-        kontra: team.announcement(slug).kontra,
+        kontra: team.announcement(slug)&.kontra || false,
         off: team.lost_announcement?(slug),
         defence: team.defence?,
         declared: team.announced?(slug)
