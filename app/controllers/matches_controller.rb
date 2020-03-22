@@ -1,6 +1,6 @@
 class MatchesController < ApplicationController
   def index
-    @matches = Match.select { |m| m.players.length < 4 }
+    @matches = Match.order(created_at: :desc)
   end
 
   def new
