@@ -7,6 +7,10 @@
 			<%= @instruction %>
 		</div>
 
+		<div class="home-button-container">
+			<%= link_to fa_icon('home'), matches_path, class: 'btn btn-outline-dark' %>
+		</div>
+
 		<div
 			class="center-container spinner-border text-primary d-none"
 			role="status"
@@ -34,21 +38,17 @@
 		<%= render 'score', visible: @game.stage == 'finished' %>
 		<%= render 'matches/points', visible: false %>
 
-		<div class="new-game-button-container">
-			<%= link_to 'New game', new_match_path, class: 'btn btn-outline-dark new-game-button' %>
-		</div>
-
 		<div class="finished-buttons <%= @game.stage == 'finished' ? '' : 'd-none' %>" id="js-finished-buttons">
 			<div>
-				<%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showScores()' %>
+				<%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark', onClick: 'showScores()' %>
 			</div>
 
 			<div>
-				<%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'showPoints()' %>
+				<%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark', onClick: 'showPoints()' %>
 			</div>
 
 			<div>
-				<%= button_tag 'Next hand', type: 'button', class: 'btn btn-outline-dark new-game-button', onClick: 'nextHand()' %>
+				<%= button_tag 'Next hand', type: 'button', class: 'btn btn-outline-dark', onClick: 'nextHand()' %>
 			</div>
 		</div>
 	<% end %>
