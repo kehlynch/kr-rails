@@ -24,7 +24,7 @@
     <div id="player-<%= player.position %>-top-info">
       <% if player.human? && !player.active? %>
         <h6>
-          <%= link_to 'human', edit_match_player_game_path(@match_id, player.id, @game), target: '_blank', class:'card-subtitle mb-2 text-muted' %>
+          <%= link_to 'human', edit_match_player_game_path(@match_id, player.id, @game.id), class:'card-subtitle mb-2 text-muted' %>
         </h6>
       <% end %>
     </div>
