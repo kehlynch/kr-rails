@@ -33,13 +33,15 @@ function nextHand() {
 }
 
 function showScores() {
-  $('#js-score-container').removeClass('d-none');
+  $('#js-talon').addClass('d-none');
   $('#js-points-container').addClass('d-none');
+  $('#js-score-container').removeClass('d-none');
 }
 
 function showPoints() {
-  $('#js-points-container').removeClass('d-none');
+  $('#js-talon').addClass('d-none');
   $('#js-score-container').addClass('d-none');
+  $('#js-points-container').removeClass('d-none');
 }
 
 function attachClickers() {

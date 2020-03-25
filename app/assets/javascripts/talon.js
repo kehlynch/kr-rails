@@ -56,3 +56,10 @@ function setTalonResolvable(resolvable) {
     makeHandPickable();
   }
 }
+
+function showTalonGameEnd() {
+  $('#js-score-container').addClass('d-none');
+  $('#js-points-container').addClass('d-none');
+  $("#js-talon").removeClass("d-none");
+}
+
