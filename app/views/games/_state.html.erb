@@ -9,7 +9,7 @@
   data-match-id=<%= @match_id %>
   data-player-position=<%= @player.position %>
   data-current-trick=<%= @game.tricks.playable_trick_index %>
-  data-visible-trick=<%= @show_penultimate ? @game.tricks.playable_trick_index - 1 : @game.tricks.playable_trick_index %>
+  data-visible-trick=<%= @show_penultimate_trick ? @game.tricks.playable_trick_index - 1 : @game.tricks.playable_trick_index %>
 />
 <input
   id="js-state-game-id"
