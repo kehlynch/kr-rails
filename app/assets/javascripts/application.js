@@ -51,9 +51,9 @@ function pageClicked() {
 
   if (inProgress()) { return; }
   
-  console.log("pageClicked()", gameStage, myMove());
+  console.log("pageClicked()", gameStage, currentTrickIndex(), visibleTrickIndex());
   if (gameStage == 'play_card') {
-    if (myMove()) {
+    if (currentTrickIndex() !== visibleTrickIndex()) {
       revealTrick(currentTrickIndex());
     } else {
       // just to start the first trick if we're not declarer
