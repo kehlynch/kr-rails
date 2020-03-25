@@ -78,10 +78,6 @@ class Game < ApplicationRecord
     bids.make_bid!(bid_slug)
   end
 
-  def make_announcements!(slugs)
-    announcements.make_announcements!(slugs)
-  end
-
   def pick_king!(king_slug)
     self.king = king_slug || declarer.pick_king
 

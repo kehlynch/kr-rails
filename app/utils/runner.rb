@@ -28,7 +28,6 @@ class Runner
       @game.resolve_talon!(params[:resolve_whole_talon])
     when 'make_announcement'
       advance_announcements!(params[:make_announcement])
-      @game.make_announcements!(params[:make_announcement])
     when 'play_card'
       card_slug = params[:play_card][0] if params[:play_card]
       advance_tricks!(card_slug)
