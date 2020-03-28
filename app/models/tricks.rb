@@ -1,6 +1,18 @@
 class Tricks
   attr_reader :tricks
-  delegate :select, :first, :last, :[], :sort_by, :each, to: :tricks
+
+  delegate(
+    :[],
+    :count,
+    :each,
+    :first,
+    :last,
+    :length,
+    :select,
+    :sort_by,
+    to: :tricks
+  )
+
   def initialize(tricks, game)
     @game = game
     @tricks = tricks.sort_by(&:id)

@@ -10,14 +10,14 @@ function createSubscriptions() {
   App.cable = ActionCable.createConsumer();  
   App.messages = App.cable.subscriptions.create({channel: 'MessagesChannel', id: gameId()}, {  
     received: function(data) {
-      console.log("recvd from messages channel", data);
+      // console.log("recvd from messages channel", data);
       const action = data.action;
 
       if (data.message) {
         addMessage(data.message);
       }
       if (data.player_id == playerId()) {
-        console.log("adding player info", data);
+        // console.log("adding player info", data);
         addPlayerInfo(data)
       }
 
@@ -58,7 +58,7 @@ function createSubscriptions() {
   if (showPageMatchId) {
     App.matchMessages = App.cable.subscriptions.create({channel: 'MatchesChannel', id:  showPageMatchId}, {  
       received: function(data) {
-        console.log("recvd from match channel", data);
+        // console.log("recvd from match channel", data);
         // for when a new human joins
         const url = `/matches/${showPageMatchId}/players/${showPagePlayerId}/games/${data.game_id}/edit`
         window.location.href = url;

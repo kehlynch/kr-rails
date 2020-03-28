@@ -53,12 +53,11 @@ function pageClicked() {
 
   if (inProgress()) { return; }
   
-  console.log("pageClicked()", gameStage, currentTrickIndex(), visibleTrickIndex());
   if (gameStage == 'play_card') {
     if (currentTrickIndex() !== visibleTrickIndex()) {
       revealTrick(currentTrickIndex());
-    } else {
-      // just to start the first trick if we're not declarer
+    } else if (!myMove()) {
+      // this starts the first trick if we're not forehand
       $('#gameForm').submit();
     }
   } else if (gameStage == 'pick_whole_talon') {

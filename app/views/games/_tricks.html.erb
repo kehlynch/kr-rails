@@ -4,7 +4,7 @@
       render(
         'trick',
         trick: trick,
-        visible: show_penultimate ? i == 1 : i == 0,
+        visible: @visible_trick_index == i,
         form: form
       )
     %>

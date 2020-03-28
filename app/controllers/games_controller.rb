@@ -39,7 +39,8 @@ class GamesController < ApplicationController
     @message = message_presenter.message
     @instruction = message_presenter.instruction_msg(@player)
 
-    @show_penultimate_trick = !@player.played_in_current_trick? && @tricks.length > 1
+    @show_penultimate_trick = (!@player.played_in_current_trick? || @game.tricks.current_trick.finished?) && @game.tricks.count > 1
+    @visible_trick_index = @show_penultimate_trick ? @game.tricks.playable_trick_index - 1 : @game.tricks.playable_trick_index
 
     @player.active = true
     @my_move = @game.next_player&.id == @player.id

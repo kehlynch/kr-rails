@@ -33,7 +33,7 @@
 
 		<%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
 
-		<%= render 'tricks', tricks: @tricks, form: form, visible: @action == 'play_card', show_penultimate: @show_penultimate_trick %>
+		<%= render 'tricks', tricks: @tricks, form: form, visible: @action == 'play_card', visible_trick_index: @visible_trick_index %>
 
 		<%= render 'score', visible: @game.stage == 'finished' %>
 		<%= render 'matches/points', visible: false %>
