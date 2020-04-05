@@ -55,7 +55,7 @@ class GamesController < ApplicationController
       redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
     end
 
-    runner = Runner.new(game)
+    runner = Runner.new(game, params[:player_id].to_i)
     runner.advance!(**game_params)
   end
 

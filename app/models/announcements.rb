@@ -30,6 +30,7 @@ class Announcements
   delegate(
     :any?,
     :each,
+    :empty?,
     :find,
     :find_by,
     :map,
@@ -89,7 +90,7 @@ class Announcements
   end
 
   def started?
-    return !@announcements.empty?
+    !empty?
   end
 
   def next_player

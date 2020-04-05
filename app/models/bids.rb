@@ -37,7 +37,13 @@ class Bids
 
   attr_reader :bids
 
-  delegate :each, :map, :select, to: :bids
+  delegate(
+    :each,
+    :empty?,
+    :map,
+    :select,
+    to: :bids
+  )
 
   def initialize(bids, game)
     @game = game
@@ -82,7 +88,7 @@ class Bids
   end
 
   def started?
-    return @bids.empty?
+    !empty?
   end
 
   def first_round_finished?

@@ -3,15 +3,19 @@
 # Pass it an action from the active player and it
 # will make all the computer player moves happen and announce the results
 class Runner
-  def initialize(game)
+  def initialize(game, player_id)
     @game = game
+    @player_id = player_id
     @broadcaster = Broadcaster.new(game)
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
   def advance!(action:, **params)
+
     case action
     when 'make_bid'
+      fail_if_not_next_player if @game.bids.started?
+
       advance_bidding!(params[:make_bid])
     when 'pick_king'
       @game.pick_king!(params[:pick_king])
@@ -27,8 +31,12 @@ class Runner
     when 'resolve_whole_talon'
       @game.resolve_talon!(params[:resolve_whole_talon])
     when 'make_announcement'
+      fail_if_not_next_player if @game.announcements.started?
+
       advance_announcements!(params[:make_announcement])
     when 'play_card'
+      fail_if_not_next_player if @game.tricks.started?
+
       card_slug = params[:play_card][0] if params[:play_card]
       advance_tricks!(card_slug)
     when 'next_trick'
@@ -74,5 +82,9 @@ class Runner
       @broadcaster.card_played(card: card)
       card = @game.tricks.play_card!
     end
+  end
+
+  def fail_if_not_next_player
+    fail 'not your turn' unless @player_id == @game.next_player.id
   end
 end

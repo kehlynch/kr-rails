@@ -10,6 +10,7 @@ class Tricks
     :length,
     :select,
     :sort_by,
+    :empty?,
     to: :tricks
   )
 
@@ -21,7 +22,11 @@ class Tricks
   end
 
   def finished?
-    @tricks.length == 12 && current_trick&.finished?
+    length == 12 && current_trick&.finished?
+  end
+
+  def started?
+    length != 0
   end
 
   def play_card!(card = nil)
@@ -36,7 +41,7 @@ class Tricks
   end
 
   def current_trick
-    @tricks.last
+    last
   end
 
   def current_trick_finished?
@@ -46,9 +51,9 @@ class Tricks
   def playable_trick_index
     return 0 unless current_trick
 
-    return @tricks.length - 1 unless current_trick.finished?
+    return length - 1 unless current_trick.finished?
 
-    return @tricks.length
+    return length
   end
 
   def lead_player
