@@ -3,6 +3,9 @@
 # Pass it an action from the active player and it
 # will make all the computer player moves happen and announce the results
 class Runner
+
+  class RunnerError < StandardError; end
+
   def initialize(game, player_id)
     @game = game
     @player_id = player_id
@@ -40,9 +43,9 @@ class Runner
       card_slug = params[:play_card][0] if params[:play_card]
       advance_tricks!(card_slug)
     when 'next_trick'
-      fail 'not doing next_trick anymore'
+      fail RunnerError('not doing next_trick anymore')
     else
-      fail "unknown action #{action}"
+      fail RunnerError("unknown action #{action}")
     end
 
     @broadcaster.info
@@ -85,6 +88,6 @@ class Runner
   end
 
   def fail_if_not_next_player
-    fail 'not your turn' unless @player_id == @game.next_player.id
+    fail RunnerError('not your turn') unless @player_id == @game.next_player.id
   end
 end
