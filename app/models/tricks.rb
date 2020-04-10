@@ -26,7 +26,7 @@ class Tricks
   end
 
   def started?
-    length != 0
+    !empty?
   end
 
   def play_card!(card = nil)
