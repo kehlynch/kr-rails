@@ -13,7 +13,8 @@ class Runner
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
-  def advance!(action:, **params)
+  def advance!(**params)
+    action = @game.stage
 
     case action
     when 'make_bid'
