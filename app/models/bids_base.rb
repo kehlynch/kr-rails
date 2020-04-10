@@ -27,6 +27,9 @@ class BidsBase
     return nil if finished? || (next_bidder.human? && !bid_slug)
 
     bid_slug = bid_slug || get_bot_bid
+
+    return unless valid?(bid_slug)
+
     bid = add_bid!(bid_slug)
     bids.reload
     bid
@@ -35,6 +38,11 @@ class BidsBase
   def started?
     !empty?
   end
+
+  def valid?(_slug)
+    fail NotImplementedError
+  end
+
 
   def get_bot_bid
     fail NotImplementedError

@@ -25,6 +25,10 @@ class Announcements < BidsBase
     VALAT => [4, 8]
   }
 
+  def valid?(slug)
+    valid_announcements.include?(slug)
+  end
+
   def valid_announcements
     player = next_bidder
 

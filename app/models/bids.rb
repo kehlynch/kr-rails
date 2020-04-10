@@ -34,6 +34,10 @@ class Bids < BidsBase
     SOLO_DREIER => 6
   }
 
+  def valid?(slug)
+    valid_bids.include?(slug)
+  end
+
   def valid_bids
     if first_round_finished?
       return [PASS] unless highest&.player.id == next_bidder.id
