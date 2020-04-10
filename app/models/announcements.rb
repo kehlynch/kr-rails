@@ -38,6 +38,8 @@ class Announcements < BidsBase
 
     valid = valid_kontras + valid
 
+    valid.reject! { |s| player.team.announced?(s) }
+
     valid + [PASS]
   end
 
