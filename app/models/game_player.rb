@@ -93,7 +93,7 @@ class GamePlayer
   end
 
   def declarer?
-    @game.declarer.id == id
+    @game.declarer&.id == id
   end
 
   def winner?
