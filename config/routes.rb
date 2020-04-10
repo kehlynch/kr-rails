@@ -5,8 +5,9 @@ Rails.application.routes.draw do
 
   resources :matches, only: [:create, :new, :index, :destroy] do
     resources :players, only: [:show, :new, :create] do
-      resources :games, only: [:create, :edit, :update, :destroy] do
-        post :next
+      resources :games, only: [:create, :edit, :update] do
+        post :next, on: :member
+        post :reset, on: :member
       end
     end
   end

@@ -14,7 +14,7 @@ class GamesController < ApplicationController
 
   def next
     match = find_match
-    game = match.games.where('id > ?', params[:game_id]).reject(&:finished?).first
+    game = match.games.where('id > ?', params[:id]).reject(&:finished?).first
     if game
       redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
     else

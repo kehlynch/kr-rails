@@ -9,7 +9,8 @@
 
 		<div class="home-button-container">
 			<%= link_to fa_icon('home'), matches_path, class: 'btn btn-outline-dark' %>
-		</div>
+			<%= link_to fa_icon('undo'), reset_match_player_game_path(@match_id, @player_id, @game.id), method: :post, class: 'btn btn-outline-dark' %>
+    </div>
 
 		<div
 			class="center-container spinner-border text-primary d-none"
