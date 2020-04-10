@@ -7,10 +7,12 @@ class BidsBase
     :any?,
     :each,
     :empty?,
+    :filter,
     :find,
     :find_by,
     :last,
     :map,
+    :max_by,
     :select,
     to: :bids
   )

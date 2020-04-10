@@ -49,11 +49,11 @@ class Bids < BidsBase
 
 			return []
     else
-      return [PASS] if @bids.any? { |b| b.slug == PASS && b.player == next_bidder }
+      return [PASS] if any? { |b| b.slug == PASS && b.player == next_bidder }
 
       lowest_rank = next_bidder.forehand? ? highest_rank : highest_rank + 1
 
-      slugs_for_rank_up(lowest_rank, next_bidder.forehand? && @bids.empty?)
+      slugs_for_rank_up(lowest_rank, next_bidder.forehand? && empty?)
     end
   end
 
@@ -76,7 +76,7 @@ class Bids < BidsBase
 
   def first_round_finished?
     passed_players = 
-      @bids.filter { |b| b.slug == 'pass' }.map(&:player_id).uniq.count
+      filter { |b| b.slug == 'pass' }.map(&:player_id).uniq.count
 
     passed_players >= 3
   end
@@ -98,7 +98,7 @@ class Bids < BidsBase
   end
 
   def highest
-    @bids.max_by do |b|
+    max_by do |b|
       [b.rank, b.player.forehand? ? 1 : 0]
     end
   end
@@ -117,10 +117,10 @@ class Bids < BidsBase
   end
 
   def next_bidder
-    if @bids.empty?
+    if empty?
       return @players.forehand
     else
-      return @players.next_from(@bids[-1].player)
+      return @players.next_from(last.player)
     end
   end
 
