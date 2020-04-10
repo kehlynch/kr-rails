@@ -8,8 +8,9 @@
     </div>
 
     <div class="home-button-container">
+      <%= link_to fa_icon('random'), matches_path(match: { human_count: 1 }), method: :post, class: 'btn btn-outline-dark', title: 'start new single player game' %>
+      <%= link_to fa_icon('undo'), reset_match_player_game_path(@match_id, @player_id, @game.id), method: :post, class: 'btn btn-outline-dark', title: 'reset game' %>
       <%= link_to fa_icon('home'), matches_path, class: 'btn btn-outline-dark' %>
-      <%= link_to fa_icon('undo'), reset_match_player_game_path(@match_id, @player_id, @game.id), method: :post, class: 'btn btn-outline-dark' %>
     </div>
 
     <div
