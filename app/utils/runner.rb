@@ -43,9 +43,9 @@ class Runner
       card_slug = params[:play_card][0] if params[:play_card]
       advance_tricks!(card_slug)
     when 'next_trick'
-      fail RunnerError('not doing next_trick anymore')
+      fail RunnerError.new('not doing next_trick anymore')
     else
-      fail RunnerError("unknown action #{action}")
+      fail RunnerError.new("unknown action #{action}")
     end
 
     @broadcaster.info
@@ -88,6 +88,6 @@ class Runner
   end
 
   def fail_if_not_next_player
-    fail RunnerError('not your turn') unless @player_id == @game.next_player.id
+    fail RunnerError.new('not your turn') unless @player_id == @game.next_player.id
   end
 end
