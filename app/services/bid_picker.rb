@@ -10,7 +10,7 @@ class BidPicker
 
     return Bids::DREIER if perc(80) && @bids.include?(Bids::DREIER) && trump_count >= 8
 
-    return Bids::SOLO if perc(80) && @bids.include?(Bids::SOLO) && trump_count >= 6
+    return Bids::SOLO if perc(40) && @bids.include?(Bids::SOLO) && trump_count >= 6
 
     return Bids::RUFER if perc(80) && @bids.include?(Bids::RUFER)
 
