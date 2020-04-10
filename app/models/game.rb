@@ -119,7 +119,7 @@ class Game < ApplicationRecord
     if stage == 'make_bid'
       return bids.next_bidder
     elsif stage == 'make_announcement'
-      return announcements.next_player
+      return announcements.next_bidder
     elsif ['pick_king', 'pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(stage)
       return declarer
     elsif ['play_card', 'play_card', 'next_trick'].include?(stage)

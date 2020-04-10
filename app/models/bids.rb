@@ -70,10 +70,6 @@ class Bids < BidsBase
     first_round_finished? && (highest&.slug != RUFER)
   end
 
-  def started?
-    !empty?
-  end
-
   def first_round_finished?
     passed_players = 
       filter { |b| b.slug == 'pass' }.map(&:player_id).uniq.count
@@ -116,12 +112,8 @@ class Bids < BidsBase
     highest&.declarer_leads? ? declarer : @players.forehand
   end
 
-  def next_bidder
-    if empty?
-      return @players.forehand
-    else
-      return @players.next_from(last.player)
-    end
+  def first_bidder
+    return @players.forehand
   end
 
   private

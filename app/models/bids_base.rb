@@ -23,4 +23,19 @@ class BidsBase
     @players = game.players
   end
 
+  def started?
+    !empty?
+  end
+
+  def first_bidder
+    fail NotImplementedError
+  end
+
+  def next_bidder
+    if empty?
+      return first_bidder
+    else
+      return @players.next_from(last.player)
+    end
+  end
 end

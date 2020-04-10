@@ -26,14 +26,14 @@ class Announcements < BidsBase
   }
 
   def make_announcements!(slugs = [])
-    return nil if finished? || (next_player.human? && slugs.blank?)
+    return nil if finished? || (next_bidder.human? && slugs.blank?)
 
-    slugs = next_player.pick_announcements(valid_announcements) if slugs.blank?
+    slugs = next_bidder.pick_announcements(valid_announcements) if slugs.blank?
     add_announcements!(slugs)
   end
 
   def valid_announcements
-    player = next_player
+    player = next_bidder
 
     return [] unless player # announcing not started
 
@@ -55,7 +55,7 @@ class Announcements < BidsBase
     bid_kontra = @game.bids.highest.kontra
     bid_kontra_slug = @game.bids.highest.kontra_slug
 
-    if next_player.defence?
+    if next_bidder.defence?
       slugs = declarer_announcements.map(&:kontra_slug) + defence_announcements.map(&:rekontra_slug)
       [nil, 4].include?(bid_kontra) ? slugs + [bid_kontra_slug] : slugs
     else
@@ -70,22 +70,14 @@ class Announcements < BidsBase
     last(3).map(&:slug) == [PASS, PASS, PASS]
   end
 
-  def started?
-    !empty?
-  end
-
-  def next_player
-    if empty?
-      return @game.declarer
-    else
-      return @players.next_from(last.player)
-    end
+  def first_bidder
+    return @game.declarer
   end
 
   private
 
   def add_announcements!(slugs)
-    player = next_player
+    player = next_bidder
     announcements = slugs.map do |slug|
       add_announcement!(slug, player)
     end
