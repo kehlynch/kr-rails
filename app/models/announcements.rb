@@ -40,12 +40,18 @@ class Announcements < BidsBase
 
     valid.reject! { |s| player.team.announced?(s) }
 
-    valid + [PASS]
+    valid += [PASS] unless must_announce_bird?
+
+    valid
+  end
+
+  def must_announce_bird?
+    @game.bids.bird_required? && next_bidder.declarer? && !next_bidder.announced_bird?
   end
 
   def valid_kontras
     declarer_announcements = @game.player_teams.declarers.announcements
-    defence_announcements = @game.player_teams.declarers.announcements
+    defence_announcements = @game.player_teams.defence.announcements
 
     bid_kontra = @game.bids.highest.kontra
     bid_kontra_slug = @game.bids.highest.kontra_slug

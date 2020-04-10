@@ -93,7 +93,7 @@ class GamePlayer
   end
 
   def declarer?
-    @game.declarer == self
+    @game.declarer.id == id
   end
 
   def winner?
@@ -117,9 +117,15 @@ class GamePlayer
   end
 
   def pick_announcement(_valid_announcements)
-    bird_required = @game.bids.bird_required? && @game.bids.highest&.player_id == id
-    bird_announced_by_player = ['pagat', 'uhu', 'kakadu'].any? { |a| announced_individually?(a) }
-    AnnouncementPicker.new(hand: hand, bird_required: bird_required && !bird_announced_by_player).pick
+    bird_required = @game.bids.bird_required? && declarer?
+    AnnouncementPicker.new(
+      hand: hand,
+      bird_required: bird_required && !announced_bird?
+    ).pick
+  end
+
+  def announced_bird?
+    ['pagat', 'uhu', 'kakadu'].any? { |a| announced_individually?(a) }
   end
 
   def pick_card
