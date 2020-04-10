@@ -12,6 +12,15 @@ class Game < ApplicationRecord
     return game
   end
 
+  def self.reset!(game_id)
+    Bid.where(game_id: game_id).destroy_all
+    Announcement.where(game_id: game_id).destroy_all
+    Trick.where(game_id: game_id).destroy_all
+    Card.where(game_id: game_id).each do |card|
+      card.update(discard: false, trick_id: nil, played_index: nil)
+    end
+  end
+
   def bids
     @bids ||= Bids.new(_bids, self)
   end
