@@ -1,9 +1,9 @@
 class Game < ApplicationRecord
   belongs_to :match
-  has_many :cards
-  has_many :_announcements, class_name: 'Announcement'
-  has_many :_bids, class_name: 'Bid'
-  has_many :_tricks, class_name: 'Trick'
+  has_many :cards, dependent: :destroy
+  has_many :_announcements, class_name: 'Announcement', dependent: :destroy
+  has_many :_bids, class_name: 'Bid', dependent: :destroy
+  has_many :_tricks, class_name: 'Trick', dependent: :destroy
 
   def self.deal_game(match_id, players)
     game = Game.create(match_id: match_id)
@@ -19,6 +19,7 @@ class Game < ApplicationRecord
     Card.where(game_id: game_id).each do |card|
       card.update(discard: false, trick_id: nil, played_index: nil)
     end
+    Game.update(king: nil, talon_picked: nil, talon_resolved: false)
   end
 
   def bids

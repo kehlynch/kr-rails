@@ -1,6 +1,6 @@
 class Match < ApplicationRecord
-  has_many :players, -> { order(:id) }
-  has_many :games, -> { order(:id) }
+  has_many :players, -> { order(:id) }, dependent: :destroy
+  has_many :games, -> { order(:id) }, dependent: :destroy
 
   attribute :human_name, :text
   attribute :human_count, :integer
