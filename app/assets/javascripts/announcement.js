@@ -20,7 +20,9 @@ const ANNOUNCEMENT_SHORTNAMES = {
 // announcement indicators under players
 function addAnnouncement(slug, player) {
   const name = announcementShortname(slug);
-  $(`#js-player-${player}-announcements`).find('h6').append(name);
+  if (name) {
+    $(`#js-player-${player}-announcements`).find('h6').append(`${name} `);
+  }
 }
 
 function announcementShortname(slug) {
