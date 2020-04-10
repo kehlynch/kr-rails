@@ -1,4 +1,4 @@
-class Announcements
+class Announcements < BidsBase
   PASS = 'pass'
   PAGAT = 'pagat'
   UHU = 'uhu'
@@ -24,25 +24,6 @@ class Announcements
     FORTY_FIVE => [2, 0],
     VALAT => [4, 8]
   }
-
-  attr_reader :announcements
-
-  delegate(
-    :any?,
-    :each,
-    :empty?,
-    :find,
-    :find_by,
-    :map,
-    :select,
-    to: :announcements
-  )
-
-  def initialize(announcements, game)
-    @game = game
-    @announcements = announcements.sort_by(&:id)
-    @players = @game.players
-  end
 
   def make_announcements!(slugs = [])
     return nil if finished? || (next_player.human? && slugs.blank?)
@@ -84,9 +65,9 @@ class Announcements
   end
 
   def finished?
-    return false unless @announcements.map(&:player_id).uniq.count == 4
+    return false unless map(&:player_id).uniq.count == 4
 
-    @announcements.last(3).map(&:slug) == [PASS, PASS, PASS]
+    last(3).map(&:slug) == [PASS, PASS, PASS]
   end
 
   def started?
@@ -94,10 +75,10 @@ class Announcements
   end
 
   def next_player
-    if @announcements.empty?
+    if empty?
       return @game.declarer
     else
-      return @players.next_from(@announcements[-1].player)
+      return @players.next_from(last.player)
     end
   end
 
@@ -108,7 +89,7 @@ class Announcements
     announcements = slugs.map do |slug|
       add_announcement!(slug, player)
     end
-    @announcements += announcements
+    @bids += announcements
     return announcements
   end
 

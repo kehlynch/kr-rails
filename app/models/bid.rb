@@ -47,13 +47,6 @@ class Bid < ApplicationRecord
     return nil
   end
 
-  # breaking this out - it might cause issues if I change the way
-  # bids are created. There's a bid_index on the model that's not
-  # being set or used - could use that here
-  def bidding_order
-    id
-  end
-
   def points
     Bids::POINTS[slug]
   end

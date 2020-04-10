@@ -1,5 +1,4 @@
-class Bids
-  PASS = 'pass'
+class Bids < BidsBase
   RUFER = 'rufer'
   SOLO = 'solo'
   DREIER = 'dreier'
@@ -34,22 +33,6 @@ class Bids
     BETTEL => 3,
     SOLO_DREIER => 6
   }
-
-  attr_reader :bids
-
-  delegate(
-    :each,
-    :empty?,
-    :map,
-    :select,
-    to: :bids
-  )
-
-  def initialize(bids, game)
-    @game = game
-    @bids = bids.sort_by(&:bidding_order)
-    @players = game.players
-  end
 
   def make_bid!(bid_slug = nil)
     return nil if finished? || (next_bidder.human? && !bid_slug)
