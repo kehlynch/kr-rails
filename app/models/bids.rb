@@ -34,13 +34,6 @@ class Bids < BidsBase
     SOLO_DREIER => 6
   }
 
-  def make_bid!(bid_slug = nil)
-    return nil if finished? || (next_bidder.human? && !bid_slug)
-
-    bid_slug = bid_slug || next_bidder.pick_bid(valid_bids)
-    add_bid!(bid_slug)
-  end
-
   def valid_bids
     if first_round_finished?
       return [PASS] unless highest&.player.id == next_bidder.id
@@ -116,11 +109,17 @@ class Bids < BidsBase
     return @players.forehand
   end
 
-  private
+  def next_bidder
+    return first_bidder if empty?
+
+    @players.next_from(last.player)
+  end
+
+  def get_bot_bid
+    next_bidder.pick_bid(valid_bids)
+  end
 
   def add_bid!(bid_slug)
-    bid = Bid.create(slug: bid_slug, game_id: @game.id, player_id: next_bidder.id)
-    @bids << bid
-    return bid
+    Bid.create(slug: bid_slug, game_id: @game.id, player_id: next_bidder.id)
   end
 end

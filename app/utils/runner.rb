@@ -67,13 +67,11 @@ class Runner
     @broadcaster.bids_finished if @game.bids.finished?
   end
 
-  def advance_announcements!(announcement_slugs)
-    announcements = @game.announcements.make_announcements!(announcement_slugs)
-    while announcements
-      announcements.each do |a|
-        @broadcaster.announcement(announcement: a)
-      end
-      announcements = @game.announcements.make_announcements!
+  def advance_announcements!(announcement_slug)
+    announcement = @game.announcements.make_bid!(announcement_slug)
+    while announcement
+      @broadcaster.announcement(announcement: announcement)
+      announcement = @game.announcements.make_bid!
     end
     @broadcaster.announcements_finished if @game.announcements.finished?
   end

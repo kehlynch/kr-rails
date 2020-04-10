@@ -41,15 +41,33 @@ function kontraName(slug) {
 // announcement picking buttons
 function addValidAnnouncement(slug) {
   const name = announcementName(slug);
-  const input = `<input hidden=true id="valid-announcement-${slug}" name="game[make_announcement][]" type="checkbox" value="${slug}" />`
+  const input = `
+    <input
+      hidden=true
+      id="valid-announcement-${slug}"
+      name="game[make_announcement]"
+      type="checkbox"
+      value="${slug}"
+    />
+  `
 
-  const button = `<button name="button" type="button" alt="${name}" class="announcement-button btn btn-outline-dark" onclick="toggleAnnouncement('${slug}')">${name}</button>`
-  $(`#js-valid-announcement-buttons`).append(input)
-  $(`#js-valid-announcement-buttons`).append(button)
+  const button = `
+    <button
+      name="button"
+      type="button"
+      alt="${name}"
+      class="btn btn-outline-dark"
+      onclick="submitBid('${slug}', 'announcement')"
+    >
+      ${name}
+    </button>
+  `
+  $(`#js-valid-announcements`).append(input)
+  $(`#js-valid-announcements`).append(button)
 }
 
 function addValidAnnouncements(slugs) {
-  $(`#js-valid-announcement-buttons`).empty();
+  $(`#js-valid-announcements`).empty();
   slugs.forEach(addValidAnnouncement)
   $("#js-valid-announcements").removeClass("d-none");
 }

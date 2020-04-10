@@ -25,13 +25,6 @@ class Announcements < BidsBase
     VALAT => [4, 8]
   }
 
-  def make_announcements!(slugs = [])
-    return nil if finished? || (next_bidder.human? && slugs.blank?)
-
-    slugs = next_bidder.pick_announcements(valid_announcements) if slugs.blank?
-    add_announcements!(slugs)
-  end
-
   def valid_announcements
     player = next_bidder
 
@@ -74,21 +67,24 @@ class Announcements < BidsBase
     return @game.declarer
   end
 
-  private
+  def next_bidder
+    return first_bidder if empty?
 
-  def add_announcements!(slugs)
-    player = next_bidder
-    announcements = slugs.map do |slug|
-      add_announcement!(slug, player)
-    end
-    @bids += announcements
-    return announcements
+    return last.player if last.slug != PASS
+
+    @players.next_from(last.player)
   end
 
-  def add_announcement!(slug, player)
+  def get_bot_bid
+    next_bidder.pick_announcement(valid_announcements)
+  end
+
+  def add_bid!(slug)
     add_kontra!(slug) if slug.include?('kontra')
-    Announcement.create(slug: slug, game_id: @game.id, player_id: player.id)
+    Announcement.create(slug: slug, game_id: @game.id, player_id: next_bidder.id)
   end
+
+  private
 
   def add_kontra!(kontra_slug)
     kontrable = Kontrable.find_kontrable(kontra_slug)

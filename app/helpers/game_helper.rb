@@ -10,23 +10,13 @@ module GameHelper
     ['south', 'east', 'north', 'west'][index]
   end
 
-  def bid_button(slug, name)
+  def bid_button(slug, name, type)
     button_tag(
       name,
       alt: name,
       type: 'button',
       class: 'btn btn-outline-dark',
-      onclick: "submitBid(#{slug})"
-    )
-  end
-
-  def announcement_button(slug, name)
-    button_tag(
-      name,
-      alt: name,
-      type: 'button',
-      class: 'announcement-button btn btn-outline-dark',
-      onclick: "toggleAnnouncement('#{slug}')"
+      onclick: "submitBid('#{slug}', '#{type}')"
     )
   end
 

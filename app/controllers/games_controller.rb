@@ -59,12 +59,13 @@ class GamesController < ApplicationController
     runner.advance!(**game_params)
   end
 
-  def destroy
-    @game = Game.find(params[:id])
-    @game.destroy
+  def reset
+    game = find_game
+    Game.reset!(game.id)
 
-    redirect_to games_path
+    redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
   end
+
 
   private
 
@@ -82,7 +83,7 @@ class GamesController < ApplicationController
 
   def game_params
     params.require(:game)
-          .permit(:action, :make_bid, :pick_talon, :pick_king, :make_announcement => [], :resolve_talon => [], :resolve_whole_talon => [], :play_card => [])
+          .permit(:action, :make_bid, :pick_talon, :pick_king, :make_announcement, :resolve_talon => [], :resolve_whole_talon => [], :play_card => [])
           .to_h.symbolize_keys
   end
 end

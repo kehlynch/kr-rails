@@ -116,7 +116,7 @@ class GamePlayer
     BidPicker.new(bids: valid_bids, hand: hand).pick
   end
 
-  def pick_announcements(_valid_announcements)
+  def pick_announcement(_valid_announcements)
     bird_required = @game.bids.bird_required? && @game.bids.highest&.player_id == id
     bird_announced_by_player = ['pagat', 'uhu', 'kakadu'].any? { |a| announced_individually?(a) }
     AnnouncementPicker.new(hand: hand, bird_required: bird_required && !bird_announced_by_player).pick

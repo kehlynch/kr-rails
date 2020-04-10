@@ -21,8 +21,26 @@ function addBid(slug, player) {
 
 function addValidBid(slug) {
   const name = BID_NAMES[slug];
-  const input = `<input hidden=true id="${slug}" name="game[make_bid]" type="checkbox" value="${slug}" />`
-  const button = `<button name="button" type="button" alt="${slug}" class="btn btn-outline-dark" onclick="submitBid(${slug})">${name}</button>`
+  const input = `
+    <input 
+      hidden=true
+      id="valid-bid-${slug}"
+      name="game[make_bid]"
+      type="checkbox"
+      value="${slug}"
+    />
+  `
+  const button = `
+    <button
+      name="button"
+      type="button"
+      alt="${slug}"
+      class="btn btn-outline-dark"
+      onclick="submitBid('${slug}', 'bid')"
+    >
+      ${name}
+    </button>
+  `
   $(`#js-valid-bids`).append(input)
   $(`#js-valid-bids`).append(button)
 }
@@ -50,7 +68,7 @@ function setWonBid(slug, declarerPosition) {
   setState('is-declarer', declarerPosition == 0);
 }
 
-function submitBid(bidSlug) {
-  submitGame(bidSlug);
-  $("#js-valid-bids").empty();
+function submitBid(bidSlug, bidOrAnnouncement) {
+  submitGame($(`#valid-${bidOrAnnouncement}-${bidSlug}`));
+  $(`#js-valid-${bidOrAnnouncement}`).empty();
 }

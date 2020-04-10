@@ -1,8 +1,8 @@
 class Game < ApplicationRecord
   belongs_to :match
   has_many :cards, dependent: :destroy
-  has_many :_announcements, class_name: 'Announcement', dependent: :destroy
-  has_many :_bids, class_name: 'Bid', dependent: :destroy
+  has_many :_announcements, -> { order(:id) }, class_name: 'Announcement', dependent: :destroy
+  has_many :_bids, -> { order(:id) }, class_name: 'Bid', dependent: :destroy
   has_many :_tricks, class_name: 'Trick', dependent: :destroy
 
   def self.deal_game(match_id, players)
