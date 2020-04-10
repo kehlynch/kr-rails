@@ -16,10 +16,13 @@ class MatchesController < ApplicationController
 
   def create
     match = Match.create
-    human_player = Player.create({'position' => 0, name: match_params[:human_name], match: match, human: true})
+    positions = Player::POSITIONS
+    human_position = positions.delete(positions.sample)
+    human_player = Player.create({'position' => human_position, name: match_params[:human_name], match: match, human: true})
     bot_count = 4 - match_params[:human_count].to_i
-    bot_count.times do |i|
-      Player.create({'position' => i + 1, match: match})
+
+    positions.sample(bot_count).each do |position|
+      Player.create({'position' => position, match: match})
     end
 
     if match_params[:human_count].to_i == 1

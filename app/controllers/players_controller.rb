@@ -23,7 +23,7 @@ class PlayersController < ApplicationController
       flash[:error] = 'Sorry, 4 players are already in this game'
       redirect_to matches_path
     else
-      position = @match.players.max_by(&:position).position + 1
+      position = (Player::POSITIONS - @match.players.map(&:position)).sample
 
       player = Player.create(player_params.merge({match_id: match_id, human: true, position: position}))
       @match.players.reload

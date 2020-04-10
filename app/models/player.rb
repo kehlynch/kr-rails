@@ -1,4 +1,5 @@
 class Player < ApplicationRecord
+  POSITIONS = [0, 1, 2, 3]
   has_many :cards, -> { where(played_index: nil, discard: false).order(suit: :desc, value: :desc) }
   has_many :discards, -> { where(discard: true) }, class_name: 'Card', foreign_key: 'player_id'
 
