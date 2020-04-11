@@ -1,0 +1,7 @@
+<div
+  class="spinner-grow spinner-grow-sm text-secondary mb-1 <%= @game.next_player&.id == player.id ? '' : 'd-none' %> "
+  role="status"
+  id="js-player-<%= player.position %>-waiting"
+>
+  <span class="sr-only">Loading...</span>
+</div>

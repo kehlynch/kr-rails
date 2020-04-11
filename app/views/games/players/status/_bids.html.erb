@@ -1,0 +1,7 @@
+<div id="js-player-<%= player.position %>-bids">
+  <% if @action == 'make_bid' %>
+    <% player.bids.each do |bid| %>
+      <h6 class="card-subtitle mb-2 text-muted"><%= bid %></h6>
+    <% end %>
+  <% end %>
+</div>

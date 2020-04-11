@@ -1,0 +1,12 @@
+<div class="card">
+  <div class="card-body" id="player-<%= player.position %>" >
+    <h5 class="card-title">
+      <%= player.name(false) %>
+      <%= render 'games/players/status/waiting', player: player %>
+      <%= render 'games/players/status/role', player: player %>
+    </h5>
+    <%= render 'games/players/status/human_link', player: player %>
+    <%= render 'games/players/status/announcements', player: player %>
+    <%= render 'games/players/status/bids', player: player %>
+  </div>
+</div>
