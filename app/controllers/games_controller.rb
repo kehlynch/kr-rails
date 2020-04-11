@@ -45,6 +45,8 @@ class GamesController < ApplicationController
     @player.active = true
     @my_move = @game.next_player&.id == @player.id
     @waiting = !@my_move
+
+    @remarks = Remarks.remarks_for(@game)
   end
 
   def update

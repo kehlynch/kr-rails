@@ -2,7 +2,7 @@ class Talon
 
   attr_reader :talon, :cards
 
-  delegate :each_with_index, to: :talon
+  delegate :each_with_index, :flatten, :map, to: :talon
   delegate :find, to: :cards
 
   def initialize(cards, game)

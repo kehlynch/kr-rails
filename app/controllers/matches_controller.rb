@@ -16,7 +16,7 @@ class MatchesController < ApplicationController
 
   def create
     match = Match.create
-    positions = Player::POSITIONS
+    positions = Player::POSITIONS.clone
     human_position = positions.delete(positions.sample)
     human_player = Player.create({'position' => human_position, name: match_params[:human_name], match: match, human: true})
     bot_count = 4 - match_params[:human_count].to_i

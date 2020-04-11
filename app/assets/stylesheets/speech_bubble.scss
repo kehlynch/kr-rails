@@ -1,0 +1,22 @@
+// https://leaverou.github.io/bubbly/
+
+.speech-bubble {
+	position: relative;
+	background: white;
+	border-radius: 10px;
+  padding: 12px;
+}
+
+.speech-bubble:after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 40%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-bottom-color: white;
+  border-top: 0;
+  border-left: 0;
+  margin-bottom: -20px;
+}

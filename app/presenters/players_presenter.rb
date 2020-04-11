@@ -9,6 +9,7 @@ class PlayersPresenter
     :find,
     :first,
     :map,
+    :reject,
     to: :player_presenters
   )
 

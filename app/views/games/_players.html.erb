@@ -1,5 +1,5 @@
 <% @players.each do |p| %>
   <div class="player-container <%= player_compass_position(p.position, @player.position) %> <%= p.name %>">
-    <%= render 'player', player: p %>
+    <%= render 'player', player: p, remark: remarks[p.position] %>
   </div>
 <% end %>

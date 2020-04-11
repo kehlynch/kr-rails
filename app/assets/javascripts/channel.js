@@ -10,12 +10,19 @@ function createSubscriptions() {
   App.cable = ActionCable.createConsumer();  
   App.messages = App.cable.subscriptions.create({channel: 'MessagesChannel', id: gameId()}, {  
     received: function(data) {
-      // console.log("recvd from messages channel", data);
+      console.log("recvd from messages channel", data);
       const action = data.action;
 
       if (data.message) {
         addMessage(data.message);
       }
+      if (data.remarks) {
+        console.log('data.speech')
+        Object.entries(data.remarks).forEach(([playerPosition, remark]) => {
+          addRemark(playerPosition, remark);
+        })
+      }
+
       if (data.player_id == playerId()) {
         // console.log("adding player info", data);
         addPlayerInfo(data)

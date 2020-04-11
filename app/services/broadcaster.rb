@@ -121,6 +121,16 @@ class Broadcaster
     )
   end
 
+  def make_remarks
+    remarks = Remarks.remarks_for(@game)
+    return if remarks.empty?
+
+    MessagesChannel.broadcast_to(
+      @game,
+      remarks: remarks
+    )
+  end
+
   def scores
     @game.players.select(&:human?).each do |player|
       scores = PlayersPresenter.new(@game, player.id).map do |p|

@@ -50,6 +50,7 @@ class Runner
     end
 
     @broadcaster.info
+    @broadcaster.make_remarks
 
     if @game.finished?
       @broadcaster.scores
