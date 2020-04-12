@@ -87,6 +87,10 @@ class MessagePresenter
     ["#{declarer_name} picks #{ActiveSupport::Inflector.ordinalize(talon_picked + 1)} half of talon."] + first_announcement_msg
   end
 
+  def talon_resolved_msg
+    ["#{declarer_name} puts down cards"]
+  end
+
   def first_announcement_msg
     ["#{declarer_name} starts announcements"]
   end

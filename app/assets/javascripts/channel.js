@@ -24,7 +24,6 @@ function createSubscriptions() {
       }
 
       if (data.player_id == playerId()) {
-        // console.log("adding player info", data);
         addPlayerInfo(data)
       }
 

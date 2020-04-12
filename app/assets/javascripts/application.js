@@ -53,17 +53,8 @@ function pageClicked() {
 
   if (inProgress()) { return; }
   
-  if (gameStage == 'play_card') {
-    if (currentTrickIndex() !== visibleTrickIndex()) {
-      revealTrick(currentTrickIndex());
-    } else if (!myMove()) {
-      // this starts the first trick if we're not forehand
-      $('#gameForm').submit();
-    }
-  } else if (gameStage == 'pick_whole_talon') {
-    $('#gameForm').submit();
-  } else if (gameStage && !myMove() && gameStage != 'finished') {
-    $('#gameForm').submit();
+  if (gameStage == 'play_card' && currentTrickIndex() !== visibleTrickIndex()) {
+    revealTrick(currentTrickIndex());
   }
 }
 

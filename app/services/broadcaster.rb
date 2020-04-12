@@ -33,12 +33,21 @@ class Broadcaster
     )
   end
 
-  def talon_picked(talon_half_index)
+  def talon_picked
     MessagesChannel.broadcast_to(
       @game,
       action: 'talon',
-      talon_half_index: talon_half_index,
+      talon_half_index: @game.talon_picked,
       message: @message.talon_picked_msg
+    )
+  end
+
+  def talon_resolved
+    MessagesChannel.broadcast_to(
+      @game,
+      action: 'resolve_talon',
+      talon_half_index: @game.talon_picked,
+      message: @message.talon_resolved_msg
     )
   end
 

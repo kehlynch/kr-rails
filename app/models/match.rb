@@ -8,7 +8,8 @@ class Match < ApplicationRecord
   accepts_nested_attributes_for :players
 
   def deal_game
-    Game.deal_game(id, players)
+    game = Game.deal_game(id, players)
+    Runner.new(game).advance!
   end
 
   def earlier_games(game_id)

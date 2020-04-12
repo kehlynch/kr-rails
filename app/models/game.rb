@@ -89,12 +89,16 @@ class Game < ApplicationRecord
   end
 
   def pick_king!(king_slug)
+    return if declarer_human? && !king_slug
+
     self.king = king_slug || declarer.pick_king
 
     save
   end
 
   def pick_talon!(talon_half_index)
+    return if declarer_human? && talon_half_index.nil?
+
     talon.pick_talon!(talon_half_index, declarer)
 
     update(talon_picked: talon_half_index)
@@ -108,6 +112,8 @@ class Game < ApplicationRecord
   end
 
   def resolve_talon!(putdown_card_slugs)
+    return if declarer_human? && putdown_card_slugs.blank?
+
     talon.resolve_talon!(putdown_card_slugs, declarer)
 
     update(talon_resolved: true)
