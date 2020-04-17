@@ -18,8 +18,12 @@ class Game < ApplicationRecord
     Trick.where(game_id: game_id).destroy_all
     Card.where(game_id: game_id).each do |card|
       card.update(discard: false, trick_id: nil, played_index: nil)
+      if card.talon_half
+        card.update(player_id: nil)
+      end
     end
     Game.update(king: nil, talon_picked: nil, talon_resolved: false)
+    Runner.new(Game.find(game_id)).advance!
   end
 
   def bids
