@@ -12,6 +12,7 @@ class Broadcaster
       bid: bid.slug,
       message: @message.bid_msg(bid)
     )
+    info()
   end
 
   def bids_finished
@@ -22,6 +23,7 @@ class Broadcaster
       declarer: @game.declarer.position,
       message: @message.bids_finished_msg
     )
+    info()
   end
 
   def king_picked
@@ -31,6 +33,7 @@ class Broadcaster
       king_slug: @game.king,
       message: @message.king_picked_msg
     )
+    info()
   end
 
   def talon_picked
@@ -40,6 +43,7 @@ class Broadcaster
       talon_half_index: @game.talon_picked,
       message: @message.talon_picked_msg
     )
+    info()
   end
 
   def talon_resolved
@@ -49,6 +53,7 @@ class Broadcaster
       talon_half_index: @game.talon_picked,
       message: @message.talon_resolved_msg
     )
+    info()
   end
 
   def announcement(announcement:)
@@ -59,6 +64,7 @@ class Broadcaster
       announcement: announcement.slug,
       message: @message.announcement_msg(announcement)
     )
+    info()
   end
 
   def announcements_finished
@@ -66,6 +72,7 @@ class Broadcaster
       @game,
       message: @message.first_trick_msg
     )
+    info()
   end
 
   def card_played(card:)
@@ -78,6 +85,7 @@ class Broadcaster
       message: @message.trick_msg(card.trick),
       won_card: card.trick.won_card&.slug
     )
+    info()
   end
 
   def info

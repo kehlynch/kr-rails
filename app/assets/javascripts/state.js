@@ -18,6 +18,14 @@ function currentTrickIndex() { return state().currentTrick; }
 
 function visibleTrickIndex() { return state().visibleTrick; }
 
+function talonToPick() { return state().talonToPick; }
+
+function talonPicked() { return state().talonPicked; }
+
+function visibleStep() { return state().visibleStep; }
+
+function declarerName() { return state().declarerName; }
+
 function meToPlayHandCard() {
   if (!myMove()) { return false; }
   if (stage() == 'play_card') { return (currentTrickIndex() == visibleTrickIndex()); }
@@ -43,7 +51,7 @@ function setState(key, value) {
 function setInProgress(value) {
   setState('data-in-progress', value);
   value ? makeHandUnpickable() : makeHandPickable;
-  $('#js-in-progress-spinner').toggleClass('d-none', !value);
+  toggle(sections.PROGRESS_SPINNER, !value);
 }
 
 function updateSubscriptionsOnGameChange() {

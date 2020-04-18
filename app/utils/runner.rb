@@ -3,7 +3,6 @@
 # Pass it an action from the active player and it
 # will make all the computer player moves happen and announce the results
 class Runner
-
   class RunnerError < StandardError; end
 
   def initialize(game)
@@ -19,9 +18,9 @@ class Runner
     when 'make_bid'
       advance_bidding!(params[:make_bid])
     when 'pick_king'
-      pick_king!(params[:king_slug])
+      pick_king!(params[:pick_king])
     when 'pick_talon'
-      pick_talon!(params[:pick_talon].to_i)
+      pick_talon!(params[:pick_talon]&.to_i)
     when 'pick_whole_talon'
       pick_whole_talon!
     when 'resolve_talon'
@@ -37,7 +36,7 @@ class Runner
       fail RunnerError.new("unknown action #{action}")
     end
 
-    @broadcaster.info
+    # @broadcaster.info
     @broadcaster.make_remarks
 
     if @game.finished?

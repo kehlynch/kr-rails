@@ -26,50 +26,47 @@
     <%= render 'games/players/players', remarks: @remarks, form: form %>
 
     <%= render(
-        'bids',
-        player: @player,
-        visible: @action == 'make_bid' && @my_move,
-        bids: @bids.valid_bids,
-        type: 'bid'
-      )
-    %>
+      'bids',
+      player: @player,
+      visible: @action == 'make_bid' && @my_move,
+      bids: @bids.valid_bids,
+      type: 'bid') %>
 
     <%= render(
-        'bids',
-        player: @player,
-        visible: @action == 'make_announcement' && @my_move,
-        bids: @game.valid_announcements,
-        type: 'announcement'
-      )
-    %>
+      'bids',
+      player: @player,
+      visible: @game.visible_step == 'announcement',
+      bids: @game.valid_announcements,
+      type: 'announcement') %>
 
-  <%= render 'hand', form: form %>
+    <%= render 'hand', form: form %>
 
-  <%= render 'kings', visible: @action == 'pick_king'  %>
+    <%= render 'kings', visible: @game.visible_step == 'king'  %>
 
-  <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@action) || (@action == 'resolve_talon' && !@player.declarer?) %>
+    <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@game.visible_step) %>
 
-  <%= render 'tricks', tricks: @tricks, form: form, visible: @action == 'play_card', visible_trick_index: @visible_trick_index %>
+    <%= render 'tricks', tricks: @tricks, form: form, visible: @game.visible_step == 'trick', visible_trick_index: @visible_trick_index %>
 
-  <%= render 'score', visible: @game.stage == 'finished' %>
-  <%= render 'matches/points', visible: false %>
+    <%= render 'score', visible: @game.visible_step == 'finished' %>
 
-  <div class="finished-buttons <%= @game.stage == 'finished' ? '' : 'd-none' %>" id="js-finished-buttons">
-    <div>
-      <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark', onClick: 'showScores()' %>
+    <%= render 'matches/points', visible: false %>
+
+    <div class="finished-buttons <%= @game.stage == 'finished' ? '' : 'd-none' %>" id="js-finished-buttons">
+      <div>
+        <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark', onClick: 'showScores()' %>
+      </div>
+
+      <div>
+        <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark', onClick: 'showPoints()' %>
+      </div>
+
+      <div>
+        <%= button_tag 'Show talon', type: 'button', class: 'btn btn-outline-dark', onClick: 'showTalonGameEnd()' %>
+      </div>
+
+      <div>
+        <%= button_tag 'Next hand', type: 'button', class: 'btn btn-outline-dark', onClick: 'nextHand()' %>
+      </div>
     </div>
-
-    <div>
-      <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark', onClick: 'showPoints()' %>
-    </div>
-
-    <div>
-      <%= button_tag 'Show talon', type: 'button', class: 'btn btn-outline-dark', onClick: 'showTalonGameEnd()' %>
-    </div>
-
-    <div>
-      <%= button_tag 'Next hand', type: 'button', class: 'btn btn-outline-dark', onClick: 'nextHand()' %>
-    </div>
-  </div>
-<% end %>
+  <% end %>
 </div>

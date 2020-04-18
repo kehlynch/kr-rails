@@ -11,6 +11,7 @@ class PlayerPresenter
     :id,
     :points,
     :position,
+    :played_in_any_trick?,
     :played_in_current_trick?,
     :team_points,
     :winner?,

@@ -42,6 +42,11 @@ class GamePresenter
     @players.find { |p| p.id == @active_player_id }
   end
 
+  def my_move?
+    # next_player is nil if the game is finished
+    @active_player_id == next_player&.id
+  end
+
   def talon_pickable?
     declarer&.id == @active_player_id && stage == 'pick_talon'
   end
@@ -117,5 +122,58 @@ class GamePresenter
     return [] unless @game.finished?
 
     @players.map(&:game_points)
+  end
+
+  def show_king?
+    return false if [Stage::BID, Stage::TRICK, Stage::FINISHED].include?(stage)
+
+    return false unless active_player.announcements.blank?
+
+    return false unless @game.bids.pick_king?
+
+    return true
+  end
+
+  def show_talon?
+    return false if [Stage::BID, Stage::KING, Stage::TRICK, Stage::FINISHED].include?(stage)
+
+    return false unless active_player.announcements.blank?
+
+    return false unless @game.bids.talon_cards_to_pick.present?
+
+    return true
+  end
+
+  def show_penultimate_trick?
+    return false unless stage == Stage::TRICK
+
+    return false if active_player.played_in_current_trick?
+    
+    return false if @game.tricks.current_trick&.finished?
+
+    return false if @game.tricks.count < 2
+
+    return true
+  end
+
+  def visible_step
+    return 'finished' if stage == Stage::FINISHED
+
+    return 'trick' if (active_player.played_in_any_trick? || active_player.declarer?) && stage == Stage::TRICK
+
+    return 'announcement' if (active_player.announcements.any? || active_player.declarer?) && [Stage::TRICK, Stage::ANNOUNCEMENT].include?(stage)
+
+    return 'pick_talon' if active_player.declarer? && stage == Stage::PICK_TALON
+
+    return 'pick_whole_talon' if active_player.declarer? && stage == Stage::PICK_WHOLE_TALON
+
+    return 'resolve_talon' if active_player.declarer? && stage == Stage::RESOLVE_TALON
+
+    return 'resolve_whole_talon' if active_player.declarer? && stage == Stage:: RESOLVE_WHOLE_TALON
+
+    # show the king being picked if we're not declarer
+    return 'king' if [Stage::KING, Stage::ANNOUNCEMENT].include?(stage)
+
+    return 'bid'
   end
 end

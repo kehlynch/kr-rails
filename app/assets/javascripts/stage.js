@@ -2,40 +2,40 @@ function changeStage(stage) {
   setState('stage', stage);
   $('#js-stage').attr('value', stage);
   if (stage == 'pick_king') {
-    $("#js-valid-bids").addClass("d-none");
-    $("#js-kings").removeClass("d-none");
+    hideBidPicker();
+    revealKings();
   }
   if (stage == 'pick_whole_talon') {
-    enablePickWholeTalon();
+    showPickWholeTalon();
   }
   if (stage == 'pick_talon') {
-    enablePickTalon();
+    showPickTalon();
   }
   if (stage == 'resolve_talon') {
-    enableResolveTalon();
+    showResolveTalon();
   }
   if (stage == 'resolve_whole_talon') {
-    enableResolveWholeTalon();
+    showResolveWholeTalon();
   }
   if (stage == 'make_announcement') {
-    $('#talon-submit').addClass('d-none');
-    $("#js-valid-bids").addClass("d-none");
-    $("#js-kings").addClass("d-none");
-    $("#js-talon").addClass("d-none");
+    showAnnouncementsPicker();
+    // $('#talon-submit').addClass('d-none');
+    // $("#js-valid-bids").addClass("d-none");
+    // hideKings();
+    // hideTalon();
   }
 
   if (stage == 'play_card') {
-    // removeAnnouncements();
-    $("#js-tricks").removeClass("d-none");
-    $("#js-valid-bids").addClass("d-none");
-    $("#js-valid-announcements").addClass("d-none");
-    $("#js-kings").addClass("d-none");
-    $("#js-talon").addClass("d-none");
+    reveal(sections.TRICK);
+    hideBidPicker();
+    hideAnnouncementPicker();
+    hideKings();
+    hideTalon();
   }
 
   if (stage == 'finished') {
-    $("#js-tricks").addClass("d-none");
-    $("#js-finished-buttons").removeClass("d-none");
+    hide(sections.TRICK);
+    reveal(sections.FINISHED_BUTTONS);
     showScores();
   }
   setInProgress(false);

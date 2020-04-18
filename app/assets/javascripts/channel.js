@@ -1,10 +1,6 @@
 //= require_tree .
 //= require jquery3
 
-function addKing(slug) {
-  $("#js-king").append(`<img alt="diamond_8" class="kr-card " src="/assets/${slug}.jpg">`)
-}
-
 function createSubscriptions() {
   this.App = {};
   App.cable = ActionCable.createConsumer();  
@@ -34,7 +30,7 @@ function createSubscriptions() {
         setWonBid(data.slug, data.declarer)
       }
       if (action == 'king') {
-        addKing(data.king_slug)
+        setPickedKing(data.king_slug)
       }
       if (action == 'talon') {
         showPickedTalon(data.talon_half_index)

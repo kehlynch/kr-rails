@@ -24,6 +24,10 @@ class GamePlayer
     @game.tricks.current_trick.cards.map(&:player_id).include?(id)
   end
 
+  def played_in_any_trick?
+    hand.select(&:trick_id).any?
+  end
+
   def won_tricks
     @game.tricks.select { |t| t.won_player&.id == id }
   end

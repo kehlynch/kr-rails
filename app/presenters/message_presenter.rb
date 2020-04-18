@@ -69,11 +69,16 @@ class MessagePresenter
   def king_picked_msg
     msg = []
     if @game.king
-      king_name = CardPresenter.new(@game.king).name
       msg << "#{declarer_name} picks #{king_name}."
       msg += next_after_king_msg
     end
     return msg
+  end
+
+  def king_name
+    return unless @game.king
+
+    CardPresenter.new(@game.king).name
   end
 
   def next_after_king_msg
@@ -136,14 +141,24 @@ class MessagePresenter
   end
 
   def instruction_msg(player)
-    if @game.next_player&.id == player.id
-      return active_instruction_msg(player)
-    elsif @game.next_player_human?
-      return "Waiting for #{@game.next_player.name}"
-    elsif @game.finished?
-      return finished_msg.first
+    game_presenter = GamePresenter.new(@game, player.id)
+
+    p game_presenter.visible_step
+
+    if game_presenter.visible_step == 'king' && declarer.id != player.id
+      "#{declarer_name} picks #{king_name}; click to continue."
+    elsif ['pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(game_presenter.visible_step) && declarer.id != player.id
+      "#{declarer_name} picks talon; click to continue."
+    elsif game_presenter.show_penultimate_trick?
+      "#{player_name(game_presenter.tricks[-2].won_player)} wins trick, click to continue"
+    elsif game_presenter.my_move?
+      active_instruction_msg(player)
+    elsif game_presenter.next_player_human?
+      "Waiting for #{game_presenter.next_player.name}"
+    elsif game_presenter.finished?
+      finished_msg.first
     else
-      return "Click to continue."
+      "Click to continue."
     end
   end
 

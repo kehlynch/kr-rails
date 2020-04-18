@@ -35,16 +35,19 @@ class GamesController < ApplicationController
     @action = @game.stage
     @bids = BidsPresenter.new(@game)
     @tricks = TricksPresenter.new(@game)
-    message_presenter = MessagePresenter.new(@game)
+    # pass in raw game not presenter, cos we need to call the message presenter from the broadcaster too
+    message_presenter = MessagePresenter.new(find_game)
     @message = message_presenter.message
+
     @instruction = message_presenter.instruction_msg(@player)
 
-    @show_penultimate_trick = (!@player.played_in_current_trick? || @game.tricks.current_trick.finished?) && @game.tricks.count > 1
+    @show_penultimate_trick = @game.show_penultimate_trick?
     @visible_trick_index = @show_penultimate_trick ? @game.tricks.playable_trick_index - 1 : @game.tricks.playable_trick_index
 
     @player.active = true
-    @my_move = @game.next_player&.id == @player.id
+    @my_move = @game.my_move?
     @waiting = !@my_move
+
 
     @remarks = Remarks.remarks_for(@game)
   end

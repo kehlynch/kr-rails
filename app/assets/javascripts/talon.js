@@ -10,34 +10,30 @@ function toggleCard(checkbox) {
   }
 }
 
-function revealResolveTalonButton() {
-  $('#talon-submit').removeClass('d-none');
-}
-
 function showPickedTalon(index) {
   $(`#js-talon-half-${index}`).addClass("picked");
 }
 
-function enableResolveTalon() {
-  $("#js-valid-bids").addClass("d-none");
-  $("#js-kings").addClass("d-none");
+function showResolveTalon() {
+  hideBidPicker();
+  hideKings();
 }
 
-function enableResolveWholeTalon() {
-  $("#js-valid-bids").addClass("d-none");
-  $("#js-kings").addClass("d-none");
+function showResolveWholeTalon() {
+  hideBidPicker();
+  hideKings();
 }
 
-function enablePickTalon() {
-  $("#js-valid-bids").addClass("d-none");
-  $("#js-kings").addClass("d-none");
-  $("#js-talon").removeClass("d-none");
+function showPickTalon() {
+  hideBidPicker();
+  hideKings();
+  revealTalon();
 }
 
-function enablePickWholeTalon() {
-  $("#js-valid-bids").addClass("d-none");
-  $("#js-kings").addClass("d-none");
-  $("#js-talon").removeClass("d-none");
+function showPickWholeTalon() {
+  hideBidPicker();
+  hideKings();
+  revealTalon();
 }
 
 function setTalonPickable(pickable) {
@@ -52,14 +48,55 @@ function setTalonPickable(pickable) {
 
 function setTalonResolvable(resolvable) {
   if (resolvable) {
-    $("#js-talon").addClass("d-none");
+    hideTalon();
     makeHandPickable();
   }
 }
 
 function showTalonGameEnd() {
-  $('#js-score-container').addClass('d-none');
-  $('#js-points-container').addClass('d-none');
-  $("#js-talon").removeClass("d-none");
+  hide(sections.SCORES_CONTAINER)
+  hide(sections.POINTS_CONTAINER)
+  revealTalon();
 }
+
+function revealTalon() {
+  reveal(sections.TALON)
+}
+
+function hideTalon() {
+  hide(sections.TALON);
+}
+
+function revealResolveTalonButton() {
+  reveal(sections.SUBMIT_TALON);
+}
+
+function hideResolveTalonButton() {
+  hide(sections.SUBMIT_TALON);
+}
+
+function setTalonMessage() {
+  if ( !talonToPick() ) {
+    return
+  } else if ( talonToPick() == 6 ) {
+    return setFullTalonMessage()
+  } else {
+    if ( myMove() ) {
+      setInstruction('Pick 3 cards to put down');
+    } else {
+      // TODO get the half with talonPicked() and ordinalise
+      setInstruction(`${declarerName()} picks talon`);
+    }
+  }
+}
+
+function setFullTalonMessage() {
+  if ( myMove() ) {
+    setInstruction('Click to take whole talon');
+  } else {
+    // TODO get the half with talonPicked() and ordinalise
+    setInstruction(`${declarerName()} takes whole talon`);
+  }
+}
+
 

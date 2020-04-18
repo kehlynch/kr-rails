@@ -33,15 +33,15 @@ function nextHand() {
 }
 
 function showScores() {
-  $('#js-talon').addClass('d-none');
-  $('#js-points-container').addClass('d-none');
-  $('#js-score-container').removeClass('d-none');
+  hide(sections.TALON);
+  hide(sections.POINTS_CONTAINER);
+  reveal(sections.SCORES_CONTAINER);
 }
 
 function showPoints() {
-  $('#js-talon').addClass('d-none');
-  $('#js-score-container').addClass('d-none');
-  $('#js-points-container').removeClass('d-none');
+  hide(sections.TALON);
+  hide(sections.SCORES_CONTAINER);
+  reveal(sections.POINTS_CONTAINER);
 }
 
 function attachClickers() {
@@ -52,7 +52,12 @@ function pageClicked() {
   const gameStage = stage();
 
   if (inProgress()) { return; }
-  
+ 
+  // click on from Talon picking if we aren't declarer
+  if (gameStage == 'talon' || gameStage == 'make_announcement') {
+    advancePreAnnouncements();
+  }
+
   if (gameStage == 'play_card' && currentTrickIndex() !== visibleTrickIndex()) {
     revealTrick(currentTrickIndex());
   }

@@ -37,7 +37,7 @@ module GameHelper
   end
 
   def human_resolve_talon?(game, player)
-    ['resolve_talon', 'resolve_whole_talon'].include?(game.stage) && game.declarer.id == player.id
+    ['resolve_talon', 'resolve_whole_talon'].include?(game.visible_step) && game.declarer.id == player.id
   end
 
   def hand_card_pickable?(game, player, action)
@@ -56,7 +56,9 @@ module GameHelper
   def king_card_button(card_slug, player, game)
     own_king = player.hand.find { |c| c.slug == card_slug }.nil? ? '' : 'own_king'
     pickable = player.declarer? ? 'pickable' : ''
-    classes = "#{pickable} #{own_king}"
+
+    picked = game.king == card_slug ? 'selected' : ''
+    classes = "#{pickable} #{own_king} #{picked}"
     onclick = card_action(card_slug, 'pick_king')
     card_tag(card_slug, classes: classes, onclick: onclick)
   end

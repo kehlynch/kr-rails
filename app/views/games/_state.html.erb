@@ -10,6 +10,10 @@
   data-player-position=<%= @player.position %>
   data-current-trick=<%= @game.tricks.playable_trick_index %>
   data-visible-trick=<%= @visible_trick_index %>
+  data-talon-to-pick=<%= @game.bids.talon_cards_to_pick %>
+  data-talon-picked=<%= @game.talon_picked %>
+  data-visible-step=<%= @game.visible_step %>
+  data-declarer-name=<%= @game.declarer&.name %>
 />
 <input
   id="js-state-game-id"

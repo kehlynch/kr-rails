@@ -2,7 +2,7 @@ function addPlayerInfo(data) {
   const lookup = {
     'instruction': setInstruction,
     'valid_bids': addValidBids,
-    'valid_announcements': addValidAnnouncements,
+    'valid_announcements': setValidAnnouncements,
     'partner': setPartner,
     'my_move': setMyMove,
     'hand': updateHand,
