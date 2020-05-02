@@ -1,19 +1,32 @@
 <input
   id="js-state"
   hidden=true
-  data-stage=<%= @action %>
-  data-my-move=<%= @my_move %>
-  data-won-bid=<%= @bids.winning_bid_slug %>
-  data-is-declarer=<%= @player.declarer?  %>
-  data-player-id=<%= @player.id %>
-  data-match-id=<%= @match_id %>
-  data-player-position=<%= @player.position %>
   data-current-trick=<%= @game.tricks.playable_trick_index %>
+  <% if @game.declarer.present? %>
+    data-declarer-name=<%= @game.declarer.name %>
+  <% end %>
+  data-is-declarer=<%= @player.declarer?  %>
+  data-king-needed=<%= @game.bids.pick_king? %>
+  data-match-id=<%= @match_id %>
+  data-my-move=<%= @my_move %>
+  <% if @game.king.present? %>
+    data-picked-king-slug=<%= @game.king %>
+  <% end %>
+  data-player-id=<%= @player.id %>
+  data-player-position=<%= @player.position %>
+  data-stage=<%= @action %>
+  <% if @game.talon_picked.present? %>
+    data-talon-picked=<%= @game.talon_picked %>
+  <% end %>
+  <% if @game.bids.talon_cards_to_pick.present? %>
+    data-talon-to-pick=<%= @game.bids.talon_cards_to_pick %>
+  <% end %>
+  data-visible-stage=<%= @game.visible_stage %>
   data-visible-trick=<%= @visible_trick_index %>
-  data-talon-to-pick=<%= @game.bids.talon_cards_to_pick %>
-  data-talon-picked=<%= @game.talon_picked %>
-  data-visible-step=<%= @game.visible_step %>
-  data-declarer-name=<%= @game.declarer&.name %>
+  <% if @bids.winning_bid_slug.present? %>
+    data-won-bid=<%= @bids.winning_bid_slug %>
+<% end %>
+  data-advance-available=<%= @game.advance_available? %>
 />
 <input
   id="js-state-game-id"

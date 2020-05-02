@@ -143,11 +143,11 @@ class MessagePresenter
   def instruction_msg(player)
     game_presenter = GamePresenter.new(@game, player.id)
 
-    p game_presenter.visible_step
+    p game_presenter.visible_stage
 
-    if game_presenter.visible_step == 'king' && declarer.id != player.id
+    if game_presenter.visible_stage == 'pick_king' && declarer.id != player.id
       "#{declarer_name} picks #{king_name}; click to continue."
-    elsif ['pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(game_presenter.visible_step) && declarer.id != player.id
+    elsif ['pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(game_presenter.visible_stage) && declarer.id != player.id
       "#{declarer_name} picks talon; click to continue."
     elsif game_presenter.show_penultimate_trick?
       "#{player_name(game_presenter.tricks[-2].won_player)} wins trick, click to continue"

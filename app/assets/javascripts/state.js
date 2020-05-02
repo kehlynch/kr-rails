@@ -18,13 +18,19 @@ function currentTrickIndex() { return state().currentTrick; }
 
 function visibleTrickIndex() { return state().visibleTrick; }
 
-function talonToPick() { return state().talonToPick; }
+function kingNeeded() { return state().kingNeeded; }
+
+function talonCardsToPick() { return state().talonCardsToPick; }
 
 function talonPicked() { return state().talonPicked; }
 
-function visibleStep() { return state().visibleStep; }
+function visibleStage() { return state().visibleStage; }
 
 function declarerName() { return state().declarerName; }
+
+function pickedKingSlug() { return state().pickedKingSlug; }
+
+function continueAvailable() { return state().continueAvailable == 'true'; }
 
 function meToPlayHandCard() {
   if (!myMove()) { return false; }
@@ -48,10 +54,15 @@ function setState(key, value) {
   $('#js-state').attr(`data-${key}`, value);
 }
 
-function setInProgress(value) {
+function setInProgress(value=true) {
   setState('data-in-progress', value);
   value ? makeHandUnpickable() : makeHandPickable;
   toggle(sections.PROGRESS_SPINNER, !value);
+}
+
+function setContinueAvailable(value=true) {
+  console.log("estContinueAvailable", value);
+  setState('continue-available', value);
 }
 
 function updateSubscriptionsOnGameChange() {

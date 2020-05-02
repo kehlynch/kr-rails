@@ -37,7 +37,7 @@ module GameHelper
   end
 
   def human_resolve_talon?(game, player)
-    ['resolve_talon', 'resolve_whole_talon'].include?(game.visible_step) && game.declarer.id == player.id
+    ['resolve_talon', 'resolve_whole_talon'].include?(game.visible_stage) && game.declarer.id == player.id
   end
 
   def hand_card_pickable?(game, player, action)

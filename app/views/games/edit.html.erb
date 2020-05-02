@@ -35,19 +35,19 @@
     <%= render(
       'bids',
       player: @player,
-      visible: @game.visible_step == 'announcement',
+      visible: @game.visible_stage == 'announcement',
       bids: @game.valid_announcements,
       type: 'announcement') %>
 
     <%= render 'hand', form: form %>
 
-    <%= render 'kings', visible: @game.visible_step == 'king'  %>
+    <%= render 'kings', visible: @game.visible_stage == 'pick_king'  %>
 
-    <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@game.visible_step) %>
+    <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@game.visible_stage) %>
 
-    <%= render 'tricks', tricks: @tricks, form: form, visible: @game.visible_step == 'trick', visible_trick_index: @visible_trick_index %>
+    <%= render 'tricks', tricks: @tricks, form: form, visible: @game.visible_stage == 'trick', visible_trick_index: @visible_trick_index %>
 
-    <%= render 'score', visible: @game.visible_step == 'finished' %>
+    <%= render 'score', visible: @game.visible_stage == 'finished' %>
 
     <%= render 'matches/points', visible: false %>
 

@@ -1,6 +1,5 @@
 function addPlayerInfo(data) {
   const lookup = {
-    'instruction': setInstruction,
     'valid_bids': addValidBids,
     'valid_announcements': setValidAnnouncements,
     'partner': setPartner,
@@ -15,11 +14,6 @@ function addPlayerInfo(data) {
   Object.entries(lookup).forEach(([k, f]) => {
     if (data.hasOwnProperty(k)) { f(data[k]) };
   })
-}
-
-function setInstruction(inst) {
-  $('#instruction').empty();
-  $('#instruction').append(inst);
 }
 
 function setMyMove(myMove) {
@@ -42,11 +36,6 @@ function setNextPlayer(playerPosition) {
   $(`#js-player-${playerPosition}-waiting`).removeClass('d-none');
 }
 
-function setKingsPickable(pickable) {
-  if (pickable) {
-    $("#js-kings").find("img").addClass("pickable");
-  } else {
-    $("#js-kings").find("img").removeClass("pickable");
-  }
+function addDeclarerIndicator(playerPosition) {
+  $(`#js-player-${playerPosition}-declarer-indicator`).removeClass('d-none');
 }
-

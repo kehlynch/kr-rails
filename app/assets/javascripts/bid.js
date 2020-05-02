@@ -1,26 +1,71 @@
 //= require jquery3
 
-const BID_NAMES = {
-  'pass': 'Pass',
-  'rufer': 'Rufer',
-  'solo': 'Solo',
-  'piccolo': 'Piccolo',
-  'besser_rufer': 'Besser Rufer',
-  'dreier': 'Dreier',
-  'solo_dreier': 'Solo Dreier',
-  'bettel': 'Bettel',
-  'call_king': 'Call a king',
-  'trischaken': 'Trischaken',
-  'sechserdreier': 'Sechserdreier'
+const bids = {
+  PASS: 'pass',
+  RUFER: 'rufer',
+  SOLO: 'solo',
+  PICCOLO: 'piccolo',
+  BESSER_RUFER: 'besser_rufer',
+  DREIER: 'dreier',
+  SOLO_DREIER: 'solo_dreier',
+  BETTEL: 'bettel',
+  CALL_KING: 'call_king',
+  TRISCHAKEN: 'trischaken',
+  SECHSERDREIER: 'sechserdreier'
 }
 
-function addBid(slug, player) {
-  const name = BID_NAMES[slug]
-  $(`#js-player-${player}-bids`).append(`<h6 class="card-subtitle mb-2 text-muted">${name}</h6>`)
+const bidNames = {
+  [bids.PASS]: 'Pass',
+  [bids.RUFER]: 'Rufer',
+  [bids.SOLO]: 'Solo',
+  [bids.PICCOLO]: 'Piccolo',
+  [bids.BESSER_RUFER]: 'Besser Rufer',
+  [bids.DREIER]: 'Dreier',
+  [bids.SOLO_DREIER]: 'Solo Dreier',
+  [bids.BETTEL]: 'Bettel',
+  [bids.CALL_KING]: 'Call a king',
+  [bids.TRISCHAKEN]: 'Trischaken',
+  [bids.SECHSERDREIER]: 'Sechserdreier'
+}
+
+function addBid(bid) {
+  if (!bid) { return };
+  const name = bidNames[bid.slug]
+  console.log("addBid", name, bid.slug, bidNames);
+  addSpeech(bid.player.position, name);
+
+  message = bidMsg(bid)
+  addMessage([message])
+  if (bid.finished) {
+    setWonBid(bid.slug, bid.player.position);
+    setContinueInstruction();
+    setContinueAvailable();
+  }
+  // $(`#js-player-${bid.player}-bids`).append(`<h6 class="card-subtitle mb-2 text-muted">${name}</h6>`)
+}
+
+function bidMsg(bid) {
+  const name = bidNames[bid.slug]
+  if (bid.finished) {
+    return bidFinishedMsg(bid);
+  } else if (bid.slug == bids.PASS) {
+    return `${bid.player.name} passes`;
+  } else {
+    return `${bid.player.name} bids ${name}`;
+  }
+}
+
+function bidFinishedMsg(bid) {
+  const name = bidNames[bid.slug];
+  if (bid.slug == bids.CALL_KING) {
+    return `${bid.player.name} wins bidding with Rufer and calls a King` 
+  } else {
+    return `${bid.player.name} wins bidding with ${name}`
+  }
 }
 
 function addValidBid(slug) {
-  const name = BID_NAMES[slug];
+  const name = bidNames[slug];
   const input = `
     <input 
       hidden=true
@@ -46,26 +91,19 @@ function addValidBid(slug) {
 }
 
 function addValidBids(slugs) {
-  console.log("addValidBids", slugs);
   $(`#js-valid-bids`).empty();
   slugs.forEach(addValidBid)
   showBidPicker();
 }
 
 function setWonBid(slug, declarerPosition) {
-  [0, 1, 2, 3].forEach((player) => {
-    $(`#js-player-${player}-bids`).empty();
-  })
+  clearAllSpeech();
   $("#js-message-header").empty();
-  $("#js-message-header").append(slug == 'call_king' ? 'Rufer' : BID_NAMES[slug]);
-  // delete made bids
-  $(`#player-${declarerPosition}-bids`).empty();
-  // add declarer indicator
-  $(`#js-player-${declarerPosition}-declarer-indicator`).removeClass('d-none');
-  $("#js-valid-bids").empty();
+  $("#js-message-header").append(slug == 'call_king' ? 'Rufer' : bidNames[slug]);
+  addDeclarerIndicator(declarerPosition);
+  emptyBidPicker();
   setState('won-bid', slug);
-  // TODO I think this breaks in multiplayer - we'll need to start identifying players by ID?
-  setState('is-declarer', declarerPosition == 0);
+  setState('is-declarer', declarerPosition == playerPosition());
 }
 
 function submitBid(bidSlug, bidOrAnnouncement) {
@@ -74,9 +112,13 @@ function submitBid(bidSlug, bidOrAnnouncement) {
 }
 
 function showBidPicker() {
-  show(sections.BID_PICKER);
+  reveal(sections.BID_PICKER);
 }
 
 function hideBidPicker() {
   hide(sections.BID_PICKER);
+}
+
+function emptyBidPicker() {
+  clear(sections.BID_PICKER);
 }

@@ -73,14 +73,6 @@ function setValidAnnouncements(slugs) {
   slugs.forEach(addValidAnnouncement);
 }
 
-function showAnnouncementsPicker() {
-  reveal(sections.ANNOUNCEMENT_PICKER);
-}
-
-function hideAnnouncementsPicker() {
-  hide(sections.ANNOUNCEMENT_PICKER);
-}
-
 function toggleAnnouncement(slug) {
   const checkbox = $(`#valid-announcement-${slug}`)
   if (slug == 'pass') {
@@ -111,31 +103,9 @@ function activeBirdBids() {
 
 function submitAnnouncement(announcementSlug) {
   submitGame(announcementSlug);
-  showAnnouncementsPicker();
+  hide(sections.ANNOUNCEMENTS_PICKER);
 }
 
 function setAnnouncementsMessage() {
   myMove() ? setInstruction('Make an announcement') : setInstruction('Waiting for TODO');
 }
-
-function advancePreAnnouncements() {
-  console.log("advancePreAnnouncements", visibleStep(), talonPicked());
-  if (visibleStep() == 'king' && talonPicked()) {
-    console.log("advancePreAnnouncements, advancing from King");
-    hideKings();
-    revealTalon();
-    setTalonMessage();
-    setState('visible_step', 'talon');
-  } else if (visibleStep() == 'king') {
-    hideKings();
-    showAnnouncementsPicker();
-    setAnnouncementsMessage();
-    setState('visible_step', 'announcements');
-  } else if (['pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include(visibleStep())) {
-    hideTalon();
-    shownAnnouncementsPicker();
-    setAnnouncementsMessage();
-    setState('visible_step', 'announcements');
-  }
-}
-

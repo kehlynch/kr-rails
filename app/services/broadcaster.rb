@@ -4,36 +4,43 @@ class Broadcaster
     @message = MessagePresenter.new(game)
   end
 
-  def bid(bid:)
-    MessagesChannel.broadcast_to(
-      @game,
-      action: 'bid',
-      player: bid.player.position,
-      bid: bid.slug,
-      message: @message.bid_msg(bid)
-    )
-    info()
+  def broadcast_to_humans(broadcaster)
+    @game.players.select(&:human?).each do |player|
+      channel = "#{player.id}-#{@game.id}"
+      broadcaster.broadcast_to(channel, player)
+    end
   end
 
-  def bids_finished
-    MessagesChannel.broadcast_to(
-      @game,
-      action: 'bid_won',
-      slug: @game.bids.highest.slug,
-      declarer: @game.declarer.position,
-      message: @message.bids_finished_msg
-    )
-    info()
+  def bid(bid:)
+    broadcaster = Broadcasters::BidBroadcaster.new(@game, bid)
+    broadcast_to_humans(broadcaster)
   end
+
+  # def bids_finished
+  #   MessagesChannel.broadcast_to(
+  #     @game,
+  #     action: 'bid_won',
+  #     slug: @game.bids.highest.slug,
+  #     declarer: @game.declarer.position,
+  #     message: @message.bids_finished_msg,
+  #     stage: @game.stage,
+  #     next_player: @game.next_player&.position,
+  #     playable_trick_index: @game.tricks.playable_trick_index
+  #   )
+  #   players_info()
+  # end
 
   def king_picked
     MessagesChannel.broadcast_to(
       @game,
       action: 'king',
       king_slug: @game.king,
-      message: @message.king_picked_msg
+      message: @message.king_picked_msg,
+      stage: @game.stage,
+      next_player: @game.next_player&.position,
+      playable_trick_index: @game.tricks.playable_trick_index
     )
-    info()
+    players_info()
   end
 
   def talon_picked
@@ -41,9 +48,12 @@ class Broadcaster
       @game,
       action: 'talon',
       talon_half_index: @game.talon_picked,
-      message: @message.talon_picked_msg
+      message: @message.talon_picked_msg,
+      stage: @game.stage,
+      next_player: @game.next_player&.position,
+      playable_trick_index: @game.tricks.playable_trick_index
     )
-    info()
+    players_info()
   end
 
   def talon_resolved
@@ -51,9 +61,12 @@ class Broadcaster
       @game,
       action: 'resolve_talon',
       talon_half_index: @game.talon_picked,
-      message: @message.talon_resolved_msg
+      message: @message.talon_resolved_msg,
+      stage: @game.stage,
+      next_player: @game.next_player&.position,
+      playable_trick_index: @game.tricks.playable_trick_index
     )
-    info()
+    players_info()
   end
 
   def announcement(announcement:)
@@ -62,17 +75,23 @@ class Broadcaster
       action: 'announcement',
       player: announcement.player.position,
       announcement: announcement.slug,
-      message: @message.announcement_msg(announcement)
+      message: @message.announcement_msg(announcement),
+      stage: @game.stage,
+      next_player: @game.next_player&.position,
+      playable_trick_index: @game.tricks.playable_trick_index
     )
-    info()
+    players_info()
   end
 
   def announcements_finished
     MessagesChannel.broadcast_to(
       @game,
-      message: @message.first_trick_msg
+      message: @message.first_trick_msg,
+      stage: @game.stage,
+      next_player: @game.next_player&.position,
+      playable_trick_index: @game.tricks.playable_trick_index
     )
-    info()
+    players_info()
   end
 
   def card_played(card:)
@@ -83,20 +102,16 @@ class Broadcaster
       card_slug: card.slug,
       trick_index: card.trick.trick_index,
       message: @message.trick_msg(card.trick),
-      won_card: card.trick.won_card&.slug
-    )
-    info()
-  end
-
-  def info
-    @game.reload
-    MessagesChannel.broadcast_to(
-      @game,
-      action: :info,
+      won_card: card.trick.won_card&.slug,
       stage: @game.stage,
       next_player: @game.next_player&.position,
       playable_trick_index: @game.tricks.playable_trick_index
     )
+    players_info()
+  end
+
+  def players_info
+    @game.reload
 
     @game.players.select(&:human?).each do |player|
       player_info(player)

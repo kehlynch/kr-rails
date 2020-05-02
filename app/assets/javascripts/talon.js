@@ -36,13 +36,13 @@ function showPickWholeTalon() {
   revealTalon();
 }
 
-function setTalonPickable(pickable) {
+function setTalonPickable(pickable=true) {
   if (pickable) {
-    $('#js-talon').children('div').addClass('pickable');
+    sectionElement(sections.TALON).children('div').addClass('pickable');
     $('#js-talon-half-0').attr('onclick', 'submitGame(talon_0)')
     $('#js-talon-half-1').attr('onclick', 'submitGame(talon_1)')
   } else {
-    $('#js-talon').children('div').removeClass('pickable');
+    sectionElement(sections.TALON).children('div').removeClass('pickable');
   }
 }
 
@@ -76,9 +76,9 @@ function hideResolveTalonButton() {
 }
 
 function setTalonMessage() {
-  if ( !talonToPick() ) {
+  if ( !talonToCardsPick() ) {
     return
-  } else if ( talonToPick() == 6 ) {
+  } else if ( talonCardsToPick() == 6 ) {
     return setFullTalonMessage()
   } else {
     if ( myMove() ) {

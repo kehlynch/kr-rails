@@ -156,24 +156,19 @@ class GamePresenter
     return true
   end
 
-  def visible_step
-    return 'finished' if stage == Stage::FINISHED
+  def advance_available?
+    show_penultimate_trick? || (visible_stage != @game.stage)
+  end
 
-    return 'trick' if (active_player.played_in_any_trick? || active_player.declarer?) && stage == Stage::TRICK
+  def visible_stage
+    return stage if stage == Stage::FINISHED
 
-    return 'announcement' if (active_player.announcements.any? || active_player.declarer?) && [Stage::TRICK, Stage::ANNOUNCEMENT].include?(stage)
+    # show the announcement results if we haven't played a card yet
+    return stage if active_player.played_in_any_trick? && stage == Stage::TRICK
 
-    return 'pick_talon' if active_player.declarer? && stage == Stage::PICK_TALON
+    # show the bid results unless we're declarer or have already made an announcement
+    return Stage::BID unless active_player.declarer? || active_player.announcements.any?
 
-    return 'pick_whole_talon' if active_player.declarer? && stage == Stage::PICK_WHOLE_TALON
-
-    return 'resolve_talon' if active_player.declarer? && stage == Stage::RESOLVE_TALON
-
-    return 'resolve_whole_talon' if active_player.declarer? && stage == Stage:: RESOLVE_WHOLE_TALON
-
-    # show the king being picked if we're not declarer
-    return 'king' if [Stage::KING, Stage::ANNOUNCEMENT].include?(stage)
-
-    return 'bid'
+    return stage
   end
 end

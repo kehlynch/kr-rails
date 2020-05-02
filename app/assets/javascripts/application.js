@@ -53,13 +53,14 @@ function pageClicked() {
 
   if (inProgress()) { return; }
  
-  // click on from Talon picking if we aren't declarer
-  if (gameStage == 'talon' || gameStage == 'make_announcement') {
-    advancePreAnnouncements();
-  }
-
-  if (gameStage == 'play_card' && currentTrickIndex() !== visibleTrickIndex()) {
-    revealTrick(currentTrickIndex());
+  if (continueAvailable()) {
+    if (gameStage == 'play_card' && currentTrickIndex() !== visibleTrickIndex()) {
+      revealTrick(currentTrickIndex());
+      setContinueAvailable(false);
+    } else {
+      advanceVisibleStage();
+      setContinueAvailable(false);
+    }
   }
 }
 

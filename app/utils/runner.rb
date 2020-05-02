@@ -94,7 +94,7 @@ class Runner
     end
 
     if @game.bids.finished?
-      @broadcaster.bids_finished
+      @broadcaster.bid(bid: bid) if bid
       advance!
     end
   end
