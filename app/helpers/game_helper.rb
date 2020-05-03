@@ -53,14 +53,14 @@ module GameHelper
     card_tag(card.slug, classes: classes, onclick: onclick)
   end
 
-  def king_card_button(card_slug, player, game)
-    own_king = player.hand.find { |c| c.slug == card_slug }.nil? ? '' : 'own_king'
-    pickable = player.declarer? ? 'pickable' : ''
+  def king_card_button(slug:, own_king:, pickable:, picked:)
+    own_king = own_king ? 'own_king' : ''
+    pickable = pickable ? 'pickable' : ''
 
-    picked = game.king == card_slug ? 'selected' : ''
+    picked = picked ? 'selected' : ''
     classes = "#{pickable} #{own_king} #{picked}"
-    onclick = card_action(card_slug, 'pick_king')
-    card_tag(card_slug, classes: classes, onclick: onclick)
+    onclick = card_action(slug, 'pick_king')
+    card_tag(slug, classes: classes, onclick: onclick)
   end
 
   def card_tag(card_slug, classes: '', onclick: nil, landscape: false)

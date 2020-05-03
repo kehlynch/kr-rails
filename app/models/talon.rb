@@ -20,7 +20,7 @@ class Talon
   end
 
   def pick_talon!(talon_half_index, player)
-    talon_half_index = player.pick_talon_half_for(@game_id) if !talon_half_index
+    talon_half_index = player.pick_talon if !talon_half_index
 
     @talon[talon_half_index].each do |talon_card|
       talon_card.update(player_id: player.id)

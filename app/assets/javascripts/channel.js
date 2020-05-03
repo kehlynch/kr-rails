@@ -3,8 +3,10 @@
 
 function createSubscriptions() {
   this.App = {};
+  const channel = getState(state.CHANNEL);
   App.cable = ActionCable.createConsumer();  
-  App.messages = App.cable.subscriptions.create({channel: 'PlayersChannel', game_id: gameId(), player_id: playerId() }, {
+  console.log(`connecting to ${channel}`);
+  App.messages = App.cable.subscriptions.create(channel, {
     received: function(data) {
       console.log("recvd from players channel", data);
       addBid(data.bid);
@@ -12,64 +14,6 @@ function createSubscriptions() {
       addPlayerInfo(data.player);
     }
   })
-
-  // App.messages = App.cable.subscriptions.create({channel: 'MessagesChannel', id: gameId()}, {
-  //   received: function(data) {
-  //     // console.log("recvd from messages channel", data);
-  //     const action = data.action;
-
-  //     // if (data.message) {
-  //     //   addMessage(data.message);
-  //     // }
-  //     if (data.remarks) {
-  //       console.log('data.speech')
-  //       Object.entries(data.remarks).forEach(([playerPosition, remark]) => {
-  //         addRemark(playerPosition, remark);
-  //       })
-  //     }
-
-  //     if (data.player_id == playerId()) {
-  //       addPlayerInfo(data)
-  //     }
-  //     if (action == 'bid') {
-  //       addBid(data.bid, data.player)
-  //     }
-  //     if (action == 'bid_won') {
-  //       setWonBid(data.slug, data.declarer)
-  //     }
-  //     if (action == 'king') {
-  //       setPickedKing(data.king_slug)
-  //     }
-  //     if (action == 'talon') {
-  //       showPickedTalon(data.talon_half_index)
-  //     }
-  //     if (action == 'announcement') {
-  //       addAnnouncement(data.announcement, data.player)
-  //       addPlayerInfo(data)
-  //     }
-  //     if (action == 'play_card') {
-  //       addTrickCard(data.card_slug, data.trick_index, data.player)
-  //       if (data.won_card) {
-  //         setWonCard(data.won_card)
-  //       }
-  //     }
-  //     if (data.next_player) {
-  //       setNextPlayer(data.next_player);
-  //     }
-  //     if (data.stage) {
-  //       changeStage(data.stage);
-  //     }
-  //     if (data.playable_trick_index) {
-  //       setState('current-trick', data.playable_trick_index);
-  //     }
-
-  //     // if (action == 'info') {
-  //     //   setNextPlayer(data.next_player);
-  //     //   changeStage(data.stage);
-  //     //   setState('current-trick', data.playable_trick_index);
-  //     // }
-  //   },
-  // });
 
   // // for refreshing show page
   // const showPageMatchId = $('#js-reload-on-match-ready').attr('data-match-id');
@@ -90,3 +34,4 @@ $(document).ready(function() {
   scrollMessageBox();
   createSubscriptions();
 })
+

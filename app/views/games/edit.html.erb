@@ -1,17 +1,15 @@
 <div class="game">
-  <%= form_with model: @game.model, url: match_player_game_path(@match_id, @player_id, @game.id), html: {id: "gameForm"}, class: 'game-container' do |form| %>
-    <%= render 'state' %>
-    <input id="js-stage" hidden=true name="game[action]" value=<%= @action %> />
+  <%= form_with url: paths[:update_path], method: :patch, html: {id: "gameForm"}, class: 'game-container' do |form| %>
+    <%= render(
+      'state',
+      local_assigns) %>
+    <input id="js-stage" hidden=true name="game[action]" value=<%= action %> />
 
     <div class="instruction alert alert-primary" role="alert" id="instruction">
-      <%= @instruction %>
+      <%= instruction %>
     </div>
 
-    <div class="home-button-container">
-      <%= link_to fa_icon('random'), matches_path(match: { human_count: 1 }), method: :post, class: 'btn btn-outline-dark', title: 'start new single player game' %>
-      <%= link_to fa_icon('undo'), reset_match_player_game_path(@match_id, @player_id, @game.id), method: :post, class: 'btn btn-outline-dark', title: 'reset game' %>
-      <%= link_to fa_icon('home'), matches_path, class: 'btn btn-outline-dark' %>
-    </div>
+    <%= render 'navigation_buttons', paths %>
 
     <div
       class="center-container spinner-border text-primary d-none"
@@ -21,52 +19,34 @@
       <span class="sr-only">Loading...</span>
     </div>
 
-    <%= render 'message', message: @message %>
+    <%= render 'message', message: message %>
 
-    <%= render 'games/players/players', remarks: @remarks, form: form %>
+    <%= render 'games/players/players', remarks: remarks, form: form %>
 
     <%= render(
-      'bids',
-      player: @player,
-      visible: @action == 'make_bid' && @my_move,
-      bids: @bids.valid_bids,
+      'valid_bid_buttons',
+      visible: action == 'make_bid' && my_move,
+      bids: valid_bids,
       type: 'bid') %>
 
     <%= render(
-      'bids',
-      player: @player,
-      visible: @game.visible_stage == 'announcement',
-      bids: @game.valid_announcements,
+      'valid_bid_buttons',
+      visible: visible_stage == 'announcement',
+      bids: valid_announcements,
       type: 'announcement') %>
 
     <%= render 'hand', form: form %>
 
-    <%= render 'kings', visible: @game.visible_stage == 'pick_king'  %>
+    <%= render 'kings', visible: visible_stage == 'pick_king', kings: kings  %>
 
-    <%= render 'talon', talon: @game.talon, visible: ['pick_talon', 'pick_whole_talon'].include?(@game.visible_stage) %>
+    <%= render 'talon', talon: talon, visible: ['pick_talon', 'pick_whole_talon'].include?(visible_stage) %>
 
-    <%= render 'tricks', tricks: @tricks, form: form, visible: @game.visible_stage == 'trick', visible_trick_index: @visible_trick_index %>
+    <%= render 'tricks', tricks: tricks, form: form, visible: visible_stage == 'trick', visible_trick_index: visible_trick_index %>
 
-    <%= render 'score', visible: @game.visible_stage == 'finished' %>
+    <%= render 'score', visible: visible_stage == 'finished' %>
 
     <%= render 'matches/points', visible: false %>
 
-    <div class="finished-buttons <%= @game.stage == 'finished' ? '' : 'd-none' %>" id="js-finished-buttons">
-      <div>
-        <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark', onClick: 'showScores()' %>
-      </div>
-
-      <div>
-        <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark', onClick: 'showPoints()' %>
-      </div>
-
-      <div>
-        <%= button_tag 'Show talon', type: 'button', class: 'btn btn-outline-dark', onClick: 'showTalonGameEnd()' %>
-      </div>
-
-      <div>
-        <%= button_tag 'Next hand', type: 'button', class: 'btn btn-outline-dark', onClick: 'nextHand()' %>
-      </div>
-    </div>
+    <%= render 'finished_buttons', visible: visible_stage == 'finished', next_hand_path: paths[:next_hand_path] %>
   <% end %>
 </div>

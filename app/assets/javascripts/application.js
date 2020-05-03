@@ -20,16 +20,8 @@
 //= require cable
 
 function submitGame(checkbox) {
-  if (checkbox) { $(checkbox).prop('checked', true) }
+  if (checkbox) { $(checkbox).prop('checked', true); }
   document.getElementById('gameForm').submit();
-}
-
-function nextHand() {
-  const url = `/matches/${matchId()}/players/${playerId()}/games/${gameId()}/next`
-  const csrf_token = $('meta[name="csrf-token"]').attr('content');
-  const csrf_input = `<input type="hidden" name="authenticity_token" value=${csrf_token} />`
-  const form = `<form action=${url} method="post">${csrf_input}</form>`
-  $(form).appendTo('body').submit(); 
 }
 
 function showScores() {
@@ -52,7 +44,7 @@ function pageClicked() {
   const gameStage = stage();
 
   if (inProgress()) { return; }
- 
+
   if (continueAvailable()) {
     if (gameStage == 'play_card' && currentTrickIndex() !== visibleTrickIndex()) {
       revealTrick(currentTrickIndex());
@@ -64,4 +56,4 @@ function pageClicked() {
   }
 }
 
-attachClickers()
+attachClickers();

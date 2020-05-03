@@ -50,6 +50,10 @@ class GamesController < ApplicationController
 
 
     @remarks = Remarks.remarks_for(@game)
+
+    puts @game.props
+
+    render locals: @game.props
   end
 
   def update

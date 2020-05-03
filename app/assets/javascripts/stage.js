@@ -10,9 +10,12 @@ const stages = {
   FINISHED: 'finished',
 }
 
+function stage() { return getState(state.ACTION); }
+
+function setStage() { setState(newState.ACTION, stage); }
+
 function changeStage(stage) {
-  setState('stage', stage);
-  $('#js-stage').attr('value', stage);
+  setStage(stage);
   if (stage == 'pick_king') {
     setState('visible-stage', 'pick_king');
     hideBidPicker();
@@ -103,7 +106,7 @@ function advanceVisibleStage() {
       hide(sections.BID_PICKER);
       reveal(sections.KINGS);
       setKingsPickable(isDeclarer());
-      setInstruction(isDeclarer() ? 'pick a king' : `${declarerName} to pick a king`);
+      setInstruction(isDeclarer() ? 'pick a king' : `${declarerName()} to pick a king`);
       break;
     case stages.PICK_TALON:
       hide(sections.KINGS);
@@ -117,19 +120,19 @@ function advanceVisibleStage() {
       break;
     case stages.RESOLVE_TALON:
       if (isDeclarer()) {
-        hide(section.KINGS);
+        hide(sections.KINGS);
         setTalonResolvable(isDeclarer());
       }
       break;
     case stages.RESOLVE_WHOLE_TALON:
       if (isDeclarer()) {
-        hide(section.KINGS);
+        hide(sections.KINGS);
         setTalonResolvable(isDeclarer());
       }
       break;
     case stages.ANNOUNCEMENT:
-      hide(section.TALON);
-      hide(section.KING);
+      hide(sections.TALON);
+      hide(sections.KING);
       reveal(sections.ANNOUNCEMENT_PICKER);
       setAnnouncementsMessage();
       break;

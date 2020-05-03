@@ -139,7 +139,7 @@ class GamePlayer
     CardPicker.new(hand: hand, bird_announced: bird_announced).pick
   end
 
-  def pick_talon(_talon)
+  def pick_talon
     [0, 1].sample
   end
 

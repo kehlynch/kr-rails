@@ -1,0 +1,5 @@
+<div class="bid-buttons-container center-container <%= visible ? "" : "d-none" %>" id="js-valid-<%= type %>s">
+  <% bids.each do |b| %>
+    <%= render 'valid_bid_button', slug: b[:slug], name: b[:name], type: type %>
+  <% end %>
+</div>
