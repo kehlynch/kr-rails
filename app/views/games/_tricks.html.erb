@@ -3,9 +3,7 @@
     <%=
       render(
         'trick',
-        trick: trick,
-        visible: @visible_trick_index == i,
-        form: form
+        trick.merge(form: form)
       )
     %>
   <% end %>

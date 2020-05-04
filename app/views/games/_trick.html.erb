@@ -1,10 +1,5 @@
-<div class="trick-container <%= visible ? '' : 'd-none' %>" id="js-trick-<%= trick.trick_index %>">
-  <% trick.cards.each do |c| %>
-    <% compass = c ? player_compass_position(c.player.position, @player.position) : '' %>
-    <div class="card-container trick-card-container <%= compass %>" id="js-trick-card-<%= c&.slug %>">
-      <% if c %>
-        <%= card_tag(c.slug, classes: "trickcard #{'won' if trick.won_card&.slug == c.slug}", landscape: ['east', 'west'].include?(compass)) %>
-      <% end %>
-    </div>
+<div class="trick-container <%= visible ? '' : 'd-none' %>" id="js-trick-<%= index %>">
+  <% cards.each do |card| %>
+    <%= render 'tricks/card', card: card %>
   <% end %>
 </div>

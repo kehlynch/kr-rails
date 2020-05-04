@@ -1,0 +1,7 @@
+<div class="card-container trick-card-container <%= compass %>" id="js-trick-card-<%= slug %>">
+  <%= card_tag(
+    slug,
+    classes: "trickcard #{'won' if won}",
+    landscape: landscape
+  ) %>
+</div>

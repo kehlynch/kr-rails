@@ -34,7 +34,7 @@ class GamesController < ApplicationController
     @player = @players.first
     @action = @game.stage
     @bids = BidsPresenter.new(@game)
-    @tricks = TricksPresenter.new(@game)
+    # @tricks = TricksPresenter.new(@game)
     # pass in raw game not presenter, cos we need to call the message presenter from the broadcaster too
     message_presenter = MessagePresenter.new(find_game)
     @message = message_presenter.message

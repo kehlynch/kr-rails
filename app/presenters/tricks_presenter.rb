@@ -9,11 +9,27 @@ class TricksPresenter
     to: :tricks
   )
 
-  def initialize(game)
-    tricks = game.tricks.sort_by(&:trick_index)
+  def initialize(tricks, active_player)
+    @tricks = tricks
+    @active_player = active_player
+  end
 
-    @tricks = (0..11).map do |trick_index|
-      TrickPresenter.new(tricks[trick_index], trick_index)
+  def props
+    (0..11).map do |trick_index|
+      trick = @tricks[trick_index]
+      {
+        index: trick_index,
+        visible: @visible_trick_index == trick_index,
+        cards: cards_props(trick)
+      }
+    end
+  end
+
+  def cards_props(trick)
+    return [] unless trick
+
+    trick.cards.map do |card|
+      TrickCardPresenter.new(card, trick, @active_player).props
     end
   end
 end
