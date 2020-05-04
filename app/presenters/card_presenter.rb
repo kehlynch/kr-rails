@@ -17,17 +17,23 @@ class CardPresenter
     {
       slug: @card.slug,
       stage: stage,
-      pickable: pickable?(stage),
+      pickable: hand_pickable?(stage),
       legal: @card.legal?,
-      onclick: onclick(stage)
+      onclick: hand_onclick(stage)
+    }
+  end
+
+  def talon_props(declarer, stage)
+    {
+      slug: @card.slug
     }
   end
 
   private
 
   # TODO attach listeners from the JS instead?
-  def onclick(stage)
-    return nil unless pickable?(stage)
+  def hand_onclick(stage)
+    return nil unless hand_pickable?(stage)
 
     checkbox_id = "#{stage}_#{@card.slug}"
 
@@ -45,7 +51,7 @@ class CardPresenter
     ['south', 'east', 'north', 'west'][index]
   end
 
-  def pickable?(stage)
+  def hand_pickable?(stage)
     return false unless [Stage::TRICK, Stage::RESOLVE_TALON, Stage::RESOLVE_WHOLE_TALON].include?(stage)
 
     @game.next_player&.id == @active_player.id

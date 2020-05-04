@@ -31,7 +31,7 @@
 
     <%= render 'kings/kings', visible: visible_stage == 'pick_king', kings: kings  %>
 
-    <%= render 'talon/talon', talon: talon, visible: ['pick_talon', 'pick_whole_talon'].include?(visible_stage) %>
+    <%= render 'talon/talon', talon %>
 
     <%= render 'tricks/tricks', tricks: tricks, form: form, visible: visible_stage == 'trick', visible_trick_index: visible_trick_index %>
 

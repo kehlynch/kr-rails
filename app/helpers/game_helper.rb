@@ -20,20 +20,8 @@ module GameHelper
     )
   end
 
-  def talon_half(cards, index, game, action)
-    pickable_class = game.talon_pickable? ? "pickable" : ""
-    onclick = game.talon_pickable? ? "submitGame(talon_#{index})" : ""
-
-    picked_class = game.talon_picked == index ? "picked" : ""
-
-    content_tag(
-      :div,
-      onclick: onclick,
-      class: "talon-half-container #{pickable_class} #{picked_class}",
-      id: "js-talon-half-#{index}"
-    ) do
-      render('talon/talon_half', cards: cards, index: index)
-    end
+  def talon_half_classes(pickable, picked)
+    "talon-half-container #{'pickable' if pickable} #{'picked' if picked}"
   end
 
   def human_resolve_talon?(game, player)
@@ -47,7 +35,7 @@ module GameHelper
   # def hand_card_button(card, game, player, action)
   def hand_card_button(slug, pickable, legal)
     pickable_class = pickable ? 'pickable' : ''
-    illegal_class = pickable && legal ? 'illegal' : ''
+    illegal_class = pickable && !legal ? 'illegal' : ''
     classes = "#{pickable_class} #{illegal_class}"
     onclick = pickable && legal && card_action(slug, action, "hand_#{slug}")
     card_tag(slug, classes: classes, onclick: onclick)

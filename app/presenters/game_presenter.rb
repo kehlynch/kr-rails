@@ -46,7 +46,7 @@ class GamePresenter
       valid_bids: valid_bids_props,
       valid_announcements: valid_announcements_props,
       visible_stage: visible_stage,
-      talon: talon,
+      talon: TalonPresenter.new(talon, active_player, declarer, talon_picked, visible_stage).props,
       tricks: TricksPresenter.new(tricks, active_player).props,
       playable_trick_index: tricks.playable_trick_index,
       visible_trick_index: visible_trick_index,
