@@ -1,9 +1,6 @@
 <div class="row pl-4 pr-4 justify-content-center hand-container"  id="js-hand">
-  <% @player.hand.each do |card| %>
-    <div class="card-container hand">
-      <input hidden=true id="hand_<%= card.slug %>" name="game[<%= @action %>][]" type="checkbox" value="<%= card.slug %>" />
-      <%= hand_card_button(card, @game, @player, @action) %>
-    </div>
+  <% hand.each do |card| %>
+    <%= render 'hand/hand_card', card %>
   <% end %>
 </div>
 <div class="center-container">

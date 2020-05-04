@@ -32,7 +32,7 @@ module GameHelper
       class: "talon-half-container #{pickable_class} #{picked_class}",
       id: "js-talon-half-#{index}"
     ) do
-      render('talon_half', cards: cards, index: index)
+      render('talon/talon_half', cards: cards, index: index)
     end
   end
 
@@ -44,13 +44,13 @@ module GameHelper
     human_resolve_talon?(game, player) || (action == 'play_card' && game.next_player.id == player.id)
   end
 
-  def hand_card_button(card, game, player, action)
-    pickable = hand_card_pickable?(game, player, action)
+  # def hand_card_button(card, game, player, action)
+  def hand_card_button(slug, pickable, legal)
     pickable_class = pickable ? 'pickable' : ''
-    illegal_class = pickable && !card.legal? ? 'illegal' : ''
+    illegal_class = pickable && legal ? 'illegal' : ''
     classes = "#{pickable_class} #{illegal_class}"
-    onclick = pickable && card.legal? && card_action(card.slug, action, "hand_#{card.slug}")
-    card_tag(card.slug, classes: classes, onclick: onclick)
+    onclick = pickable && legal && card_action(slug, action, "hand_#{slug}")
+    card_tag(slug, classes: classes, onclick: onclick)
   end
 
   def king_card_button(slug:, own_king:, pickable:, picked:)

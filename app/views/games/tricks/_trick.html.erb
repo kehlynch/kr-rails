@@ -1,5 +1,5 @@
 <div class="trick-container <%= visible ? '' : 'd-none' %>" id="js-trick-<%= index %>">
   <% cards.each do |card| %>
-    <%= render 'tricks/card', card: card %>
+    <%= render 'tricks/trick_card', card: card %>
   <% end %>
 </div>

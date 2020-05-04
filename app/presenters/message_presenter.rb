@@ -78,7 +78,7 @@ class MessagePresenter
   def king_name
     return unless @game.king
 
-    CardPresenter.new(@game.king).name
+    OldCardPresenter.new(@game.king).name
   end
 
   def next_after_king_msg

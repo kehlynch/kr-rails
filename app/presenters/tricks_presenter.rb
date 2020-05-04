@@ -29,7 +29,7 @@ class TricksPresenter
     return [] unless trick
 
     trick.cards.map do |card|
-      TrickCardPresenter.new(card, trick, @active_player).props
+      CardPresenter.new(card, @active_player).trick_props(trick)
     end
   end
 end

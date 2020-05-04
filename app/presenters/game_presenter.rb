@@ -60,8 +60,15 @@ class GamePresenter
       won_bid: bids.highest&.slug,
       continue_available: continue_available?,
       kings: kings_props,
-      players: players_props
+      players: players_props,
+      hand: hand_props
     }
+  end
+
+  def hand_props
+    active_player.hand.map do |card|
+      CardPresenter.new(card, active_player).hand_props(stage)
+    end
   end
 
   def players_props

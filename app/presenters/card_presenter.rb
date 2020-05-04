@@ -1,44 +1,53 @@
 class CardPresenter
-  FACE_NAMES = {
-    8 => 'King',
-    7 => 'Queen',
-    6 => 'Knight',
-    5 => 'Jack'
-  }
-
-  def initialize(slug)
-    @slug = slug
-    @suit, @value = @slug.split('_')
-    @value = @value.to_i
+  def initialize(card, active_player)
+    @card = card
+    @active_player = active_player
   end
 
-  def name
-    return trump_name if @suit == 'trump'
+  def trick_props(trick)
+    {
+      slug: @card.slug,
+      compass: compass,
+      landscape: ['east', 'west'].include?(compass),
+      won: trick.won_card&.slug == @card.slug
+    }
+  end
 
-    return face_name if [5, 6, 7, 8].include?(@value)
-
-    return red_pip_name if ['diamond', 'heart'].include?(@suit)
-
-    return black_pip_name
+  def hand_props(stage)
+    {
+      slug: @card.slug,
+      stage: stage,
+      pickable: pickable?(stage),
+      legal: @card.legal?,
+      onclick: onclick(stage)
+    }
   end
 
   private
 
-  # not being used at the moment - will want a better implementation if it is
-  def trump_name
-    "#{@value} of trumps"
+  # TODO attach listeners from the JS instead?
+  def onclick(stage)
+    return nil unless pickable?(stage)
+
+    checkbox_id = "#{stage}_#{@card.slug}"
+
+    return "playCard(#{checkbox_id})" if Stage::TRICK == stage
+
+    return "toggleCard(#{checkbox_id})"
   end
 
-  def face_name
-    "#{FACE_NAMES[@value]} of #{@suit.capitalize}s"
+  def checkbox_id(stage)
+
   end
 
-  def red_pip_name
-    name = @value == 4 ? 'Ace' : 5 - @value
-    "#{name} of #{@suit.capitalize}"
+  def compass
+    index = (@card.player.position - active_player.position) % 4
+    ['south', 'east', 'north', 'west'][index]
   end
 
-  def black_pip_name
-    "#{@value + 6} of #{@suit.capitalize}"
+  def pickable?(stage)
+    return false unless [Stage::TRICK, Stage::RESOLVE_TALON, Stage::RESOLVE_WHOLE_TALON].include?(stage)
+
+    @game.next_player&.id == @active_player.id
   end
 end

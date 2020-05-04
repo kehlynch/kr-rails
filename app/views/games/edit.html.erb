@@ -7,38 +7,38 @@
 
     <%= render 'instruction', instruction: instruction %>
 
-    <%= render 'navigation_buttons', paths %>
+    <%= render 'navigation/navigation_buttons', paths %>
 
     <%= render 'loading_spinner' %>
 
     <%= render 'message', message: message %>
 
-    <%= render 'games/players/players', players: players, remarks: remarks %>
+    <%= render 'players/players', players: players, remarks: remarks %>
 
     <%= render(
-      'valid_bid_buttons',
+      'bids/valid_bid_buttons',
       visible: visible_stage == 'make_bid',
       bids: valid_bids,
       type: 'bid') %>
 
     <%= render(
-      'valid_bid_buttons',
+      'bids/valid_bid_buttons',
       visible: visible_stage == 'make_announcement',
       bids: valid_announcements,
       type: 'announcement') %>
 
-    <%= render 'hand', form: form %>
+    <%= render 'hand/hand', hand: hand, form: form %>
 
-    <%= render 'kings', visible: visible_stage == 'pick_king', kings: kings  %>
+    <%= render 'kings/kings', visible: visible_stage == 'pick_king', kings: kings  %>
 
-    <%= render 'talon', talon: talon, visible: ['pick_talon', 'pick_whole_talon'].include?(visible_stage) %>
+    <%= render 'talon/talon', talon: talon, visible: ['pick_talon', 'pick_whole_talon'].include?(visible_stage) %>
 
-    <%= render 'tricks', tricks: tricks, form: form, visible: visible_stage == 'trick', visible_trick_index: visible_trick_index %>
+    <%= render 'tricks/tricks', tricks: tricks, form: form, visible: visible_stage == 'trick', visible_trick_index: visible_trick_index %>
 
     <%= render 'score', visible: visible_stage == 'finished' %>
 
     <%= render 'matches/points', visible: false %>
 
-    <%= render 'finished_buttons', visible: visible_stage == 'finished', next_hand_path: paths[:next_hand_path] %>
+    <%= render 'navigation/finished_buttons', visible: visible_stage == 'finished', next_hand_path: paths[:next_hand_path] %>
   <% end %>
 </div>

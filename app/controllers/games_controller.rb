@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
   helper_method :game
+  before_action :set_view_paths
 
   def create
     match = Match.find(params[:match_id])
@@ -97,5 +98,9 @@ class GamesController < ApplicationController
     params.require(:game)
           .permit(:action, :make_bid, :pick_talon, :pick_king, :make_announcement, :resolve_talon => [], :resolve_whole_talon => [], :play_card => [])
           .to_h.symbolize_keys
+  end
+
+  def set_view_paths
+    prepend_view_path 'app/views/games/'
   end
 end

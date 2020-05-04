@@ -2,7 +2,7 @@
   <% tricks.each_with_index do |trick, i| %>
     <%=
       render(
-        'trick',
+        'tricks/trick',
         trick.merge(form: form)
       )
     %>
