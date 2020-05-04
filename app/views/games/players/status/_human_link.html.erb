@@ -1,7 +1,7 @@
-<div id="player-<%= player.position %>-top-info">
-  <% if player.human? && !player.active? %>
+<div id="player-<%= position %>-top-info">
+  <% if human && !active %>
     <h6>
-      <%= link_to 'human', edit_match_player_game_path(@match_id, player.id, @game.id), class:'card-subtitle mb-2 text-muted' %>
+      <%= link_to 'human', play_as_path, class:'card-subtitle mb-2 text-muted' %>
     </h6>
   <% end %>
 </div>

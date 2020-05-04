@@ -1,11 +1,9 @@
-<% if player.forehand? %>
-  <div class="forehand-indicator">
-    <span class="sr-only">Forehand</span>
-  </div>
-<% end %>
-<div class="declarer-indicator <%= player.role == 'declarer' ? '' : 'd-none' %>" id="js-player-<%= player.position %>-declarer-indicator">
+<div class="forehand-indicator <%= 'd-none' unless forehand %>" id="js-player-<%= position %>-forehand-indicator">
+  <span class="sr-only">Forehand</span>
+</div>
+<div class="declarer-indicator <%= 'd-none' unless declarer %>" id="js-player-<%= position %>-declarer-indicator">
   <span class="sr-only">Declarer</span>
 </div>
-<div class="partner-indicator <%= player.known_partner ? '' : 'd-none' %>" id="js-player-<%= player.position %>-partner-indicator">
+<div class="partner-indicator <%= 'd-none' unless known_partner %>" id="js-player-<%= position %>-partner-indicator">
   <span class="sr-only">Partner</span>
 </div>

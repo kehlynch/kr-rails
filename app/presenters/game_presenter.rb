@@ -36,15 +36,15 @@ class GamePresenter
 
   def props
     {
-      paths: paths,
-      channel: channel,
+      paths: paths_props,
+      channel: channel_props,
       action: stage,
       instruction: @message_presenter.instruction_msg(active_player),
       message: @message_presenter.message,
       remarks: @remarks,
       my_move: my_move?,
-      valid_bids: valid_bids,
-      valid_announcements: valid_announcements,
+      valid_bids: valid_bids_props,
+      valid_announcements: valid_announcements_props,
       visible_stage: visible_stage,
       talon: talon,
       tricks: TricksPresenter.new(tricks, active_player).props,
@@ -59,11 +59,19 @@ class GamePresenter
       talon_cards_to_pick: bids.talon_cards_to_pick,
       won_bid: bids.highest&.slug,
       continue_available: continue_available?,
-      kings: kings
+      kings: kings_props,
+      players: players_props
     }
   end
 
-  def kings
+  def players_props
+    # TODO get rid of the @players using PlayersPresneter
+    game.players.map do |player|
+      PlayerPresenter.new(player, game).props(active_player)
+    end
+  end
+
+  def kings_props
     ['club_8', 'diamond_8', 'heart_8', 'spade_8'].map do |king_slug|
       {
         slug: king_slug,
@@ -74,7 +82,7 @@ class GamePresenter
     end
   end
 
-  def channel
+  def channel_props
     {
       channel: 'PlayersChannel',
       player_id: @active_player_id,
@@ -82,7 +90,7 @@ class GamePresenter
     }
   end
 
-  def paths
+  def paths_props
     {
       update_path: match_player_game_path(@game.match_id, @active_player_id, @game.id),
       new_single_player_path: matches_path(match: { human_count: 1 }),
@@ -91,7 +99,7 @@ class GamePresenter
     }
   end
 
-  def valid_bids
+  def valid_bids_props
     @game.bids.valid_bids.map do |slug|
       {
         slug: slug,
@@ -100,7 +108,7 @@ class GamePresenter
     end
   end
 
-  def valid_announcements
+  def valid_announcements_props
     @game.announcements.valid_announcements.map do |slug|
       {
         slug: slug,

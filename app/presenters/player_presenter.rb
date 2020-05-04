@@ -2,6 +2,8 @@ class PlayerPresenter
   attr_reader :player
   attr_accessor :active
 
+  include Rails.application.routes.url_helpers  
+
   delegate(
     :announcements,
     :declarer?,
@@ -23,6 +25,29 @@ class PlayerPresenter
     @player = player
     @game = game
     @player_teams = game.player_teams
+  end
+
+  def props(active_player)
+    {
+      id: @player.id,
+      position: @player.position,
+      compass: compass(active_player),
+      name: @player.name,
+      announcements_text: announcements_text,
+      bids: bids,
+      human: @player.human?,
+      active: @player.id == active_player.id,
+      play_as_path: edit_match_player_game_path(@game.match_id, @player.id, @game.id),
+      next_to_play: @game.next_player&.id == @player.id,
+      forehand: @player.forehand?,
+      declarer: @game.declarer&.id == @player.id,
+      known_partner: known_partner
+    }
+  end
+
+  def compass(active_player)
+    index = (@player.position - active_player.position) % 4
+    ['south', 'east', 'north', 'west'][index]
   end
 
   def hand
