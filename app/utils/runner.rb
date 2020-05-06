@@ -40,7 +40,7 @@ class Runner
     @broadcaster.make_remarks
 
     if @game.finished?
-      @broadcaster.scores
+      # @broadcaster.scores
     end
 
     @game

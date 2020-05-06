@@ -163,28 +163,29 @@ class Broadcaster
     )
   end
 
-  def scores
-    @game.players.select(&:human?).each do |player|
-      scores = PlayersPresenter.new(@game, player.id).map do |p|
-        {
-          name: p.name,
-          won_tricks_count: p.won_tricks_count,
-          points: p.points,
-          team_points: p.team_points,
-          game_points: p.game_points,
-          winner: p.winner?
-        }
-      end
+  # def scores
+  #   @game.players.select(&:human?).each do |player|
+  #     player_scores = PlayersPresenter.new(@game, player.id).map do |p|
+  #       {
+  #         name: p.name,
+  #         won_tricks_count: p.won_tricks_count,
+  #         points: p.points,
+  #         team_points: p.team_points,
+  #         game_points: p.game_points,
+  #         winner: p.winner?
+  #       }
+  #     end
 
-      game_summaries = MatchPresenter.new(@game.match, player.id).games.select(&:finished?).map(&:summary)
+  #     # This is the last use of MatchPresenter
+  #     game_summaries = MatchPresenter.new(@game.match, player.id).games.select(&:finished?).map(&:summary)
 
-      broadcast_to_player(
-        player,
-        scores: scores,
-        game_summaries: game_summaries
-      )
-    end
-  end
+  #     broadcast_to_player(
+  #       player_scores,
+  #       scores: scores,
+  #       game_summaries: game_summaries
+  #     )
+  #   end
+  # end
 
   def broadcast_to_player(player, **params)
     MessagesChannel.broadcast_to(

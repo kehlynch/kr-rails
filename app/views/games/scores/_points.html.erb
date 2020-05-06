@@ -1,13 +1,13 @@
 <div class="points-container center-container <%= visible ? '' : 'd-none' %>" id="js-points-container">
   <div class="points-container-grid">
-    <% @players.each do |p| %>
+    <% player_names.each do |name| %>
       <div class="d-flex justify-content-center">
-        <%= p.name %>
+        <%= name %>
       </div>
     <% end %>
     <div class=""></div>
     <div style="display: contents" id="js-points">
-      <% @match.games.select(&:finished?).map(&:summary).each do |summary| %>
+      <% games.each do |summary| %>
         <% summary[:players].each do |player| %>
           <div class="d-flex justify-content-center game-point <%= points_classes(player) %>" >
             <div class="game-point-inner">

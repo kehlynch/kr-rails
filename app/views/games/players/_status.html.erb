@@ -7,6 +7,6 @@
     </h5>
     <%= render 'games/players/status/human_link', local_assigns %>
     <%= render 'games/players/status/announcements', local_assigns %>
-    <%= render 'games/players/status/bids', local_assigns %>
+    <%= render 'games/players/status/bids', bids.merge(position: position) %>
   </div>
 </div>

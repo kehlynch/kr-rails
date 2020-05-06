@@ -3,3 +3,14 @@
     <%= render 'talon/talon_half', half %>
   <% end %>
 </div>
+
+<div class="center-container">
+  <%=
+    form.submit(
+      'put down cards',
+      disabled: true,
+      id: 'talon-submit',
+      class: "btn btn-outline-dark new-game-button #{'d-none' unless talon_resolvable}"
+    )
+  %>
+</div>

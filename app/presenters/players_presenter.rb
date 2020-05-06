@@ -14,6 +14,7 @@ class PlayersPresenter
   )
 
   def initialize(game, player_id)
+    p 'player_id', player_id
     @game = game
     presenters = @game.players.map { |p| PlayerPresenter.new(p, game) }
     player_index = presenters.index { |p| p.id == player_id }

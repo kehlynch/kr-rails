@@ -12,6 +12,14 @@ class MessagePresenter
     @msg = []
   end
 
+  def props
+    {
+      heading: @game.stage == Stage::BID ? 'Bidding' : winning_bid_name,
+      king: @game.king,
+      message: message
+    }
+  end
+
   def message
     msg = [forehand_msg]
 

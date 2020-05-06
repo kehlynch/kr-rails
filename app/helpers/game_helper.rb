@@ -24,15 +24,6 @@ module GameHelper
     "talon-half-container #{'pickable' if pickable} #{'picked' if picked}"
   end
 
-  def human_resolve_talon?(game, player)
-    ['resolve_talon', 'resolve_whole_talon'].include?(game.visible_stage) && game.declarer.id == player.id
-  end
-
-  def hand_card_pickable?(game, player, action)
-    human_resolve_talon?(game, player) || (action == 'play_card' && game.next_player.id == player.id)
-  end
-
-  # def hand_card_button(card, game, player, action)
   def hand_card_button(slug, pickable, legal)
     pickable_class = pickable ? 'pickable' : ''
     illegal_class = pickable && !legal ? 'illegal' : ''

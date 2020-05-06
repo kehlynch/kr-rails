@@ -14,4 +14,12 @@ module Stage
   def self.talon_stage?(stage)
     TALON_STAGES.include?(stage)
   end
+
+  def self.pick_talon_stage?(stage)
+    [PICK_TALON, PICK_WHOLE_TALON].include?(stage)
+  end
+
+  def self.resolve_talon_stage?(stage)
+    [RESOLVE_TALON, RESOLVE_WHOLE_TALON].include?(stage)
+  end
 end

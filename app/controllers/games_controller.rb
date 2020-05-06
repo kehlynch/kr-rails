@@ -25,36 +25,11 @@ class GamesController < ApplicationController
   end
 
   def edit
-    @match_id = params[:match_id]
-    @player_id = params[:player_id].to_i
+    p params
+    p params[:player_id]
+    game = GamePresenter.new(find_game, params[:player_id].to_i)
 
-    @match = MatchPresenter.new(find_match, @player_id)
-
-    @game = GamePresenter.new(find_game, @player_id)
-    @players = @game.players
-    @player = @players.first
-    @action = @game.stage
-    @bids = BidsPresenter.new(@game)
-    # @tricks = TricksPresenter.new(@game)
-    # pass in raw game not presenter, cos we need to call the message presenter from the broadcaster too
-    message_presenter = MessagePresenter.new(find_game)
-    @message = message_presenter.message
-
-    @instruction = message_presenter.instruction_msg(@player)
-
-    @show_penultimate_trick = @game.show_penultimate_trick?
-    @visible_trick_index = @show_penultimate_trick ? @game.tricks.playable_trick_index - 1 : @game.tricks.playable_trick_index
-
-    @player.active = true
-    @my_move = @game.my_move?
-    @waiting = !@my_move
-
-
-    @remarks = Remarks.remarks_for(@game)
-
-    puts @game.props
-
-    render locals: @game.props
+    render locals: game.props
   end
 
   def update

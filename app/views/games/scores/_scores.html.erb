@@ -11,15 +11,8 @@
       </tr>
     </thead>
     <tbody>
-      <% @players.each do |player| %>
-        <tr>
-          <th scope="row"><%= player.name %></th>
-          <td><%= player.won_tricks_count %></td>
-          <td><%= player.points %></td>
-          <td><%= player.team_points %></td>
-          <td><%= player.game_points %></td>
-          <td class="<%= player.winner? ? 'score-winner' : '' %>"></td>
-        </tr>
+      <% players.each do |player| %>
+        <%= render 'scores/score', player %>
       <% end %>
     </tbody>
   </table>

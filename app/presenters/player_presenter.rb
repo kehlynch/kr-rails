@@ -21,10 +21,11 @@ class PlayerPresenter
     to: :player
   )
 
-  def initialize(player, game)
+  def initialize(player, game, visible_stage=nil)
     @player = player
     @game = game
     @player_teams = game.player_teams
+    @visible_stage = visible_stage
   end
 
   def props(active_player)
@@ -41,7 +42,12 @@ class PlayerPresenter
       next_to_play: @game.next_player&.id == @player.id,
       forehand: @player.forehand?,
       declarer: @game.declarer&.id == @player.id,
-      known_partner: known_partner
+      known_partner: known_partner,
+      won_tricks_count: won_tricks_count,
+      points: points,
+      team_points: team_points,
+      game_points: game_points,
+      winner: winner?
     }
   end
 
@@ -64,7 +70,10 @@ class PlayerPresenter
   end
 
   def bids
-    @player.bids.map { |b| BidPresenter.new(b.slug).name }
+    {
+      visible: @visible_stage == Stage::BID,
+      bid_bids: @player.bids.map { |b| BidPresenter.new(b.slug).name },
+    }
   end
 
   def announcements_text
