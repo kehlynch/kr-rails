@@ -5,6 +5,10 @@
 $grey-blue: rgb(224, 224, 235);
 $light-green: rgba(51, 102, 0, 0.2);
 
+.d-contents {
+  display: contents;
+}
+
 .game {
   background-color: white;
   display: flex;

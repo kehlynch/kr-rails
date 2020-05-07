@@ -1,35 +1,53 @@
 class BidsPresenter
-  attr_reader :bids
-
-  delegate :finished?, to: :bids
-
-  def initialize(game)
-    @game = game
-    @bids = game.bids
-    @bid_presenters = @bids.map { |b| BidPresenter.new(b.slug) }
-    @players = game.players
-  end
-
-  def valid_bids
-    @bids.valid_bids.map do |slug|
-      [slug, BidPresenter.new(slug).name]
+  def self.names_for(bids)
+    bids.map do |bid|
+      BidPresenter.new(bid.slug).name
     end
   end
 
-  def declarer
-    PlayerPresenter.new(@bids.declarer, @game)
+  def initialize(game, active_player, visible_stage)
+    @game = game
+    @active_player = active_player
+    @visible_stage = visible_stage
   end
 
-  def winning_bid_name
-    name = winning_bid_slug == Bids::CALL_KING ? 'Rufer' : BidPresenter.new(winning_bid_slug).name
-
-    kontra_level = @bids.highest&.kontra
-    return "#{name} ( x#{kontra_level} )" if kontra_level
-
-    return name
+  def props_for_bidding
+    {
+      visible: @visible_stage == Stage::BID,
+      bid_picker_visible: @visible_stage == Stage::BID && !@game.bids.finished?,
+      finished: @game.bids.finished?,
+      finished_message: finished_message,
+      instruction: instruction,
+      valid_bids: valid_bids_props
+    }
   end
 
-  def winning_bid_slug
-    @bids.highest&.slug
+  private
+
+  def instruction
+    return 'bidding finished, click to continue' if @game.bids.finished?
+
+    return 'make a bid' if @game.next_player.id == @active_player.id
+
+    "waiting for #{@game.next_player.name} to make a bid"
+  end
+
+  def finished_message
+    return nil unless @game.bids.finished?
+
+    "#{@game.declarer.name} wins bidding with #{BidPresenter.new(@game.bids.highest.slug).name}"
+  end
+
+  def valid_bids_props
+    @game.bids.valid_bids.map do |slug|
+      valid_bid_props(slug)
+    end
+  end
+
+  def valid_bid_props(slug)
+    {
+      slug: slug,
+      name: BidPresenter.new(slug).name
+    }
   end
 end

@@ -5,9 +5,11 @@
 class Runner
   class RunnerError < StandardError; end
 
-  def initialize(game)
+  def initialize(game, active_player_id=nil)
     @game = game
-    @broadcaster = Broadcaster.new(game)
+    if active_player_id
+      @broadcaster = Broadcaster.new(game, active_player_id)
+    end
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
@@ -37,7 +39,7 @@ class Runner
     end
 
     # @broadcaster.info
-    @broadcaster.make_remarks
+    # @broadcaster.make_remarks
 
     if @game.finished?
       # @broadcaster.scores
@@ -49,11 +51,15 @@ class Runner
 
   private
 
+  def broadcast(data)
+    return unless @broadcaster
+  end
+
   def pick_king!(king_slug)
     @game.pick_king!(king_slug)
 
     if @game.king
-      @broadcaster.king_picked
+      # @broadcaster.king_picked
       advance!
     end
   end
@@ -62,7 +68,7 @@ class Runner
     @game.pick_talon!(talon_half_index)
 
     if @game.talon_picked
-      @broadcaster.talon_picked
+      # @broadcaster.talon_picked
       advance!
     end
   end
@@ -79,7 +85,7 @@ class Runner
     @game.resolve_talon!(discard_slugs)
 
     if @game.talon_resolved
-      @broadcaster.talon_resolved
+      # @broadcaster.talon_resolved
       advance!
     end
   end
@@ -89,12 +95,12 @@ class Runner
     bid = @game.bids.make_bid!(bid_slug)
 
     while bid
-      @broadcaster.bid(bid: bid)
+      @broadcaster.bid(bid: bid) if @broadcaster
       bid = @game.bids.make_bid!
     end
 
     if @game.bids.finished?
-      @broadcaster.bid(bid: bid) if bid
+      @broadcaster.bid(bid: bid) if bid && @broadcaster
       advance!
     end
   end
@@ -103,12 +109,12 @@ class Runner
     announcement = @game.announcements.make_bid!(announcement_slug)
 
     while announcement
-      @broadcaster.announcement(announcement: announcement)
+      # @broadcaster.announcement(announcement: announcement)
       announcement = @game.announcements.make_bid!
     end
 
     if @game.announcements.finished?
-      @broadcaster.announcements_finished
+      # @broadcaster.announcements_finished
       advance!
     end
   end
@@ -117,8 +123,10 @@ class Runner
     card = Card.find_by(game_id: @game.id, slug: card_slug)
     card = @game.tricks.play_card!(card)
     while card
-      @broadcaster.card_played(card: card)
+      # @broadcaster.card_played(card: card)
       card = @game.tricks.play_card!
     end
   end
+
+  
 end

@@ -21,28 +21,45 @@ class PlayerPresenter
     to: :player
   )
 
-  def initialize(player, game, visible_stage=nil)
+  def initialize(player, game, visible_stage, active_player)
     @player = player
     @game = game
     @player_teams = game.player_teams
     @visible_stage = visible_stage
+    @active_player = active_player
   end
 
-  def props(active_player)
+  def props(remark)
+    static_props
+      .merge(variable_props(remark))
+      .merge(points_props)
+  end
+
+  private
+
+  def static_props
     {
       id: @player.id,
-      position: @player.position,
-      compass: compass(active_player),
-      name: @player.name,
-      announcements_text: announcements_text,
-      bids: bids,
-      human: @player.human?,
-      active: @player.id == active_player.id,
       play_as_path: edit_match_player_game_path(@game.match_id, @player.id, @game.id),
+      compass: compass,
+      name: @player.name,
+      human: @player.human?,
+      active: @player.id == @active_player.id,
+    }
+  end
+
+  def variable_props(remark)
+    {
       next_to_play: @game.next_player&.id == @player.id,
       forehand: @player.forehand?,
       declarer: @game.declarer&.id == @player.id,
       known_partner: known_partner,
+      message: message(remark)
+    }
+  end
+
+  def points_props
+    {
       won_tricks_count: won_tricks_count,
       points: points,
       team_points: team_points,
@@ -51,8 +68,19 @@ class PlayerPresenter
     }
   end
 
-  def compass(active_player)
-    index = (@player.position - active_player.position) % 4
+  def message(remark)
+    case @visible_stage
+    when Stage::BID
+      return BidsPresenter.names_for(@player.bids).join("\n")
+    when Stage::ANNOUNCEMENT
+      return announcements_text
+    else
+      return remark
+    end
+  end
+
+  def compass
+    index = (@player.position - @active_player.position) % 4
     ['south', 'east', 'north', 'west'][index]
   end
 
@@ -67,13 +95,6 @@ class PlayerPresenter
   def name(you_if_human=true)
     return 'You' if you_if_human && active
     player.name
-  end
-
-  def bids
-    {
-      visible: @visible_stage == Stage::BID,
-      bid_bids: @player.bids.map { |b| BidPresenter.new(b.slug).name },
-    }
   end
 
   def announcements_text

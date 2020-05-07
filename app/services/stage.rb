@@ -22,4 +22,18 @@ module Stage
   def self.resolve_talon_stage?(stage)
     [RESOLVE_TALON, RESOLVE_WHOLE_TALON].include?(stage)
   end
+
+  def self.visible_stage_for(game, active_player)
+    stage = game.stage
+
+    return stage if stage == Stage::FINISHED
+
+    # show the announcement results if we haven't played a card yet
+    return stage if active_player.played_in_any_trick? && stage == Stage::TRICK
+
+    # show the bid results unless we've already made an announcement
+    return Stage::BID unless active_player.announcements.any?
+
+    return stage
+  end
 end

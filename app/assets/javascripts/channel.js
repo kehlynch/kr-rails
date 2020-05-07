@@ -8,10 +8,11 @@ function createSubscriptions() {
   console.log(`connecting to ${channel}`);
   App.messages = App.cable.subscriptions.create(channel, {
     received: function(data) {
-      console.log("recvd from players channel", data);
-      addBid(data.bid);
-      setNextPlayer(data.game.next_player);
-      addPlayerInfo(data.player);
+      console.log("recvd from players channel", data, data.players[0].bids);
+      applyChange(data);
+      // addBid(data.bid);
+      // setNextPlayer(data.game.next_player);
+      // addPlayerInfo(data.player);
     }
   })
 

@@ -35,7 +35,7 @@ class Game < ApplicationRecord
   end
 
   def players
-    @players ||= Players.new(self)
+    @players ||= GamePlayers.new(self)
   end
 
   def talon

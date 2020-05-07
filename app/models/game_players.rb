@@ -1,5 +1,4 @@
-class Players
-
+class GamePlayers
   attr_reader :players
 
   delegate :[], :each, :map, :select, :reject, :find, :max_by, :first, :each_with_index, to: :players

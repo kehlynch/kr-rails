@@ -1,4 +1,6 @@
 const sections = {
+  BIDS: 'bids',
+  ANNOUNCEMENTS: 'announcements',
   ANNOUNCEMENT_PICKER: 'announcement_picker',
   BID_PICKER: 'bid_picker',
   POINTS_CONTAINER: 'points_container',
@@ -9,12 +11,15 @@ const sections = {
   TRICK: 'trick',
   FINISHED_BUTTONS: 'finished_buttons',
   INSTRUCTION_BOX: 'instruction_box',
-  KINGS: 'kings'
+  KINGS: 'kings',
+  BIDS_FINISHED_MESSAGE: 'bids_finished_message',
+  PLAYERS: 'players',
+  BID_INSTRUCTION: 'bid_instruction'
 }
 
 const ids = {
   [sections.ANNOUNCEMENT_PICKER]: 'js-valid-announcements',
-  [sections.BID_PICKER]: 'js-valid-bids',
+  [sections.BID_PICKER]: 'js-bid-picker',
   [sections.FINISHED_BUTTONS]: 'js-finished-buttons',
   [sections.POINTS_CONTAINER]: 'js-points-container',
   [sections.PROGRESS_SPINNER]: 'js-in-progress-spinner',
@@ -24,6 +29,11 @@ const ids = {
   [sections.TRICK]: 'js-tricks',
   [sections.INSTRUCTION_BOX]: 'instruction',
   [sections.KINGS]: 'js-kings',
+  [sections.BIDS_FINISHED_MESSAGE]: 'js-bids-finished-message',
+  [sections.PLAYERS]: 'js-players',
+  [sections.BID_INSTRUCTION]: 'js-bid-instruction',
+  [sections.BIDS]: 'js-bids',
+  [sections.ANNOUNCEMENTS]: 'js-announcements'
 }
 
 function hide(section) {
@@ -34,8 +44,8 @@ function reveal(section) {
   sectionElement(section).removeClass('d-none');
 }
 
-function toggle(section, state) {
-  sectionElement(section).toggleClass('d-none', state);
+function toggle(section, visible) {
+  sectionElement(section).toggleClass('d-none', !visible);
 }
 
 function clear(section) {

@@ -1,12 +1,6 @@
-<div class="card">
-  <div class="card-body" id="player-<%= position %>" >
-    <h5 class="card-title">
-      <%= name %>
-      <%= render 'games/players/status/waiting', local_assigns %>
-      <%= render 'games/players/status/role', local_assigns %>
-    </h5>
-    <%= render 'games/players/status/human_link', local_assigns %>
-    <%= render 'games/players/status/announcements', local_assigns %>
-    <%= render 'games/players/status/bids', bids.merge(position: position) %>
-  </div>
+<div class="player-status">
+  <%= name %>
+  <%= render 'games/players/status/waiting', local_assigns %>
+  <%= render 'games/players/status/role', local_assigns %>
+  <%= render 'games/players/status/human_link', local_assigns %>
 </div>

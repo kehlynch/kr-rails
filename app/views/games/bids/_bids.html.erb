@@ -1,0 +1,14 @@
+<div class='d-contents <%= 'd-none' unless visible %>' id ='js-<%= type %>s'>
+  <div class="bid-buttons-container center-container <%= 'd-none' unless bid_picker_visible %>" id="js-<%= type %>-picker">
+    <% valid_bids.each do |b| %>
+      <%= render 'bids/valid_bid_button', slug: b[:slug], name: b[:name], type: type %>
+    <% end %>
+  </div>
+
+  <div class="center-container <%= 'd-none' unless finished %>" id="js-<%= type %>s-finished-message">
+    <%= fa_icon('gavel') %>
+    <%= finished_message %>
+  </div>
+
+  <%= render 'instruction', instruction: instruction, type: 'bid' %>
+</div>

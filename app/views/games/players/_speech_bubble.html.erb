@@ -1,3 +1,3 @@
-<div class="speech-bubble visible" id="js-speech-bubble-<%= position %>">
+<div class="speech-bubble <%= 'd-none' unless message.present? %>" id="js-player-<%= id %>-message">
   <%= message %>
 </div>

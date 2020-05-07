@@ -13,6 +13,7 @@ class BidsBase
     :last,
     :map,
     :max_by,
+    :reject,
     :select,
     to: :bids
   )

@@ -28,28 +28,27 @@ class GamePresenter
   def initialize(game, active_player_id)
     @game = game
     @active_player_id = active_player_id
-    @players = PlayersPresenter.new(game, active_player_id)
-    @announcements = game.announcements.map { |a| AnnouncementPresenter.new(game) }
     @message_presenter = MessagePresenter.new(game)
     @remarks = Remarks.remarks_for(@game)
   end
 
-  def props
+  def props(visible_stage=nil)
+    visible_stage ||= Stage.visible_stage_for(game, active_player)
+
     {
       paths: paths_props,
       channel: channel_props,
       action: stage,
-      instruction: @message_presenter.instruction_msg(active_player),
+      instruction: InstructionPresenter.new(@game, active_player, visible_stage).props,
       message: MessagePresenter.new(@game).props,
       remarks: @remarks,
       my_move: my_move?,
-      valid_bids: valid_bids_props,
-      valid_announcements: AnnouncementsPresenter.new(@game).props_for_bidding,
+      bids: BidsPresenter.new(@game, active_player, visible_stage).props_for_bidding,
+      announcements: AnnouncementsPresenter.new(@game, active_player, visible_stage).props_for_bidding,
       visible_stage: visible_stage,
       talon: TalonPresenter.new(talon, active_player, declarer, talon_picked, visible_stage).props,
-      tricks: TricksPresenter.new(tricks, active_player).props,
+      tricks: TricksPresenter.new(@game, active_player, visible_stage).props,
       playable_trick_index: tricks.playable_trick_index,
-      visible_trick_index: visible_trick_index,
       declarer_name: declarer&.name,
       is_declarer: declarer&.id == @active_player_id,
       king_needed: bids.pick_king?,
@@ -57,26 +56,12 @@ class GamePresenter
       player_position: active_player.position,
       talon_picked: talon_picked,
       talon_cards_to_pick: bids.talon_cards_to_pick,
-      won_bid: bids.highest&.slug,
-      continue_available: continue_available?,
+      won_bid: bids.finished? && bids.highest&.slug,
       kings: kings_props,
-      players: players_props,
-      hand: hand_props,
+      players: PlayersPresenter.new(@game, active_player, visible_stage).props,
+      hand: HandPresenter.new(@game, active_player, visible_stage).props,
       points: Points::MatchPointsPresenter.new(@game.match, active_player, visible_stage).props
     }
-  end
-
-  def hand_props
-    active_player.hand.map do |card|
-      CardPresenter.new(card, active_player).hand_props(stage)
-    end
-  end
-
-  def players_props
-    # TODO get rid of the @players using PlayersPresneter
-    game.players.map do |player|
-      PlayerPresenter.new(player, game).props(active_player)
-    end
   end
 
   def kings_props
@@ -107,19 +92,6 @@ class GamePresenter
     }
   end
 
-  def valid_bids_props
-    @game.bids.valid_bids.map do |slug|
-      {
-        slug: slug,
-        name: BidPresenter.new(slug).name
-      }
-    end
-  end
-
-  def visible_trick_index
-    show_penultimate_trick? ? tricks.playable_trick_index - 1 : tricks.playable_trick_index
-  end
-
   def model
     @game
   end
@@ -129,7 +101,7 @@ class GamePresenter
   end
 
   def active_player
-    @players.find { |p| p.id == @active_player_id }
+    @game.players.find { |p| p.id == @active_player_id }
   end
 
   def my_move?
@@ -159,33 +131,5 @@ class GamePresenter
     return false unless @game.bids.talon_cards_to_pick.present?
 
     return true
-  end
-
-  def show_penultimate_trick?
-    return false unless stage == Stage::TRICK
-
-    return false if active_player.played_in_current_trick?
-    
-    return false if @game.tricks.current_trick&.finished?
-
-    return false if @game.tricks.count < 2
-
-    return true
-  end
-
-  def continue_available?
-    show_penultimate_trick? || (visible_stage != @game.stage)
-  end
-
-  def visible_stage
-    return stage if stage == Stage::FINISHED
-
-    # show the announcement results if we haven't played a card yet
-    return stage if active_player.played_in_any_trick? && stage == Stage::TRICK
-
-    # show the bid results unless we're declarer or have already made an announcement
-    # return Stage::BID unless active_player.declarer? || active_player.announcements.any?
-
-    return stage
   end
 end

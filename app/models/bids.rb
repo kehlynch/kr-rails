@@ -69,7 +69,7 @@ class Bids < BidsBase
 
   def first_round_finished?
     passed_players = 
-      filter { |b| b.slug == 'pass' }.map(&:player_id).uniq.count
+      filter { |b| b.slug == PASS }.map(&:player_id).uniq.count
 
     passed_players >= 3
   end

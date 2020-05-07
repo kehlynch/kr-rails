@@ -5,27 +5,21 @@
 
     <input id="js-stage" hidden=true name="game[action]" value=<%= action %> />
 
-    <%= render 'instruction', instruction: instruction %>
-
     <%= render 'navigation/navigation_buttons', paths %>
 
     <%= render 'loading_spinner' %>
 
     <%= render 'message', message %>
 
-    <%= render 'players/players', players: players, remarks: remarks %>
+    <%= render 'players/players', players: players %>
 
     <%= render(
-      'bids/valid_bid_buttons',
-      visible: visible_stage == 'make_bid',
-      bids: valid_bids,
-      type: 'bid') %>
+      'bids/bids',
+      bids.merge(type: 'bid')) %>
 
     <%= render(
-      'bids/valid_bid_buttons',
-      visible: visible_stage == 'make_announcement',
-      bids: valid_announcements,
-      type: 'announcement') %>
+      'bids/bids',
+      announcements.merge(type: 'announcement')) %>
 
     <%= render 'hand/hand', hand: hand, form: form %>
 
@@ -33,7 +27,7 @@
 
     <%= render 'talon/talon', talon.merge(form: form) %>
 
-    <%= render 'tricks/tricks', tricks: tricks, form: form, visible: visible_stage == 'trick', visible_trick_index: visible_trick_index %>
+    <%= render 'tricks/tricks', tricks.merge(form: form) %>
 
     <%= render 'scores/scores', players: players, visible: visible_stage == 'finished' %>
 

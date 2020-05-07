@@ -1,7 +1,7 @@
 <div
-  class="spinner-grow spinner-grow-sm text-secondary mb-1 <%= next_to_play ? '' : 'd-none' %> "
+  class="spinner-grow spinner-grow-sm text-secondary mb-1 <%= 'd-none' unless next_to_play %>"
   role="status"
-  id="js-player-<%= position %>-waiting"
+  id="js-spinner-player-<%= id %>"
 >
   <span class="sr-only">Loading...</span>
 </div>

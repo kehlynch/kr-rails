@@ -21,15 +21,6 @@ function scrollMessageBox() {
 	}
 }
 
-function setInstruction(inst) {
-  console.log(`instruction: ${inst}`);
-  clear(sections.INSTRUCTION_BOX);
-  addTo(sections.INSTRUCTION_BOX, inst);
-
-  // $('#instruction').empty();
-  // $('#instruction').append(inst);
-}
-
 function setContinueInstruction() {
   setInstruction('click to continue')
 }

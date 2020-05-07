@@ -25,9 +25,9 @@ class GamesController < ApplicationController
   end
 
   def edit
-    p params
-    p params[:player_id]
     game = GamePresenter.new(find_game, params[:player_id].to_i)
+
+    p game.props
 
     render locals: game.props
   end
@@ -40,7 +40,7 @@ class GamesController < ApplicationController
       redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
     end
 
-    runner = Runner.new(game)
+    runner = Runner.new(game, params[:player_id].to_i)
 
     if find_player.id == game.next_player.id
       runner.advance!(**game_params)

@@ -41,19 +41,16 @@ function attachClickers() {
 }
 
 function pageClicked() {
-  const gameStage = stage();
+  // const gameStage = stage();
 
-  if (inProgress()) { return; }
+  // if (inProgress()) { return; }
 
-  if (continueAvailable()) {
-    if (gameStage == 'play_card' && currentTrickIndex() !== visibleTrickIndex()) {
-      revealTrick(currentTrickIndex());
-      setContinueAvailable(false);
-    } else {
-      advanceVisibleStage();
-      setContinueAvailable(false);
-    }
-  }
+  // if (getState(state.TRICKS).show_penultimate_trick) {
+  //   // TODO we should call the server here, and update using the returned params
+  //   revealTrick(currentTrickIndex());
+  // } else if (getState(state.ACTION) !== getState(state.VISIBLE_STAGE)) {
+  //   advanceVisibleStage();
+  // }
 }
 
 attachClickers();

@@ -54,6 +54,6 @@ class CardPresenter
   def hand_pickable?(stage)
     return false unless [Stage::TRICK, Stage::RESOLVE_TALON, Stage::RESOLVE_WHOLE_TALON].include?(stage)
 
-    @game.next_player&.id == @active_player.id
+    @card.game.next_player&.id == @active_player.id
   end
 end

@@ -16,7 +16,7 @@ module Remarks::TalonRemarks
     end
 
     def highest_trump_value
-      trumps.max_by(&:value).value
+      trumps.max_by(&:value)&.value || 0
     end
 
     def trumps

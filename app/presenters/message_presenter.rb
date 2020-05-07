@@ -148,49 +148,10 @@ class MessagePresenter
     ["Winners: #{winners.map { |w| player_name(w) }.join(', ')}"]
   end
 
-  def instruction_msg(player)
-    game_presenter = GamePresenter.new(@game, player.id)
-
-    p game_presenter.visible_stage
-
-    if game_presenter.visible_stage == 'pick_king' && declarer.id != player.id
-      "#{declarer_name} picks #{king_name}; click to continue."
-    elsif ['pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(game_presenter.visible_stage) && declarer.id != player.id
-      "#{declarer_name} picks talon; click to continue."
-    elsif game_presenter.show_penultimate_trick?
-      "#{player_name(game_presenter.tricks[-2].won_player)} wins trick, click to continue"
-    elsif game_presenter.my_move?
-      active_instruction_msg(player)
-    elsif game_presenter.next_player_human?
-      "Waiting for #{game_presenter.next_player.name}"
-    elsif game_presenter.finished?
-      finished_msg.first
-    else
-      "Click to continue."
-    end
-  end
-
   private
 
-  def active_instruction_msg(player)
-    if current_trick && (current_trick.finished? || (!player.played_in_current_trick? && current_trick.trick_index != 0))
-      return 'click for next trick'
-    end
-
-    {
-      'make_bid' => 'Make a bid.',
-      'pick_king' => 'Pick a king.',
-      'pick_whole_talon' => 'Click to take whole talon.',
-      'pick_talon' => 'Pick half of the talon.',
-      'resolve_talon' => 'Pick 3 cards to put down',
-      'resolve_whole_talon' => 'Pick 6 cards to put down',
-      'make_announcement' => 'Make an announcement',
-      'play_card' => 'Play a card'
-    }[@game.stage]
-  end
-
   def declarer_name
-    PlayerPresenter.new(declarer, @game).name
+    declarer.name
   end
 
   def winning_bid_name
@@ -198,6 +159,6 @@ class MessagePresenter
   end
   
   def player_name(player)
-    PlayerPresenter.new(player, @game).name
+    player.name
   end
 end

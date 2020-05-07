@@ -27,7 +27,7 @@ class TalonPresenter
 
   def half_props(cards, index)
     {
-      pickable: Stage.pick_talon_stage?(@visible_stage) && @active_player.declarer?,
+      pickable: talon_pickable?,
       picked: @talon_picked == index,
       index: index,
       cards: cards.map { |c| CardPresenter.new(c, @active_player).talon_props(@declarer, @visible_stage) }

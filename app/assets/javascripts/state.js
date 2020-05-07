@@ -1,5 +1,11 @@
+STATE_SELECTOR = '#js-state';
+
 const state = {
   CHANNEL: 'channel',
+  PLAYERS: 'players',
+  BIDS: 'bids',
+  ANNOUNCEMENTS: 'announcements',
+  INSTRUCTION: 'instruction',
   ACTION: 'action',
   PLAYABLE_TRICK_INDEX: 'playable_trick_index',
   VISIBLE_TRICK_INDEX: 'visible_trick_index',
@@ -13,22 +19,25 @@ const state = {
   TALON_CARDS_TO_PICK: 'talon_cards_to_pick',
   VISIBLE_STAGE: 'visible_stage',
   WON_BID: 'won_bid',
-  CONTINUE_AVAILABLE: 'continue_available',
   IN_PROGRESS: 'in_progress' // only set from JS
 }
 
+const updaters = {
+  [state.PLAYERS]: updatePlayers,
+}
+
 function getState(state) {
-  const jsonValue = $('#js-state').attr(state);
+  if ( !$(STATE_SELECTOR).length ) { return }
+  
+  const jsonValue = $(STATE_SELECTOR).attr(state);
   if (jsonValue) {
     return JSON.parse(jsonValue);
   }
 }
 
 function setState(key, value) {
-  $('#js-state').attr(key, value);
+  $(STATE_SELECTOR).attr(key, JSON.stringify(value));
 }
-
-function declarerName() { return getState(newstate.PLAYABLE_TRICK_INDEX) }
 
 function currentTrickIndex() { return getState(state.PLAYABLE_TRICK_INDEX) }
 
@@ -54,8 +63,6 @@ function visibleStage() { return getState(state.VISIBLE_STAGE) }
 
 function wonBid() { return getState(state.WON_BID) }
 
-function continueAvailable() { return getState(state.CONTINUE_AVAILABLE) }
-
 function inProgress() { return getState(state.IN_PROGRESS) }
 
 function meToPlayHandCard() {
@@ -68,10 +75,9 @@ function meToPlayHandCard() {
 function setInProgress(value=true) {
   setState(state.IN_PROGRESS, value);
   value ? makeHandUnpickable() : makeHandPickable;
-  toggle(sections.PROGRESS_SPINNER, !value);
+  toggle(sections.PROGRESS_SPINNER, value);
 }
 
 function setContinueAvailable(value=true) {
-  console.log("setContinueAvailable", value);
   setState(state.CONTINUE_AVAILABLE, value);
 }
