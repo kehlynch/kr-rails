@@ -23,7 +23,7 @@
 
     <%= render 'hand/hand', hand: hand, form: form %>
 
-    <%= render 'kings/kings', visible: visible_stage == 'pick_king', kings: kings  %>
+    <%= render 'kings/kings', kings %>
 
     <%= render 'talon/talon', talon.merge(form: form) %>
 

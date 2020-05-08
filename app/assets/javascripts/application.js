@@ -41,6 +41,16 @@ function attachClickers() {
 }
 
 function pageClicked() {
+  console.log("page clicked")
+  if (advanceAvailable()) {
+    const advancePath = getState(state.PATHS).advance_path
+    const authenticityToken = $('meta[name=csrf-token]').attr('content');
+    console.log('posting to', advancePath);
+    $.post(
+      advancePath,
+      {advance_from: getState(state.VISIBLE_STAGE), authenticity_token: authenticityToken}
+    );
+  }
   // const gameStage = stage();
 
   // if (inProgress()) { return; }

@@ -57,22 +57,11 @@ class GamePresenter
       talon_picked: talon_picked,
       talon_cards_to_pick: bids.talon_cards_to_pick,
       won_bid: bids.finished? && bids.highest&.slug,
-      kings: kings_props,
+      kings: KingsPresenter.new(@game, active_player, visible_stage).props,
       players: PlayersPresenter.new(@game, active_player, visible_stage).props,
       hand: HandPresenter.new(@game, active_player, visible_stage).props,
       points: Points::MatchPointsPresenter.new(@game.match, active_player, visible_stage).props
     }
-  end
-
-  def kings_props
-    ['club_8', 'diamond_8', 'heart_8', 'spade_8'].map do |king_slug|
-      {
-        slug: king_slug,
-        own_king: declarer&.hand&.find { |c| c.slug == king_slug }.present?,
-        pickable: active_player.declarer?,
-        picked: king == king_slug
-      }
-    end
   end
 
   def channel_props
@@ -88,7 +77,8 @@ class GamePresenter
       update_path: match_player_game_path(@game.match_id, @active_player_id, @game.id),
       new_single_player_path: matches_path(match: { human_count: 1 }),
       reset_path: reset_match_player_game_path(@game.match_id, @active_player_id, @game.id),
-      next_hand_path: next_match_player_game_path(@game.match_id, @active_player_id, @game.id)
+      next_hand_path: next_match_player_game_path(@game.match_id, @active_player_id, @game.id),
+      advance_path: advance_match_player_game_path(@game.match_id, @active_player_id, @game.id)
     }
   end
 

@@ -27,9 +27,15 @@ class GamesController < ApplicationController
   def edit
     game = GamePresenter.new(find_game, params[:player_id].to_i)
 
-    p game.props
-
     render locals: game.props
+  end
+
+  def advance
+    advance_from = params[:advance_from]
+    game = find_game
+    
+    advance_to = Stage.next_stage_from(game, advance_from)
+    Broadcaster.new(game).broadcast_to_player(params[:player_id].to_i, advance_to)
   end
 
   def update

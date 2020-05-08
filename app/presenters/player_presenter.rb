@@ -68,6 +68,7 @@ class PlayerPresenter
     }
   end
 
+  # TODO move this into the presenters for sections
   def message(remark)
     case @visible_stage
     when Stage::BID

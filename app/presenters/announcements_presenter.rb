@@ -8,7 +8,7 @@ class AnnouncementsPresenter
   def props_for_bidding
     {
       visible: @visible_stage == Stage::ANNOUNCEMENT,
-      bid_picker_visible: @visible_stage == Stage::ANNOUNCEMENT && !@game.announcements.finished?,
+      bid_picker_visible: @game.next_player&.id == @active_player.id && !@game.announcements.finished?,
       valid_bids: valid_announcements_props,
       finished: @game.announcements.finished?,
       finished_message: "announcments are done, ready to play?",

@@ -36,4 +36,10 @@ module Stage
 
     return stage
   end
+
+  def self.next_stage_from(game, stage)
+    stages = game.stages
+    next_stage_index = stages.index(stage) + 1
+    stages[next_stage_index]
+  end
 end

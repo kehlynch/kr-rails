@@ -1,9 +1,11 @@
 STATE_SELECTOR = '#js-state';
 
 const state = {
+  PATHS: 'paths',
   CHANNEL: 'channel',
   PLAYERS: 'players',
   BIDS: 'bids',
+  KINGS: 'kings',
   ANNOUNCEMENTS: 'announcements',
   INSTRUCTION: 'instruction',
   ACTION: 'action',
@@ -22,10 +24,6 @@ const state = {
   IN_PROGRESS: 'in_progress' // only set from JS
 }
 
-const updaters = {
-  [state.PLAYERS]: updatePlayers,
-}
-
 function getState(state) {
   if ( !$(STATE_SELECTOR).length ) { return }
   
@@ -33,6 +31,10 @@ function getState(state) {
   if (jsonValue) {
     return JSON.parse(jsonValue);
   }
+}
+
+function advanceAvailable() {
+  return getState(state.BIDS).finished
 }
 
 function setState(key, value) {

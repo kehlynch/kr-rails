@@ -1,1 +1,3 @@
 <%= hidden_field_tag('js-state', '', local_assigns.map { |k, v| [k, v.to_json] }.to_h) %>
+
+<input id="js-stage" hidden=true name="visible_stage" value=<%= visible_stage %> />

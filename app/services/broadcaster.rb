@@ -1,25 +1,18 @@
 class Broadcaster
-  def initialize(game, active_player_id)
+  def initialize(game)
     @game = game
-    @message = MessagePresenter.new(game)
-    @active_player_id = active_player_id
   end
 
-  def broadcast_to_humans(data)
+  def broadcast(visible_stage=nil)
     @game.players.select(&:human?).each do |player|
-      channel = "#{player.id}-#{@game.id}"
-      ActionCable.server.broadcast(channel, data)
+      broadcast_to_player(player.id, visible_stage)
     end
   end
 
-  def bid(bid:)
-    data = GamePresenter.new(@game, @active_player_id)
-      .props
-      .merge(change: 'bid_made')
-
-    broadcast_to_humans(data)
-    # broadcaster = Broadcasters::BidBroadcaster.new(@game, bid)
-    # broadcast_to_humans(broadcaster)
+  def broadcast_to_player(player_id, visible_stage=nil)
+    data = GamePresenter.new(@game, player_id).props(visible_stage)
+    channel = "#{player_id}-#{@game.id}"
+    ActionCable.server.broadcast(channel, data)
   end
 end
 

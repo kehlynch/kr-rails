@@ -50,6 +50,20 @@ class Game < ApplicationRecord
     @announcements ||= Announcements.new(_announcements, self)
   end
 
+  def stages
+    [
+      [Stage::BID, true],
+      [Stage::KING, bids.pick_king?],
+      [Stage::PICK_TALON, bids.talon_cards_to_pick == 3],
+      [Stage::PICK_WHOLE_TALON, bids.talon_cards_to_pick == 6],
+      [Stage::RESOLVE_TALON, bids.talon_cards_to_pick == 3],
+      [Stage::RESOLVE_WHOLE_TALON, bids.talon_cards_to_pick == 6],
+      [Stage::ANNOUNCEMENT, bids.highest&.announcements?],
+      [Stage::TRICK, true],
+      [Stage::FINISHED, true]
+    ].select { |_s, valid| valid }.map(&:first)
+  end
+
   # rubocop:disable Metrics/CyclomaticComplexity
   def stage
     return 'make_bid' unless bids.finished?

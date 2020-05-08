@@ -4,7 +4,7 @@ function updateBids(oldData, newData) {
     'bid_picker_visible': toggleBidPicker,
     'finished': toggleBidsFinishedMessage,
     'finished_message': setFinishedMessage,
-    'instruction': setInstruction,
+    'instruction': setBidInstruction,
     'valid_bids': setValidBids
   }
 
@@ -29,7 +29,7 @@ function setFinishedMessage(message) {
   addTo(sections.BIDS_FINISHED_MESSAGE, `<i class="fa fa-gavel"></i>${message}`)
 }
 
-function setInstruction(message) {
+function setBidInstruction(message) {
   console.log("setInstruction", message);
   clear(sections.BID_INSTRUCTION);
   addTo(sections.BID_INSTRUCTION, message);

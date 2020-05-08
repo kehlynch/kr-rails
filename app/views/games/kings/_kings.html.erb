@@ -1,5 +1,9 @@
-<div class="kings-container center-container <%= visible ? "" : "d-none" %>" id="js-kings" >
-  <% kings.each do |king| %>
-    <%= render 'kings/king', king %>
-  <% end %>
+<div class="d-contents <%= "d-none" unless visible %>" id="js-kings" >
+  <div class="kings-container center-container" >
+    <% kings.each do |king| %>
+      <%= render 'kings/king', king %>
+    <% end %>
+  </div>
+
+  <%= render 'instruction', instruction: instruction, type: 'kings' %>
 </div>

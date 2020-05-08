@@ -14,7 +14,8 @@ const sections = {
   KINGS: 'kings',
   BIDS_FINISHED_MESSAGE: 'bids_finished_message',
   PLAYERS: 'players',
-  BID_INSTRUCTION: 'bid_instruction'
+  BID_INSTRUCTION: 'bid_instruction',
+  KINGS_INSTRUCTION: 'kings_instruction'
 }
 
 const ids = {
@@ -32,6 +33,7 @@ const ids = {
   [sections.BIDS_FINISHED_MESSAGE]: 'js-bids-finished-message',
   [sections.PLAYERS]: 'js-players',
   [sections.BID_INSTRUCTION]: 'js-bid-instruction',
+  [sections.KINGS_INSTRUCTION]: 'js-kings-instruction',
   [sections.BIDS]: 'js-bids',
   [sections.ANNOUNCEMENTS]: 'js-announcements'
 }

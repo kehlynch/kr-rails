@@ -17,7 +17,9 @@ function applyChange(data) {
     const oldState = getState(name);
     if (JSON.stringify(oldState) != JSON.stringify(newState)) {
       updateHTML(name, oldState, newState);
-      setState(name, newState);
+      if (name != state.VISIBLE_STAGE) {
+        setState(name, newState);
+      }
     }
   })
 }

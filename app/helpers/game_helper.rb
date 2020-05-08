@@ -39,16 +39,18 @@ module GameHelper
     picked = picked ? 'selected' : ''
     classes = "#{pickable} #{own_king} #{picked}"
     onclick = card_action(slug, 'pick_king')
-    card_tag(slug, classes: classes, onclick: onclick)
+    id = "js-king-card-#{slug}"
+    card_tag(slug, classes: classes, onclick: onclick, id: id)
   end
 
-  def card_tag(card_slug, classes: '', onclick: nil, landscape: false)
+  def card_tag(card_slug, classes: '', onclick: nil, landscape: false, id: nil)
     filename = landscape ? "landscape_#{card_slug}.jpg" : "#{card_slug}.jpg"
     image_tag(
       filename,
       alt: card_slug,
       class: "kr-card #{classes}",
-      onclick: onclick
+      onclick: onclick,
+      id: id
     )
   end
 
