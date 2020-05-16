@@ -1,2 +1,6 @@
-<%= render 'games/players/status', local_assigns %>
-<%= render 'games/players/speech_bubble', local_assigns %>
+<div class="player-status">
+  <%= name %>
+  <%= render 'games/players/player/waiting', local_assigns %>
+  <%= render 'games/players/player/role', local_assigns %>
+  <%= render 'games/players/player/human_link', local_assigns %>
+</div>

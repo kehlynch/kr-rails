@@ -30,26 +30,13 @@ class GamesController < ApplicationController
     render locals: game.props
   end
 
-  def advance
-    advance_from = params[:advance_from]
-    game = find_game
-    
-    advance_to = Stage.next_stage_from(game, advance_from)
-    Broadcaster.new(game).broadcast_to_player(params[:player_id].to_i, advance_to)
-  end
-
   def update
     game = find_game
-
-    if game_params[:action] == 'finished' && game.finished?
-      new_game =  find_match.deal_game
-      redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], new_game)
-    end
-
     runner = Runner.new(game, params[:player_id].to_i)
 
     if find_player.id == game.next_player.id
-      runner.advance!(**game_params)
+      game = runner.advance!(**game_params)
+      Broadcaster.new(game).broadcast
     end
   end
 
@@ -77,7 +64,7 @@ class GamesController < ApplicationController
 
   def game_params
     params.require(:game)
-          .permit(:action, :make_bid, :pick_talon, :pick_king, :make_announcement, :resolve_talon => [], :resolve_whole_talon => [], :play_card => [])
+          .permit(Stage::BID, Stage::KING, Stage::PICK_TALON, Stage::ANNOUNCEMENT, Stage::RESOLVE_TALON => [], Stage::TRICK => [])
           .to_h.symbolize_keys
   end
 

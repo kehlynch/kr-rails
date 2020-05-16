@@ -1,0 +1,11 @@
+<div class="d-contents <%= 'd-none' unless visible %>" id="<%= stage %>">
+  <%= render 'finished/scores', scores %>
+
+  <%= render 'finished/points/points', points %>
+
+  <%= render 'finished/finished_buttons', next_hand_path: next_hand_path %>
+
+  <%= render 'instruction', instruction %>
+
+  <%= render 'hand/hand', hand %>
+</div>

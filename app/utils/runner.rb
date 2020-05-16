@@ -10,42 +10,36 @@ class Runner
     @broadcaster = Broadcaster.new(game)
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def advance!(**params)
-    action = @game.stage
+    p 'advance!', params, @game.stage
 
-    case action
-    when 'make_bid'
-      advance_bidding!(params[:make_bid])
-    when 'pick_king'
-      pick_king!(params[:pick_king])
-    when 'pick_talon'
-      pick_talon!(params[:pick_talon]&.to_i)
-    when 'pick_whole_talon'
-      pick_whole_talon!
-    when 'resolve_talon'
-      resolve_talon!(params[:resolve_talon])
-    when 'resolve_whole_talon'
-      resolve_talon!(params[:resolve_whole_talon])
-    when 'make_announcement'
-      advance_announcements!(params[:make_announcement])
-    when 'play_card'
-      card_slug = params[:play_card][0] if params[:play_card]
+    case @game.stage
+    when Stage::BID
+      advance_bidding!(params[Stage::BID])
+    when Stage::KING
+      pick_king!(params[Stage::KING])
+    when Stage::PICK_TALON
+      pick_talon!(params[Stage::PICK_TALON])
+    when Stage::RESOLVE_TALON
+      resolve_talon!(params[Stage::RESOLVE_TALON])
+    when Stage::ANNOUNCEMENT
+      advance_announcements!(params[Stage::ANNOUNCEMENT])
+    when Stage::TRICK
+      card_slug = params[Stage::TRICK][0] if params[Stage::TRICK]
       advance_tricks!(card_slug)
+    when Stage::FINISHED
     else
       fail RunnerError.new("unknown action #{action}")
     end
 
-    @broadcaster.broadcast
-
     @game
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 
   def pick_king!(king_slug)
     @game.pick_king!(king_slug)
+    @broadcaster.broadcast
 
     if @game.king
       advance!
@@ -53,15 +47,8 @@ class Runner
   end
 
   def pick_talon!(talon_half_index)
-    @game.pick_talon!(talon_half_index)
-
-    if @game.talon_picked
-      advance!
-    end
-  end
-
-  def pick_whole_talon!
-    @game.pick_whole_talon!
+    @game.pick_talon!(talon_half_index&.to_i)
+    @broadcaster.broadcast
 
     if @game.talon_picked
       advance!
@@ -70,6 +57,7 @@ class Runner
 
   def resolve_talon!(discard_slugs)
     @game.resolve_talon!(discard_slugs)
+    @broadcaster.broadcast
 
     if @game.talon_resolved
       advance!
@@ -79,9 +67,11 @@ class Runner
 
   def advance_bidding!(bid_slug)
     bid = @game.bids.make_bid!(bid_slug)
+    @broadcaster.broadcast
 
     while bid
       bid = @game.bids.make_bid!
+      @broadcaster.broadcast
     end
 
     if @game.bids.finished?
@@ -91,9 +81,11 @@ class Runner
 
   def advance_announcements!(announcement_slug)
     announcement = @game.announcements.make_bid!(announcement_slug)
+    @broadcaster.broadcast
 
     while announcement
       announcement = @game.announcements.make_bid!
+      @broadcaster.broadcast
     end
 
     if @game.announcements.finished?
@@ -104,8 +96,10 @@ class Runner
   def advance_tricks!(card_slug)
     card = Card.find_by(game_id: @game.id, slug: card_slug)
     card = @game.tricks.play_card!(card)
+    @broadcaster.broadcast
     while card
       card = @game.tricks.play_card!
+      @broadcaster.broadcast
     end
   end
 

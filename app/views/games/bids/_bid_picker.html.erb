@@ -1,0 +1,6 @@
+<div class="bid-buttons-container center-container <%= 'd-none' unless visible %>" id="js-<%= type %>-picker">
+  <% valid_bids.each do |b| %>
+    <%= render 'bids/bid_picker_button', slug: b[:slug], name: b[:name], type: type %>
+  <% end %>
+</div>
+

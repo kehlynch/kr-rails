@@ -1,13 +1,9 @@
-function toggleCard(checkbox) {
+function toggleCard(checkbox, count) {
   checkbox.checked = !checkbox.checked;
   checkbox.nextElementSibling.classList.toggle('selected');
-  var selected = $("#js-hand").find('input[type="checkbox"]:checked').length;
+  var selected = $("#js-resolve_talon-hand").find('input[type="checkbox"]:checked').length;
   var submitButton = document.getElementById('talon-submit')
-  if (stage() == 'resolve_talon') {
-    submitButton.disabled = selected != 3;
-  } else if (stage() == 'resolve_whole_talon') {
-    submitButton.disabled = selected != 6;
-  }
+  submitButton.disabled = selected != count;
 }
 
 function showPickedTalon(index) {
@@ -53,12 +49,6 @@ function setTalonResolvable(resolvable) {
   }
 }
 
-function showTalonGameEnd() {
-  hide(sections.SCORES_CONTAINER)
-  hide(sections.POINTS_CONTAINER)
-  revealTalon();
-}
-
 function revealTalon() {
   reveal(sections.TALON)
 }
@@ -98,5 +88,3 @@ function setFullTalonMessage() {
     setInstruction(`${declarerName()} takes whole talon`);
   }
 }
-
-

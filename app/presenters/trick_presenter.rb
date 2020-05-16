@@ -1,28 +1,45 @@
 class TrickPresenter
   attr_reader :trick, :trick_index
 
-  def initialize(trick, trick_index)
+  def initialize(game, active_player, index, trick, visible)
+    @game = game
+    @active_player = active_player
+    @index = index
     @trick = trick
-    @trick_index = trick_index
+    @visible = visible
   end
 
-  def cards
-    cards = @trick&.cards || []
+  def props
+    {
+      index: @index,
+      visible: @visible,
+      cards: cards_props,
+      instruction: InstructionPresenter.new(instruction, Stage::TRICK, @index).props,
+      hand: HandPresenter.new(@game, @active_player).props_for_trick(@trick, @index)
+    }
+  end
 
-    [0, 1, 2, 3].map do |player_position|
-      cards.find { |c| c.player.position == player_position }
+  private
+
+  def cards_props
+    return [] unless @trick
+
+    @trick.cards.map do |card|
+      CardPresenter.new(card, @active_player).props_for_played(trick)
     end
   end
 
-  def finished?
-    @trick&.finished? || false
+  def instruction
+    return finished_instruction if @trick.finished?
+
+    return nil unless @trick.next_player
+
+    return "play a card" if @trick.next_player&.id == @active_player.id
+
+    "Waiting for #{trick.next_player.name} to play a card"
   end
 
-  def winning_card
-    @trick&.winning_card
-  end
-
-  def won_card
-    @trick&.won_card
+  def finished_instruction
+    "#{@trick.winning_player.name} wins trick. Click to continue."
   end
 end

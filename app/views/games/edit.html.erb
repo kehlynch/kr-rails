@@ -1,38 +1,27 @@
 <div class="game">
   <%= form_with url: paths[:update_path], method: :patch, html: {id: "gameForm"}, class: 'game-container' do |form| %>
+    <%= render 'contract', contract %>
 
     <%= render 'state', local_assigns %>
-
-    <input id="js-stage" hidden=true name="game[action]" value=<%= action %> />
 
     <%= render 'navigation/navigation_buttons', paths %>
 
     <%= render 'loading_spinner' %>
 
-    <%= render 'message', message %>
-
     <%= render 'players/players', players: players %>
 
-    <%= render(
-      'bids/bids',
-      bids.merge(type: 'bid')) %>
+    <%= render('bids/bids', bids) %>
 
-    <%= render(
-      'bids/bids',
-      announcements.merge(type: 'announcement')) %>
-
-    <%= render 'hand/hand', hand: hand, form: form %>
+    <%= render('bids/bids', announcements) %>
 
     <%= render 'kings/kings', kings %>
 
-    <%= render 'talon/talon', talon.merge(form: form) %>
+    <%= render 'talon/pick_talon', pick_talon.merge(form: form) %>
+
+    <%= render 'talon/resolve_talon', resolve_talon.merge(form: form) %>
 
     <%= render 'tricks/tricks', tricks.merge(form: form) %>
 
-    <%= render 'scores/scores', players: players, visible: visible_stage == 'finished' %>
-
-    <%= render 'scores/points', points %>
-
-    <%= render 'navigation/finished_buttons', visible: visible_stage == 'finished', next_hand_path: paths[:next_hand_path] %>
+    <%= render 'finished/finished', finished %>
   <% end %>
 </div>

@@ -8,6 +8,11 @@ class Game < ApplicationRecord
   def self.deal_game(match_id, players)
     game = Game.create(match_id: match_id)
     Dealer.deal(game, players)
+    (0..11).each do |index|
+      Trick.create(game_id: game.id, trick_index: index)
+    end
+
+    game.reload
 
     return game
   end
@@ -15,7 +20,6 @@ class Game < ApplicationRecord
   def self.reset!(game_id)
     Bid.where(game_id: game_id).destroy_all
     Announcement.where(game_id: game_id).destroy_all
-    Trick.where(game_id: game_id).destroy_all
     Card.where(game_id: game_id).each do |card|
       card.update(discard: false, trick_id: nil, played_index: nil)
       if card.talon_half
@@ -54,45 +58,19 @@ class Game < ApplicationRecord
     [
       [Stage::BID, true],
       [Stage::KING, bids.pick_king?],
-      [Stage::PICK_TALON, bids.talon_cards_to_pick == 3],
-      [Stage::PICK_WHOLE_TALON, bids.talon_cards_to_pick == 6],
-      [Stage::RESOLVE_TALON, bids.talon_cards_to_pick == 3],
-      [Stage::RESOLVE_WHOLE_TALON, bids.talon_cards_to_pick == 6],
+      [Stage::PICK_TALON, bids.talon_cards_to_pick.present?],
+      [Stage::RESOLVE_TALON, bids.talon_cards_to_pick.present?],
       [Stage::ANNOUNCEMENT, bids.highest&.announcements?],
       [Stage::TRICK, true],
       [Stage::FINISHED, true]
     ].select { |_s, valid| valid }.map(&:first)
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def stage
-    return 'make_bid' unless bids.finished?
-
-    return 'pick_king' if bids.pick_king? && king.nil?
-
-    unless bids.talon_cards_to_pick.nil?
-      unless talon_picked
-        return 'pick_whole_talon' if bids.talon_cards_to_pick == 6
-
-        return 'pick_talon'
-      end
-
-      unless talon_resolved
-        return 'resolve_whole_talon' if bids.talon_cards_to_pick == 6
-
-        return 'resolve_talon'
-      end
-    end
-
-    return 'make_announcement' if bids.highest&.announcements? && !announcements.finished?
-
-    unless tricks.finished?
-      return 'play_card'
-    end
-
-    return 'finished'
+    stages.find do |stage|
+      !Stage.finished?(self, stage)
+    end || Stage::FINISHED
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def winners
     player_teams.winners
@@ -114,12 +92,17 @@ class Game < ApplicationRecord
     save
   end
 
-  def pick_talon!(talon_half_index)
-    return if declarer_human? && talon_half_index.nil?
+  def pick_talon!(talon_half_index=nil)
+    if bids.talon_cards_to_pick == 6
+      pick_whole_talon!
+    else
+      puts 'pick_talon!', declarer_human?, talon_half_index
+      return if declarer_human? && talon_half_index.nil?
 
-    talon.pick_talon!(talon_half_index, declarer)
+      talon_half_index = talon.pick_talon!(talon_half_index, declarer)
 
-    update(talon_picked: talon_half_index)
+      update(talon_picked: talon_half_index)
+    end
   end
 
   def pick_whole_talon!
@@ -150,16 +133,17 @@ class Game < ApplicationRecord
   end
 
   def next_player
-    if stage == 'make_bid'
-      return bids.next_bidder
-    elsif stage == 'make_announcement'
-      return announcements.next_bidder
-    elsif ['pick_king', 'pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].include?(stage)
-      return declarer
-    elsif ['play_card', 'play_card', 'next_trick'].include?(stage)
-      return tricks.next_player
-    elsif stage == 'finished'
-      return nil
+    case stage
+    when Stage::BID
+      bids.next_bidder
+    when Stage::ANNOUNCEMENT
+      announcements.next_bidder
+    when Stage::KING, Stage::PICK_TALON, Stage::RESOLVE_TALON
+      declarer
+    when Stage::TRICK
+      tricks.next_player
+    when Stage::FINISHED
+      nil
     end
   end
 

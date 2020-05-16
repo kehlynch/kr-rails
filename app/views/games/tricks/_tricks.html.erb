@@ -1,4 +1,4 @@
-<div id="js-tricks" class="tricks-container <%= visible ? '' : 'd-none' %>">
+<div class="d-contents <%= 'd-none' unless visible %>" id=<%= stage %>>
   <% tricks.each_with_index do |trick, i| %>
     <%=
       render(

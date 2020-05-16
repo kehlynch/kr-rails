@@ -10,6 +10,14 @@ class GamePlayer
     @player.name
   end
 
+  def original_hand
+    cards = @game.cards.select do |c|
+      c.player_id == id && c.talon_half
+    end
+
+    Hand.new(cards, @game)
+  end
+
   def hand
     cards = @game.cards.select do |c|
       c.player_id == id && c.trick_id.nil? && !c.discard

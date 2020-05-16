@@ -1,7 +1,7 @@
 <%= content_tag(
   :div,
-  onclick: "submitGame(talon_#{index}",
-  disable: !pickable,
+  onclick: "submitGame(talon_#{index})",
+  disabled: !pickable,
   class: talon_half_classes(pickable, picked),
    id: "js-talon-half-#{index}"
 ) do %>

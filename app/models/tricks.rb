@@ -5,6 +5,8 @@ class Tricks
     :[],
     :count,
     :each,
+    :each_with_index,
+    :find,
     :first,
     :last,
     :length,
@@ -22,7 +24,8 @@ class Tricks
   end
 
   def finished?
-    length == 12 && current_trick&.finished?
+    # TODO finish early if negative bid lost
+    tricks.find { |t| t.trick_index == 11 }.finished?
   end
 
   def started?
@@ -41,7 +44,17 @@ class Tricks
   end
 
   def current_trick
-    last
+    last_played_trick = @tricks
+      .select { |t| t.cards != [] }
+      .max_by(&:trick_index)
+
+    p last_played_trick
+
+    return @tricks.find { |t| t.trick_index == 0 } unless last_played_trick
+    
+    return last_played_trick unless last_played_trick.finished?
+
+    return @tricks.find { |t| t.trick_index == last_played_trick.trick_index + 1 }
   end
 
   def current_trick_finished?
@@ -49,11 +62,7 @@ class Tricks
   end
 
   def playable_trick_index
-    return 0 unless current_trick
-
-    return length - 1 unless current_trick.finished?
-
-    return length
+    current_trick&.trick_index
   end
 
   def lead_player
@@ -71,19 +80,13 @@ class Tricks
     # return @tricks[-2].won_player if !current_trick.started?
 
     # mid trick - find next player
-    @players.next_from(current_trick.last_player)
+    current_trick.next_player
   end
 
   private
 
   def add_card!(card)
-    add_trick! if !current_trick || current_trick.finished?
     current_trick.add_card(card)
-    # add_trick! if current_trick.finished? && !finished?
-  end
-
-  def add_trick!
-    @tricks << Trick.create(game_id: @game.id, trick_index: next_index)
   end
 
   def human_player

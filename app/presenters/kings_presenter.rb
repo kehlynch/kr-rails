@@ -7,9 +7,12 @@ class KingsPresenter
 
   def props
     {
+      stage: Stage::KING,
       visible: @visible_stage == Stage::KING,
       kings: kings_props,
-      instruction: instruction,
+      instruction: InstructionPresenter.new(instruction, Stage::KING).props,
+      hand: HandPresenter.new(@game, @active_player).props_for_kings,
+      finished: @game.king.present?
     }
   end
 
@@ -17,24 +20,22 @@ class KingsPresenter
 
   def kings_props
     ['club_8', 'diamond_8', 'heart_8', 'spade_8'].map do |king_slug|
-      {
-        slug: king_slug,
-        own_king: @active_player.declarer? && @game.declarer&.hand&.find { |c| c.slug == king_slug }.present?,
-        pickable: @active_player.declarer?,
-        picked: @game.king == king_slug
-      }
+      king_card = Card.find_by(game: @game, slug: king_slug)
+      CardPresenter.new(king_card, @active_player).props_for_call_king
     end
   end
 
   def instruction
-    return "#{@game.declarer&.name} picks King of #{king_name(@game.king)}" if @game.king
+    return "" unless @game.stages.include?(Stage::KING)
 
-    return 'pick a King' if @game.next_player.id == @active_player.id
+    return "#{@game.declarer&.name} picks #{king_name(@game.king)}. Click to continue" if @game.king.present?
+
+    return 'pick a King' if @game.next_player&.id == @active_player.id
 
     "waiting for #{@game.next_player.name} to pick a King"
   end
 
   def king_name(slug)
-    "King of #{slug.split('_')[0].titleize}"
+    "King of #{slug.split('_')[0].titleize}s"
   end
 end

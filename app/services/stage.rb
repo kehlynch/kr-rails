@@ -1,27 +1,12 @@
 module Stage
-  BID = 'make_bid'
-  KING = 'pick_king'
-  PICK_TALON = 'pick_talon'
-  PICK_WHOLE_TALON = 'pick_whole_talon'
-  RESOLVE_TALON = 'resolve_talon'
-  RESOLVE_WHOLE_TALON = 'resolve_whole_talon'
-  ANNOUNCEMENT = 'make_announcement'
-  TRICK = 'play_card'
-  FINISHED = 'finished'
+  BID = :bids
+  KING = :kings
+  PICK_TALON = :pick_talon
+  RESOLVE_TALON = :resolve_talon
+  ANNOUNCEMENT = :announcements
+  TRICK = :tricks
+  FINISHED = :finished
 
-  TALON_STAGES = [PICK_TALON, PICK_WHOLE_TALON, RESOLVE_TALON, RESOLVE_WHOLE_TALON]
-
-  def self.talon_stage?(stage)
-    TALON_STAGES.include?(stage)
-  end
-
-  def self.pick_talon_stage?(stage)
-    [PICK_TALON, PICK_WHOLE_TALON].include?(stage)
-  end
-
-  def self.resolve_talon_stage?(stage)
-    [RESOLVE_TALON, RESOLVE_WHOLE_TALON].include?(stage)
-  end
 
   def self.visible_stage_for(game, active_player)
     stage = game.stage
@@ -41,5 +26,22 @@ module Stage
     stages = game.stages
     next_stage_index = stages.index(stage) + 1
     stages[next_stage_index]
+  end
+
+  def self.finished?(game, stage)
+    case stage
+    when BID
+      game.bids.finished?
+    when KING
+      game.king.present?
+    when PICK_TALON
+      game.talon_picked.present?
+    when RESOLVE_TALON
+      game.talon_resolved.present?
+    when ANNOUNCEMENT
+      game.announcements.finished?
+    when TRICK
+      game.tricks.finished?
+    end
   end
 end

@@ -1,0 +1,16 @@
+<div class="d-contents <%= 'd-none' unless visible %>" id="<%= stage %>">
+  <div class="center-container <%= 'd-none' unless resolvable %> ">
+    <%=
+      form.submit(
+        'put down cards',
+        disabled: true,
+        id: 'talon-submit',
+        class: "btn btn-outline-dark new-game-button"
+      )
+    %>
+  </div>
+
+  <%= render 'hand/hand', hand %>
+
+  <%= render 'instruction', instruction %>
+</div>

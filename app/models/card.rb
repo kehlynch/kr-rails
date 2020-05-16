@@ -67,7 +67,7 @@ class Card < ApplicationRecord
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
-  def legal_for_trick?
+  def legal_for_trick?(trick = current_trick)
     return negative_legal? if game.bids.highest&.negative?
 
     if player.forced_cards.any?
@@ -78,7 +78,7 @@ class Card < ApplicationRecord
 
     return false if player.illegal_cards.include?(slug)
 
-    return true if !current_trick || current_trick&.finished?
+    return true if !trick.winning_card # lead a card
 
     return true if suit == led_suit
 
@@ -94,9 +94,9 @@ class Card < ApplicationRecord
 
   # rubocop:disable Metrics/CyclomaticComplexity
   def negative_legal?
-    winning = game.current_trick&.winning_card
+    winning_card = game.current_trick&.winning_card
 
-    if !current_trick || current_trick&.finished?
+    if !winning_card
       # leading pagat
       return false if slug == 'trump_1' && player.trumps.length > 1 && game.bids.highest&.trischaken?
 
@@ -105,12 +105,12 @@ class Card < ApplicationRecord
 
     led = game.current_trick&.led_card
 
-    play_ups = player.suit_cards(winning.suit).select { |c| c.value > winning.value }
+    play_ups = player.suit_cards(winning_card.suit).select { |c| c.value > winning_card.value }
 
     if suit == led.suit
-      return true if winning.suit != led.suit
+      return true if winning_card.suit != led.suit
 
-      return true if value > winning.value
+      return true if value > winning_card.value
 
       return true if play_ups.empty?
     end
@@ -118,9 +118,9 @@ class Card < ApplicationRecord
     return false if player.suit_cards(led.suit).any?
 
     if suit == 'trump'
-      return true if winning.suit != 'trump'
+      return true if winning_card.suit != 'trump'
 
-      return true if value > winning.value
+      return true if value > winning_card.value
 
       return true if play_ups.empty?
     end

@@ -5,9 +5,8 @@ class Points::GamePointsPresenter
 
   def props
     {
-      bid: bid_props(game),
-      announcements: AnnouncementPresenter.new(game).props_for_points,
-      players: players_props(game)
+      shorthands: Points::GamePointsShorthandsPresenter.new(@game).props,
+      players: players_props
     }
   end
 
@@ -24,16 +23,6 @@ class Points::GamePointsPresenter
     @game.players.each_with_index.map do |player, i|
       Points::PlayerPointsPresenter.new(player, @game, points[i]).props
     end
-  end
-
-  def bid_props
-    winning_bid = @game.bids.highest
-    {
-      kontra: winning_bid.kontra,
-      off: !@game.winners.include?(@game.declarer),
-      shorthand: BidPresenter.new(winning_bid.slug).shorthand,
-      vs_three:  @game.player_teams.defence.length == 3 && @game.bids&.highest&.king?
-    }
   end
 
   def raw_points(game)

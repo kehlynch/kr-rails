@@ -9,7 +9,7 @@ module Broadcasters
     def broadcast_to(channel, player)
       ActionCable.server.broadcast(
         channel,
-        params(player)
+        params(player),
       )
     end
 

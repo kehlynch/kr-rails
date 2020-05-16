@@ -1,0 +1,12 @@
+<div class="d-contents <%= "d-none" unless visible %>" id="<%= stage %>">
+
+  <div class="talon-container center-container">
+    <% halves.each do |half| %>
+      <%= render 'talon/talon_half', half %>
+    <% end %>
+  </div>
+
+  <%= render 'hand/hand', hand %>
+
+  <%= render 'instruction', instruction %>
+</div>

@@ -48,23 +48,22 @@ class PlayerTeams
   end
 
   def trischaken_game_points_for(player)
-    if trischaken_zero_trick_winners.include?(player)
-      (4 - winners.length) / winners.length
-    elsif winners.include?(player)
-      loss = 1
-      return loss * 2 unless winners.include?(@game.forehand)
+    if trischaken_zero_trick_winners.any?
+      return (4 - winners.length) / winners.length if trischaken_zero_trick_winners.include?(player)
 
-      return loss * 2 if player.forehand?
-
-      return loss
-    elsif trischaken_zero_trick_winners.any?
       -1
     else
-      loss = -(winners.length / (4 - winners.length))
+      if winners.include?(player)
+        return 2 unless winners.include?(@game.forehand)
 
-      return loss * 2 if player.forehand?
+        return 1
+      else
+        loss = -(winners.length / (4 - winners.length))
 
-      return loss
+        return loss * 2 if player.forehand?
+
+        return loss
+      end
     end
   end
 

@@ -1,9 +1,11 @@
-<div class="d-contents <%= "d-none" unless visible %>" id="js-kings" >
+<div class="d-contents <%= "d-none" unless visible %>" id="<%= stage %>" >
   <div class="kings-container center-container" >
     <% kings.each do |king| %>
       <%= render 'kings/king', king %>
     <% end %>
   </div>
 
-  <%= render 'instruction', instruction: instruction, type: 'kings' %>
+  <%= render 'instruction', instruction %>
+
+  <%= render 'hand/hand', hand %>
 </div>

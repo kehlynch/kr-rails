@@ -1,7 +1,7 @@
 <div class="card-container hand">
-  <input hidden=true id="hand_<%= slug %>" name="game[<%= stage %>][]" type="checkbox" value="<%= slug %>" />
+  <input hidden=true id="<%= local_assigns[:input_id] %>" name="game[<%= stage %>][]" type="checkbox" value="<%= slug %>" />
   <%= card_tag(
       slug,
-      onclick: onclick,
-      classes: "#{'pickable' if pickable} #{'illegal' if pickable && !legal}") %>
+      onclick: local_assigns[:onclick],
+      classes: "#{'pickable' if pickable} #{'illegal' if illegal}") %>
 </div>

@@ -1,82 +1,90 @@
 const stages = {
-  BID: 'make_bid',
-  KING: 'pick_king',
+  BID: 'bids',
+  KING: 'kings',
   PICK_TALON: 'pick_talon',
-  PICK_WHOLE_TALON: 'pick_whole_talon',
   RESOLVE_TALON: 'resolve_talon',
-  RESOLVE_WHOLE_TALON: 'resolve_whole_talon',
-  ANNOUNCEMENT: 'make_announcement',
-  TRICK: 'play_card',
+  ANNOUNCEMENT: 'announcements',
+  TRICK: 'tricks',
   FINISHED: 'finished',
+}
+
+const stageSections = {
+  [stages.BID]: sections.BIDS,
+  [stages.KING]: sections.KINGS,
+  [stages.PICK_TALON]: sections.PICK_TALON,
+  [stages.RESOLVE_TALON]: sections.RESOLVE_TALON,
+  [stages.ANNOUNCEMENT]: sections.ANNOUNCEMENTS,
+  [stages.TRICK]: sections.TRICKS,
+  [stages.FINISHED]: sections.FINISHED,
+}
+
+function advanceStage() {
+  const currentStage = getState(state.VISIBLE_STAGE);
+  if (currentStage == stages.TRICK && !getState(stages.TRICK).finished) {
+    advanceTricks();
+  } else {
+    const availableStages = getState(state.STAGES);
+    const nextStage = availableStages[availableStages.indexOf(currentStage) + 1]
+
+    setState(state.VISIBLE_STAGE, nextStage);
+    revealStageAndHideOthers(nextStage);
+  }
+}
+
+function advanceTricks() {
+  const currentTrickIndex = getState(state.VISIBLE_TRICK_INDEX);
+  const newTrickIndex = currentTrickIndex + 1;
+  setState(state.VISIBLE_TRICK_INDEX, newTrickIndex);
+  revealTrickAndHideOthers(newTrickIndex);
+}
+
+
+function advanceAvailable() {
+  const visibleStage = getState(state.VISIBLE_STAGE);
+
+  if (getState(visibleStage).finished) {
+    return true
+  } else if (visibleStage == stages.TRICK) {
+    return advanceTricksAvailable()
+  } else {
+    return false
+  }
+}
+
+function advanceTricksAvailable() {
+  const playableTrickIndex = getState(stages.TRICK).playable_trick_index
+  const visibleTrickIndex = getState(state.VISIBLE_TRICK_INDEX);
+  return visibleTrickIndex < playableTrickIndex
+}
+
+function revealStageAndHideOthers(stageToReveal) {
+  Object.values(stages).forEach((stage) => {
+    if (stage == stageToReveal) {
+      revealStage(stage)
+    } else {
+      hideStage(stage);
+    }
+  })
 }
 
 function stage() { return getState(state.ACTION); }
 
-function setStage() { setState(newState.ACTION, stage); }
-
-function changeStage(stage) {
-  setStage(stage);
-  if (stage == 'pick_king') {
-    setState('visible-stage', 'pick_king');
-    hideBidPicker();
-    revealKings();
-    addKingMessage();
-  }
-  if (stage == 'pick_talon') {
-    if (myMove()) {
-      setState('visible-stage', 'pick_talon');
-      showPickTalon();
-    }
-  }
-  if (stage == 'pick_whole_talon') {
-    if (myMove()) {
-      setState('visible-stage', 'pick_whole_talon');
-      showPickWholeTalon();
-    }
-  }
-  if (stage == 'resolve_talon') {
-    if (myMove()) {
-      setState('visible-stage', 'resolve_talon');
-      showResolveTalon();
-    }
-  }
-  if (stage == 'resolve_whole_talon') {
-    if (myMove()) {
-      setState('visible-stage', 'resolve_whole_talon');
-      showResolveWholeTalon();
-    }
-  }
-  if (stage == 'make_announcement') {
-    if (myMove()) {
-      setState('visible-stage', 'announcements');
-      showAnnouncementsPicker();
-    }
-    // $('#talon-submit').addClass('d-none');
-    // $("#js-valid-bids").addClass("d-none");
-    // hideKings();
-    // hideTalon();
-  }
-
-  if (stage == 'play_card') {
-    setState('visible-stage', 'play_card');
-    reveal(sections.TRICK);
-    hideBidPicker();
-    hideAnnouncementPicker();
-    hideKings();
-    hideTalon();
-  }
-
-  if (stage == 'finished') {
-    setState('visible-stage', 'finished');
-    hide(sections.TRICK);
-    reveal(sections.FINISHED_BUTTONS);
-    showScores();
-  }
-  setInProgress(false);
+function hideStage(stage) {
+  $(stageSelector(stage)).addClass('d-none')
 }
 
+function revealStage(stage) {
+  $(stageSelector(stage)).removeClass('d-none')
+}
+
+
+function stageSelector(stage) {
+  return `#${stage}`
+}
+
+
 function nextVisibleStage() {
-  switch (visibleStage()) {
+  switch (getState(state.VISIBLE_STAGE)) {
     case stages.BID:
       if (kingNeeded()) { return stages.KING }
       else if (talonCardsToPick()) { return stages.PICK_TALON }
@@ -97,73 +105,4 @@ function nextVisibleStage() {
     case stages.TRICK:
       return stages.FINISHED
   }
-
-}
-
-function advanceVisibleStage() {
-  switch (nextVisibleStage()) {
-    case stages.KING:
-      hide(sections.BID_PICKER);
-      reveal(sections.KINGS);
-      setKingsPickable(isDeclarer());
-      setInstruction(isDeclarer() ? 'pick a king' : `${declarerName()} to pick a king`);
-      break;
-    case stages.PICK_TALON:
-      hide(sections.KINGS);
-      reveal(sections.TALON);
-      setTalonPickable(isDeclarer());
-      break;
-    case stages.PICK_WHOLE_TALON:
-      hide(sections.KINGS);
-      reveal(sections.TALON);
-      setTalonPickable(isDeclarer());
-      break;
-    case stages.RESOLVE_TALON:
-      if (isDeclarer()) {
-        hide(sections.KINGS);
-        setTalonResolvable(isDeclarer());
-      }
-      break;
-    case stages.RESOLVE_WHOLE_TALON:
-      if (isDeclarer()) {
-        hide(sections.KINGS);
-        setTalonResolvable(isDeclarer());
-      }
-      break;
-    case stages.ANNOUNCEMENT:
-      hide(sections.TALON);
-      hide(sections.KING);
-      reveal(sections.ANNOUNCEMENT_PICKER);
-      setAnnouncementsMessage();
-      break;
-
-    case stages.TRICK:
-      hide(sections.ANNOUNCEMENT_PICKER);
-      reveal(sections.TRICK);
-  }
-
-  setVisibleStage(nextVisibleStage());
-
-  // console.log("advancePreAnnouncements", visibleStage(), talonPicked());
-  // if (visibleStage() == 'pick_king' && talonPicked()) {
-  //   console.log("advancePreAnnouncements, advancing from King");
-  //   hideKings();
-  //   revealTalon();
-  //   setTalonMessage();
-  //   setState('visible-stage', 'talon');
-  // } else if (visibleStage() == 'pick_king') {
-  //   hideKings();
-  //   showAnnouncementsPicker();
-  //   setAnnouncementsMessage();
-  //   setState('visible-stage', 'announcements');
-  // } else if (['pick_talon', 'pick_whole_talon', 'resolve_talon', 'resolve_whole_talon'].includes(visibleStage())) {
-  //   hideTalon();
-  //   shownAnnouncementsPicker();
-  //   setAnnouncementsMessage();
-  //   setState('visible-stage', 'announcements');
-  // }
-}
-
-function setVisibleStage(stage) {
-  setState('visible-stage', stage);
 }

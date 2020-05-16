@@ -1,16 +1,25 @@
 STATE_SELECTOR = '#js-state';
 
 const state = {
-  PATHS: 'paths',
+  STAGES: 'stages',
+  PLAYERS: 'players', // TODO get rid
+  PATHS: 'paths', // TODO get rid - used for advance post
   CHANNEL: 'channel',
-  PLAYERS: 'players',
   BIDS: 'bids',
   KINGS: 'kings',
+  PICK_TALON: 'pick_talon',
+  RESOLVE_TALON: 'resolve_talon',
   ANNOUNCEMENTS: 'announcements',
+  TRICKS: 'tricks',
+  FINISHED: 'finished',
+  VISIBLE_STAGE: 'visible_stage',
+  VISIBLE_TRICK_INDEX: 'visible_trick_index',
+
+
+
   INSTRUCTION: 'instruction',
   ACTION: 'action',
   PLAYABLE_TRICK_INDEX: 'playable_trick_index',
-  VISIBLE_TRICK_INDEX: 'visible_trick_index',
   DECLARER_NAME: 'declarer_name',
   IS_DECLARER: 'is_declarer',
   KING_NEEDED: 'king_needed',
@@ -19,7 +28,6 @@ const state = {
   MY_MOVE: 'my_move',
   TALON_PICKED: 'talon_picked',
   TALON_CARDS_TO_PICK: 'talon_cards_to_pick',
-  VISIBLE_STAGE: 'visible_stage',
   WON_BID: 'won_bid',
   IN_PROGRESS: 'in_progress' // only set from JS
 }
@@ -31,10 +39,6 @@ function getState(state) {
   if (jsonValue) {
     return JSON.parse(jsonValue);
   }
-}
-
-function advanceAvailable() {
-  return getState(state.BIDS).finished
 }
 
 function setState(key, value) {
@@ -76,7 +80,7 @@ function meToPlayHandCard() {
 
 function setInProgress(value=true) {
   setState(state.IN_PROGRESS, value);
-  value ? makeHandUnpickable() : makeHandPickable;
+  // value ? makeHandUnpickable() : makeHandPickable;
   toggle(sections.PROGRESS_SPINNER, value);
 }
 

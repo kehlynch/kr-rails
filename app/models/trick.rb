@@ -59,6 +59,22 @@ class Trick < ApplicationRecord
     cards[-1]&.player
   end
 
+  def next_player
+    return game.declarer if trick_index == 0 && cards.empty?
+
+    return game.players.next_from(last_player) if last_player
+
+    return previous_trick&.won_player if previous_trick&.won_player
+
+    nil
+  end
+
+  def previous_trick
+    game.tricks.find do |trick|
+      trick.trick_index == trick_index - 1
+    end
+  end
+
   # deprecate
   def last_player_id
     cards[-1]&.player_id

@@ -32,7 +32,7 @@ function createSubscriptions() {
 }
 
 $(document).ready(function() {
-  scrollMessageBox();
+  console.log("hello");
   createSubscriptions();
 })
 

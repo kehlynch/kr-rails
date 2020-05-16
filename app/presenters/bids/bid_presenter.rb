@@ -1,4 +1,4 @@
-class BidPresenter
+class Bids::BidPresenter
   BID_NAMES = {
     Bids::PASS => 'Pass',
     Bids::RUFER => 'Rufer',

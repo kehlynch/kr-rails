@@ -38,29 +38,35 @@ class GamePresenter
     {
       paths: paths_props,
       channel: channel_props,
-      action: stage,
-      instruction: InstructionPresenter.new(@game, active_player, visible_stage).props,
-      message: MessagePresenter.new(@game).props,
-      remarks: @remarks,
-      my_move: my_move?,
-      bids: BidsPresenter.new(@game, active_player, visible_stage).props_for_bidding,
-      announcements: AnnouncementsPresenter.new(@game, active_player, visible_stage).props_for_bidding,
+      players: PlayersPresenter.new(@game, active_player).static_props,
+      contract: ContractPresenter.new(@game).props,
+      stages: @game.stages,
       visible_stage: visible_stage,
-      talon: TalonPresenter.new(talon, active_player, declarer, talon_picked, visible_stage).props,
-      tricks: TricksPresenter.new(@game, active_player, visible_stage).props,
-      playable_trick_index: tricks.playable_trick_index,
-      declarer_name: declarer&.name,
-      is_declarer: declarer&.id == @active_player_id,
-      king_needed: bids.pick_king?,
-      picked_king_slug: king,
-      player_position: active_player.position,
-      talon_picked: talon_picked,
-      talon_cards_to_pick: bids.talon_cards_to_pick,
-      won_bid: bids.finished? && bids.highest&.slug,
-      kings: KingsPresenter.new(@game, active_player, visible_stage).props,
-      players: PlayersPresenter.new(@game, active_player, visible_stage).props,
-      hand: HandPresenter.new(@game, active_player, visible_stage).props,
-      points: Points::MatchPointsPresenter.new(@game.match, active_player, visible_stage).props
+      visible_trick_index: visible_trick_index,
+      # action: stage,
+      # remarks: @remarks,
+      # my_move: my_move?,
+      # playable_trick_index: tricks.playable_trick_index,
+      # declarer_name: declarer&.name,
+      # is_declarer: declarer&.id == @active_player_id,
+      # king_needed: bids.pick_king?,
+      # picked_king_slug: king,
+      # player_position: active_player.position,
+      # talon_picked: talon_picked,
+      # talon_cards_to_pick: bids.talon_cards_to_pick,
+      # won_bid: bids.finished? && bids.highest&.slug,
+    }.merge(stage_props(visible_stage))
+  end
+
+  def stage_props(visible_stage)
+    {
+      Stage::BID => Bids::BidsPresenter.new(@game, active_player, visible_stage).props,
+      Stage::KING => KingsPresenter.new(@game, active_player, visible_stage).props,
+      Stage::PICK_TALON => PickTalonPresenter.new(@game, active_player, visible_stage).props,
+      Stage::RESOLVE_TALON => ResolveTalonPresenter.new(@game, active_player, visible_stage).props,
+      Stage::ANNOUNCEMENT => Bids::AnnouncementsPresenter.new(@game, active_player, visible_stage).props,
+      Stage::TRICK => TricksPresenter.new(@game, active_player, visible_stage, visible_trick_index).props,
+      Stage::FINISHED => FinishedPresenter.new(@game, active_player, visible_stage).props,
     }
   end
 
@@ -76,9 +82,7 @@ class GamePresenter
     {
       update_path: match_player_game_path(@game.match_id, @active_player_id, @game.id),
       new_single_player_path: matches_path(match: { human_count: 1 }),
-      reset_path: reset_match_player_game_path(@game.match_id, @active_player_id, @game.id),
-      next_hand_path: next_match_player_game_path(@game.match_id, @active_player_id, @game.id),
-      advance_path: advance_match_player_game_path(@game.match_id, @active_player_id, @game.id)
+      reset_path: reset_match_player_game_path(@game.match_id, @active_player_id, @game.id)
     }
   end
 
@@ -119,6 +123,22 @@ class GamePresenter
     return false unless active_player.announcements.blank?
 
     return false unless @game.bids.talon_cards_to_pick.present?
+
+    return true
+  end
+
+  def visible_trick_index
+    return 11 if @game.tricks.finished?
+
+    show_penultimate_trick? ? @game.tricks.playable_trick_index - 1 : tricks.playable_trick_index
+  end
+
+  def show_penultimate_trick?
+    return false if active_player.played_in_current_trick?
+    
+    return false if @game.tricks&.current_trick&.finished?
+
+    return false if @game.tricks.playable_trick_index == 0
 
     return true
   end

@@ -7,6 +7,6 @@ function playCard(checkboxId) {
     setInProgress(true);
     submitGame(checkboxId);
     $(checkboxId).parent().remove();
-    makeHandUnpickable();
+    // makeHandUnpickable();
   }
 }

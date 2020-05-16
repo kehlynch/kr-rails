@@ -1,51 +1,68 @@
-function updateBids(oldData, newData) {
+function updateBids(newData, oldData) {
   const updaters = {
-    'visible': (visible) => { toggle(sections.BIDS, visible) },
-    'bid_picker_visible': toggleBidPicker,
-    'finished': toggleBidsFinishedMessage,
-    'finished_message': setFinishedMessage,
-    'instruction': setBidInstruction,
-    'valid_bids': setValidBids
+    'instruction': setInstruction,
+    'bid_picker': setBidPicker,
+    'hand': updateHand
   }
+
+  const updatersNeedingStage = {
+    'players': setPlayerBids,
+    'finished_message': setFinishedMessage,
+    'finished': toggleBidsFinishedMessage,
+  }
+
+  const stage = newData.stage;
 
   Object.entries(newData).forEach ( ( [ name, newValue] ) => {
     const oldValue = oldData[name];
     if ( JSON.stringify(oldValue) != JSON.stringify(newValue)) {
-      updaters[name](newValue);
+      if (updaters[name]) {
+        updaters[name](newValue, oldValue);
+      } else if (updatersNeedingStage[name]) {
+        updatersNeedingStage[name](stage, newValue, oldValue);
+      }
     }
   })
 }
 
-function toggleBidPicker(visible) {
-  toggle(sections.BID_PICKER, visible);
-}
-
-function toggleBidsFinishedMessage(visible) {
-  toggle(sections.BIDS_FINISHED_MESSAGE, visible);
-}
-
-function setFinishedMessage(message) {
-  clear(sections.BIDS_FINISHED_MESSAGE);
-  addTo(sections.BIDS_FINISHED_MESSAGE, `<i class="fa fa-gavel"></i>${message}`)
-}
-
-function setBidInstruction(message) {
-  console.log("setInstruction", message);
-  clear(sections.BID_INSTRUCTION);
-  addTo(sections.BID_INSTRUCTION, message);
-}
-
-function setValidBids(validBidsData) {
-  clear(sections.BID_PICKER)
-  const html = validBidsData.map((bid) => {
-    return bidButtonHtml(bid.slug, bid.name);
+function setPlayerBids(type, players, oldPlayers) {
+  players.forEach((player, i) => {
+    if ( JSON.stringify(player) != JSON.stringify(oldPlayers[i])) {
+      const sectionSelector = `#js-player-${player.id}-${type}`
+      const bidIndicators = player.bids.map((bid) => (playerBidIndicator(bid)));
+      $(sectionSelector).empty().append(bidIndicators);
+    }
   })
-  addTo(sections.BID_PICKER, html);
 }
 
-function bidButtonHtml(slug, name) {
-  const input = `<input hidden="true" id="valid-bid-${slug}" name="game[make_bid]" type="checkbox" value="${slug}">`;
-  const button = `<button name="button" type="button" alt="${name}" class="btn btn-outline-dark" onclick="submitBid('${slug}', 'bid')">${name}</button>`;
+function playerBidIndicator(bid) {
+  return `<button name="button" type="submit" class="btn btn-dark" disabled="disabled">${bid}</button>`
+}
+
+function toggleBidsFinishedMessage(type, visible) {
+  $(finishedMessageSelector(type)).toggleClass('d-none', !visible);
+}
+
+function setFinishedMessage(type, message) {
+  $(finishedMessageSelector(type)).empty().append(`<i class="fa fa-gavel"></i>${message}`);
+}
+
+function finishedMessageSelector(type) {
+  return `#js-${type}-finished-message`;
+}
+
+function setBidPicker({ visible, type, valid_bids }) {
+  const selector = `#js-${type}-picker`;
+  const html = valid_bids.map(({slug, name}) => {
+    return bidButtonHtml(slug, name, type);
+  })
+  $(selector).empty().append(html);
+  $(selector).toggleClass('d-none', !visible);
+}
+
+function bidButtonHtml(slug, name, type) {
+  const input = `<input hidden="true" id="valid-${type}-${slug}" name="game[${type}]" type="checkbox" value="${slug}">`;
+  const button = `<button name="button" type="button" alt="${name}" class="btn btn-outline-dark" onclick="submitBid('${slug}', '${type}')">${name}</button>`;
   return input + button;
 }
 

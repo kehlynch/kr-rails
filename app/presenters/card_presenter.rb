@@ -4,56 +4,117 @@ class CardPresenter
     @active_player = active_player
   end
 
-  def trick_props(trick)
+  def props_for_call_king
+    input_id = id(Stage::KING)
+    {
+      slug: @card.slug,
+      stage: Stage::KING,
+      classes: classlist(
+        own_king: @card.player&.id == @active_player.id,
+        pickable: @active_player.declarer? && @card.game.king.blank?,
+        picked: @card.game.king == @card.slug
+      ),
+      input_id: id(Stage::KING),
+      onclick: "submitGame(#{input_id})"
+    }
+  end
+
+
+  def hand_props_for_bids
+    {
+      slug: @card.slug,
+      stage: Stage::BID,
+      pickable: false,
+      illegal: nil,
+      onclick: nil
+    }
+  end
+
+
+  def props_for_pick_talon
+    {
+      stage: Stage::PICK_TALON,
+      slug: @card.slug
+    }
+  end
+
+  def hand_props_for_resolve_talon
+    id = id(Stage::RESOLVE_TALON);
+    {
+      slug: @card.slug,
+      stage: Stage::RESOLVE_TALON,
+      pickable: @active_player.declarer?,
+      illegal: @active_player.declarer? && !@card.legal?,
+      input_id: id,
+      onclick: "toggleCard(#{id}, #{@card.game.bids.talon_cards_to_pick}"
+    }
+  end
+
+  def hand_props_for_pick_talon
+    {
+      slug: @card.slug,
+      stage: Stage::PICK_TALON,
+      pickable: false,
+      illegal: nil,
+      onclick: nil
+    }
+  end
+
+  def hand_props_for_kings
+    {
+      slug: @card.slug,
+      stage: Stage::BID,
+      pickable: false,
+      illegal: nil,
+      onclick: nil
+    }
+  end
+
+  def props_for_played(trick)
     {
       slug: @card.slug,
       compass: compass,
       landscape: ['east', 'west'].include?(compass),
-      won: trick.won_card&.slug == @card.slug
+      won: trick.won_card&.slug == @card.slug,
+      input_id: "played_#{trick.trick_index}_#{id(Stage::TRICK)}",
+      trick_index: trick.trick_index
     }
   end
 
-  def hand_props(stage)
+  def hand_props_for_trick(trick, trick_index)
+    id = "trick#{trick_index}_#{id(Stage::TRICK)}"
     {
       slug: @card.slug,
-      stage: stage,
-      pickable: hand_pickable?(stage),
-      legal: @card.legal?,
-      onclick: hand_onclick(stage)
+      stage: Stage::TRICK,
+      pickable: trick&.next_player&.id == @active_player.id,
+      illegal: (trick&.next_player&.id == @active_player.id) &&! @card.legal?,
+      input_id: id,
+      onclick: "playCard(#{id})",
     }
   end
 
-  def talon_props(declarer, stage)
+  def hand_props_for_finished
     {
-      slug: @card.slug
+      slug: @card.slug,
+      stage: Stage::FINISHED,
+      pickable: false,
+      illegal: nil,
+      onclick: nil
     }
   end
 
   private
 
-  # TODO attach listeners from the JS instead?
-  def hand_onclick(stage)
-    return nil unless hand_pickable?(stage)
-
-    checkbox_id = "#{stage}_#{@card.slug}"
-
-    return "playCard(#{checkbox_id})" if Stage::TRICK == stage
-
-    return "toggleCard(#{checkbox_id})"
-  end
-
-  def checkbox_id(stage)
-
+  def id(stage)
+    "#{stage}_#{@card.slug}"
   end
 
   def compass
-    index = (@card.player.position - active_player.position) % 4
+    index = (@card.player.position - @active_player.position) % 4
     ['south', 'east', 'north', 'west'][index]
   end
 
-  def hand_pickable?(stage)
-    return false unless [Stage::TRICK, Stage::RESOLVE_TALON, Stage::RESOLVE_WHOLE_TALON].include?(stage)
-
-    @card.game.next_player&.id == @active_player.id
+  def classlist(**args)
+    args.select{ |_k, v| v }.keys
   end
 end

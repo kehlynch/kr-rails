@@ -1,59 +1,40 @@
-function updateHand(cards) {
-  if ( $('#js-hand').find('img').length != cards.length ) {
-    $("#js-hand").empty()
-  }
-  cards.forEach((c) => {
-    updateCard(c.slug, c.legal);
-  })
-}
+function updateHand(newData, oldData) {
+  console.log('updateHand', newData);
+  const { id, hand } = newData;
+  const handSlugs = hand.map((c) => c.slug);
+  const oldHandSlugs = oldData.hand.map((c) => c.slug);
 
-function updateCard(slug, legal) {
-  // TODO toggling talon putdowns
-  const inputId = `hand_${slug}`
-  const talonStage = ['resolve_talon', 'resolve_whole_talon'].includes(stage());
-  const action = talonStage ? 'toggleCard' : 'playCard';
-  const pickableClass = meToPlayHandCard() ? 'pickable' : '';
-  const legalClass = legal ? '' : 'illegal';
-  const classes = `kr-card ${pickableClass} ${legalClass}`
-  const onclick = legal ? `${action}(${inputId})` : '';
-
-  const inputName = `game[${stage()}][]`
-  addOrUpdateCard(slug, classes, onclick, inputId, inputName);
-
-  if (talonStage && myMove()) {
-    revealResolveTalonButton();
+  if (JSON.stringify(handSlugs) != JSON.stringify(oldHandSlugs)) {
+    resetHand(newData);
+  } else { 
+    hand.forEach((card, i) => {
+      const oldCard = oldData.hand[i];
+      if ((JSON.stringify(card) != JSON.stringify(oldCard))) {
+        updateHandCard(card)
+      }
+    })
   }
 }
 
-function addOrUpdateCard(slug, classes, onclick, inputId, inputName) {
-  if ($(`#${inputId}`).length) {
-    $(`#${inputId}`).attr('name', inputName);
-    $(`#${inputId}`).next().attr('class', classes);
-    $(`#${inputId}`).next().attr('onclick', onclick);
-  } else {
-    addCard(slug, classes, onclick, inputId, inputName);
-  }
+function updateHandCard({input_id, pickable, illegal, onclick}) {
+  const image = $(`#${input_id}`).next();
+  $(image).toggleClass('pickable', pickable);
+  $(image).toggleClass('illegal', illegal);
+  $(image).attr('onclick', onclick);
 }
 
-function addCard(slug, classes, onclick, inputId, inputName) {
-  const input = (`<input hidden=true id="${inputId}" name="game[${stage()}][]" type="checkbox" value="${slug}" />`);
+function resetHand({ id, hand }) {
+  const cards = hand.map((c) => handCard(c)).join(" ")
 
-  const image = `<img alt="${slug}" class="${classes}" onclick="${onclick}" src="/assets/${slug}.jpg">`
-  $("#js-hand").append(`<div class="card-container hand">${input}${image}</div>`)
+  $(`#${id}`).empty().append(cards);
 }
 
-function updateHandPickable() {
-  if (meToPlayHandCard()) {
-    makeHandPickable();
-  } else {
-    makeHandUnpickable();
-  }
-}
+function handCard({ input_id, stage, slug, onclick, pickable, illegal }) {
+  const input = (`<input hidden=true id="${input_id}" name="game[${stage}][]" type="checkbox" value="${slug}" />`);
 
-function makeHandUnpickable() {
-  $("#js-hand").find("img").removeClass("pickable")
-}
+  const classes = `kr-card ${pickable && 'pickable'} ${illegal && 'illegal'}`
 
-function makeHandPickable() {
-  $("#js-hand").find("img").addClass("pickable")
+  const image = `<img alt="${slug}" onclick="${onclick}" class="${classes}" src="/assets/${slug}.jpg">`
+
+  return `<div class="card-container hand">${input}${image}</div>`
 }

@@ -50,7 +50,7 @@ class MessagePresenter
   end
 
   def bid_msg(bid)
-    bid_name = BidPresenter.new(bid.slug).name(true)
+    bid_name = Bids::BidPresenter.new(bid.slug).name(true)
     player = bid.player
     bid_text = bid.slug == 'pass' ?  'passes' : "bids #{bid_name}"
     ["#{player.name} #{bid_text}"]
@@ -109,7 +109,7 @@ class MessagePresenter
   end
 
   def announcement_msg(announcement)
-    announcement_name = AnnouncementPresenter.new(announcement.slug).name
+    announcement_name = Bids::AnnouncementPresenter.new(announcement.slug).name
     player = announcement.player
     announcement_text = announcement.slug == 'pass' ? 'passes' : "announces #{announcement_name}"
     ["#{player.name} #{announcement_text}"]
@@ -155,7 +155,7 @@ class MessagePresenter
   end
 
   def winning_bid_name
-    BidPresenter.new(@bids.highest&.slug).name(true)
+    Bids::BidPresenter.new(@bids.highest&.slug).name(true)
   end
   
   def player_name(player)

@@ -1,5 +1,11 @@
-<div class="trick-container <%= visible ? '' : 'd-none' %>" id="js-trick-<%= index %>">
-  <% cards.each do |card| %>
-    <%= render 'tricks/trick_card', card: card %>
-  <% end %>
+<div class="d-contents <%= 'd-none' unless visible %>" id="js-trick-<%= index %>">
+  <div class="trick-container">
+    <% cards.each do |card| %>
+      <%= render 'tricks/trick_card', card %>
+    <% end %>
+  </div>
+
+  <%= render 'instruction', instruction %>
+
+  <%= render 'hand/hand', hand %>
 </div>

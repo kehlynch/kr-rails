@@ -10,6 +10,7 @@ class Match < ApplicationRecord
   def deal_game
     game = Game.deal_game(id, players)
     Runner.new(game).advance!
+    game
   end
 
   def earlier_games(game_id)

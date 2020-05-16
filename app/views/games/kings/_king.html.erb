@@ -1,4 +1,4 @@
 <div class="card-container">
-  <input hidden=true id="pick_king_<%= slug %>" name="game[pick_king]" type="checkbox" value=<%= slug %> />
-  <%= king_card_button(local_assigns) %>
+  <input hidden=true id="<%= input_id %>" name="game[<%= stage %>]" type="checkbox" value=<%= slug %> />
+  <%= card_tag(slug, classes: classes, onclick: onclick) %>
 </div>

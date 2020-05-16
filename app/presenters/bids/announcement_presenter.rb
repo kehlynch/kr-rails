@@ -1,4 +1,4 @@
-class AnnouncementPresenter
+class Bids::AnnouncementPresenter
   ANNOUNCEMENT_NAMES = {
     Announcements::PASS => 'pass',
     Announcements::PAGAT => 'pagat',

@@ -9,7 +9,6 @@ class PlayerTeam
     @bid = bid
     @defence = defence
     @king = king
-    @last_trick = @game.tricks.last
   end
 
   def announcement_points_lookup

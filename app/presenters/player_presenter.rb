@@ -21,18 +21,33 @@ class PlayerPresenter
     to: :player
   )
 
-  def initialize(player, game, visible_stage, active_player)
+  def initialize(player, game, active_player)
     @player = player
     @game = game
     @player_teams = game.player_teams
-    @visible_stage = visible_stage
     @active_player = active_player
   end
 
-  def props(remark)
+  def props
     static_props
-      .merge(variable_props(remark))
+      .merge(indicator_props)
       .merge(points_props)
+  end
+
+  def props_for_bids
+    {
+      id: @player.id,
+      compass: compass,
+      bids: Bids::BidsPresenter.names_for(@player.bids),
+    }
+  end
+
+  def props_for_announcements
+    {
+      id: @player.id,
+      compass: compass,
+      bids: @player.announcements.map { |a| Bids::AnnouncementPresenter.new(a.slug).name }
+    }
   end
 
   private
@@ -48,13 +63,12 @@ class PlayerPresenter
     }
   end
 
-  def variable_props(remark)
+  def indicator_props
     {
       next_to_play: @game.next_player&.id == @player.id,
       forehand: @player.forehand?,
       declarer: @game.declarer&.id == @player.id,
       known_partner: known_partner,
-      message: message(remark)
     }
   end
 
@@ -68,25 +82,9 @@ class PlayerPresenter
     }
   end
 
-  # TODO move this into the presenters for sections
-  def message(remark)
-    case @visible_stage
-    when Stage::BID
-      return BidsPresenter.names_for(@player.bids).join("\n")
-    when Stage::ANNOUNCEMENT
-      return announcements_text
-    else
-      return remark
-    end
-  end
-
   def compass
     index = (@player.position - @active_player.position) % 4
     ['south', 'east', 'north', 'west'][index]
-  end
-
-  def hand
-    HandPresenter.new(@player.hand).sorted
   end
 
   def active?
@@ -102,7 +100,7 @@ class PlayerPresenter
     @player
       .announcements
       .select { |a| a.slug != 'pass' }
-      .map { |a| AnnouncementPresenter.new(a.slug).shorthand }
+      .map { |a| Bids::AnnouncementPresenter.new(a.slug).shorthand }
       .join(" ")
   end
 

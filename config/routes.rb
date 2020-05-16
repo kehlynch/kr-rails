@@ -8,7 +8,6 @@ Rails.application.routes.draw do
       resources :games, only: [:create, :edit, :update] do
         post :next, on: :member
         post :reset, on: :member
-        post :advance, on: :member
       end
     end
   end
