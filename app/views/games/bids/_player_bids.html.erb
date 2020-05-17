@@ -1,5 +1,7 @@
-<div class="player-container <%= compass %> align-self-end" id="js-player-<%= id %>-<%= stage %>">
+<div class="player-bids <%= compass %>" id="js-player-<%= id %>-<%= stage %>">
   <% bids.each do |bid| %>
-    <%= button_tag(bid, class: 'btn btn-dark', disabled: true) %>
+    <div class='player-bid-made' >
+      <%= bid %>
+    </div>
   <% end %>
 </div>

@@ -61,8 +61,6 @@ class Card < ApplicationRecord
   end
 
   def legal?
-    return simple_legal_putdown? if ['resolve_talon', 'resolve_whole_talon'].include?(game.stage)
-
     return legal_for_trick?
   end
 

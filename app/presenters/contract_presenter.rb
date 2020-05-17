@@ -14,6 +14,6 @@ class ContractPresenter
 
   def won_bid
     return nil unless @game.bids.finished?
-    Bids::BidPresenter.new(@game.bids.highest&.slug).name
+    Bids::BidPresenter.new(@game.bids.highest&.slug).name(declared: true)
   end
 end

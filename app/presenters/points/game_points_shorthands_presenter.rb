@@ -5,6 +5,7 @@ class Points::GamePointsShorthandsPresenter
 
   def props
     {
+      id: "game-shorthands-#{@game.id}",
       bid: bid_props,
       announcements: announcements_props
     }

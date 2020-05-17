@@ -1,5 +1,4 @@
 function updateTricks(newData, oldData) {
-  console.log('updateTricks', newData);
   newData.tricks.forEach ( ( newTrickData, index ) => {
     const oldTrickData = oldData.tricks[index];
     if ( JSON.stringify(newTrickData) != JSON.stringify(oldTrickData)) {
@@ -37,7 +36,6 @@ function updateTrickCards(cardsData) {
 }
 
 function updateTrickCard(cardData) {
-  console.log("updateTrickCard", cardData);
   const { slug, won, input_id } = cardData;
   const selector = `#${input_id}`
   if ($(selector).length) {
@@ -48,7 +46,6 @@ function updateTrickCard(cardData) {
 }
 
 function addTrickCard(cardData) {
-  console.log("addTrickCard", cardData);
   const { input_id, slug, landscape, trick_index, compass } = cardData;
   const imageFile = landscape ? `landscape_${slug}` : slug;
   const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg" id="${input_id}">`;

@@ -36,7 +36,6 @@ class GamesController < ApplicationController
 
     if find_player.id == game.next_player.id
       game = runner.advance!(**game_params)
-      Broadcaster.new(game).broadcast
     end
   end
 

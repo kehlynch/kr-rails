@@ -1,50 +1,26 @@
-$container-column-start: 2;
-$container-row-start: 3;
-
-
-$north-column: 2;
-$north-row: 1;
-
-$south-column: 2;
-$south-row: 3;
-
-$east-column: 3;
-$east-row: 2;
-
-$west-column: 1;
-$west-row: 2;
+@import 'board';
 
 .trick-container {
-  grid-column: $container-column-start / span 3;
-  grid-row: $container-row-start / span 3;
-  display: grid;
-  justify-items: center;
-  grid-template-columns: repeat(3, 6.875rem);
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-auto-flow: column;
+  @include board
 }
 
 .trick-card-container {
   &.south {
-    grid-column: $south-column;
-    grid-row: $south-row;
+    @include board-south;
   }
   &.east {
-    grid-column: $east-column;
-    grid-row: $east-row;
+    @include board-east;
     height: 3.75rem;
     width: 6.875rem;
     align-self: center;
   }
   &.north {
-    grid-column: $north-column;
-    grid-row: $north-row;
+    @include board-north
   }
   &.west {
-    grid-column: $west-column;
-    grid-row: $west-row;
-      height: 3.75rem;
-      width: 6.875rem;
+    @include board-west;
+    height: 3.75rem;
+    width: 6.875rem;
     align-self: center;
   }
 }

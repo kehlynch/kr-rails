@@ -3,5 +3,6 @@
   <%= card_tag(
       slug,
       onclick: local_assigns[:onclick],
+      disabled: local_assigns[:disabled],
       classes: "#{'pickable' if pickable} #{'illegal' if illegal}") %>
 </div>

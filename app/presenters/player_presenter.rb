@@ -1,6 +1,5 @@
 class PlayerPresenter
   attr_reader :player
-  attr_accessor :active
 
   include Rails.application.routes.url_helpers  
 
@@ -26,6 +25,7 @@ class PlayerPresenter
     @game = game
     @player_teams = game.player_teams
     @active_player = active_player
+    @active = active_player.id == player.id
   end
 
   def props
@@ -59,7 +59,7 @@ class PlayerPresenter
       compass: compass,
       name: @player.name,
       human: @player.human?,
-      active: @player.id == @active_player.id,
+      active: @active
     }
   end
 
@@ -87,12 +87,8 @@ class PlayerPresenter
     ['south', 'east', 'north', 'west'][index]
   end
 
-  def active?
-    active
-  end
-
   def name(you_if_human=true)
-    return 'You' if you_if_human && active
+    return 'You' if you_if_human && @active
     player.name
   end
 
@@ -112,7 +108,8 @@ class PlayerPresenter
     king_played = @game.cards.find do |c|
       c.trick_id.present? && c.slug == @game.king
     end.present?
-    @game.partner&.id == @player&.id && (king_played || active?)
+
+    @game.partner&.id == @player&.id && (king_played || @active)
   end
 
   def role

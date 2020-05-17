@@ -21,7 +21,8 @@ class TricksPresenter
       stage: Stage::TRICK,
       visible: @visible_stage == Stage::TRICK,
       tricks: tricks_props,
-      playable_trick_index: @tricks.playable_trick_index
+      playable_trick_index: @tricks.playable_trick_index,
+      finished: @game.tricks.finished?
     }
   end
 

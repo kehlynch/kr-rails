@@ -36,7 +36,7 @@ function setPlayerBids(type, players, oldPlayers) {
 }
 
 function playerBidIndicator(bid) {
-  return `<button name="button" type="submit" class="btn btn-dark" disabled="disabled">${bid}</button>`
+	return `<div class="player-bid-made">${bid}</div>`
 }
 
 function toggleBidsFinishedMessage(type, visible) {

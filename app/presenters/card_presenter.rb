@@ -13,9 +13,9 @@ class CardPresenter
         own_king: @card.player&.id == @active_player.id,
         pickable: @active_player.declarer? && @card.game.king.blank?,
         picked: @card.game.king == @card.slug
-      ),
+      ).join(' '),
       input_id: id(Stage::KING),
-      onclick: "submitGame(#{input_id})"
+      onclick: @active_player.declarer? && !@card.game.king.blank? && "submitGame(#{input_id})"
     }
   end
 
@@ -34,7 +34,7 @@ class CardPresenter
   def props_for_pick_talon
     {
       stage: Stage::PICK_TALON,
-      slug: @card.slug
+      slug: @card.slug,
     }
   end
 
@@ -44,9 +44,9 @@ class CardPresenter
       slug: @card.slug,
       stage: Stage::RESOLVE_TALON,
       pickable: @active_player.declarer?,
-      illegal: @active_player.declarer? && !@card.legal?,
+      illegal: @active_player.declarer? && !@card.simple_legal_putdown?,
       input_id: id,
-      onclick: "toggleCard(#{id}, #{@card.game.bids.talon_cards_to_pick}"
+      onclick: @active_player.declarer? && "toggleCard('#{id}', #{@card.game.bids.talon_cards_to_pick})",
     }
   end
 
@@ -83,13 +83,14 @@ class CardPresenter
 
   def hand_props_for_trick(trick, trick_index)
     id = "trick#{trick_index}_#{id(Stage::TRICK)}"
+    active_player_next = trick&.next_player&.id == @active_player.id
     {
       slug: @card.slug,
       stage: Stage::TRICK,
-      pickable: trick&.next_player&.id == @active_player.id,
-      illegal: (trick&.next_player&.id == @active_player.id) &&! @card.legal?,
+      pickable: active_player_next,
+      illegal: active_player_next &&! @card.legal?,
       input_id: id,
-      onclick: "playCard(#{id})",
+      onclick: active_player_next && @card.legal? && "playCard(#{id})",
     }
   end
 

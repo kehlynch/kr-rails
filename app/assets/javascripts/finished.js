@@ -1,4 +1,5 @@
 function updateFinished(newData, oldData) {
+  console.log("updateFinished");
   const updaters = {
     'instruction': setInstruction,
     'hand': updateHand,
@@ -37,14 +38,12 @@ function updatePlayerScore(playerScoreData) {
     winner
   } = playerScoreData;
   const html = `
-      <tr>
       <th scope="row">${name}</th>
       <td>${won_tricks_count}</td>
       <td>${points}</td>
       <td>${team_points}</td>
       <td>${game_points}</td>
       <td class="${winner && 'score-winner'}"></td>
-    </tr>
   `
   $(`#${id}`).empty().append(html);
 }
@@ -54,11 +53,9 @@ function updatePoints({ games }) {
   games.forEach(updateGamePoints);
 }
 
-function updateGamePoints({ players, bid, announcements }) {
+function updateGamePoints({ players, shorthands }) {
   players.forEach(updatePlayerGamePoints);
-  updateGameBidShorthand(bid);
-  announements.forEach(updatePlayerGamePoints);
-  updateGameAnnouncementsShorthands(bid);
+  updateShorthands(shorthands);
 }
 
 function updatePlayerGamePoints({ id, points, forehand, declarer, winner }) {
@@ -70,19 +67,24 @@ function updatePlayerGamePoints({ id, points, forehand, declarer, winner }) {
   node.toggleClass('winner', winner);
 }
 
-function updateGameBidShorthand({ id, shorthand, off, vs_three, kontra }) {
-  const node = $(`#${id}`);
-  node.empty().append(shorthand);
-  node.toggleClass('off', off);
-  node.toggleClass('vs_three', vs_three);
-  const kontraClassName = kontraClass(kontra);
-  if (kontraClassName) {
-    node.addClass(kontraClassName)
-  }
+function updateShorthands({ id, bid, announcements }) {
+  const bidHtml = bidShorthand(bid);
+  const announcementsHtml = announcements.map(announcementsShorthand).join(' ');
+  $(`#${id}`).empty().append(bidHtml + announcementsHtml);
+}
+
+function bidShorthand({ shorthand, classes }) {
+  return `<span class="bid-shorthand ${classes}">${shorthand}</span>`
+}
+
+function announcementShorthand({ shorthand, classes }) {
+  return `<span class="announcement-shorthand ${classes}">${shorthand}</span>`
 }
 
 function updateGameAnnouncementsShorthands(announcements) {
+  announcements.forEach(({ id, shorthand, classes }) => {
 
+  })
 }
 
 
@@ -91,13 +93,13 @@ function kontraClass(kontra) {
 }
 
 function showScores() {
-  hide(sections.TALON);
+  hideStage(stages.PICK_TALON);
   hide(sections.POINTS);
   reveal(sections.SCORES);
 }
 
 function showPoints() {
-  hide(sections.TALON);
+  hideStage(stages.PICK_TALON);
   hide(sections.SCORES);
   reveal(sections.POINTS);
 }
@@ -105,5 +107,5 @@ function showPoints() {
 function showTalonGameEnd() {
   hide(sections.SCORES);
   hide(sections.POINTS);
-  reveal(sections.TALON);
+  revealStage(stages.PICK_TALON);
 }

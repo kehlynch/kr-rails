@@ -2,6 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import 'grid';
+
 $grey-blue: rgb(224, 224, 235);
 $light-green: rgba(51, 102, 0, 0.2);
 
@@ -16,8 +18,7 @@ $light-green: rgba(51, 102, 0, 0.2);
 }
 
 .center-container {
-  grid-column: 2 / span 3;
-  grid-row: 3 / span 3;
+  @include centre;
   align-self: center;
   table {
     display: contents;
@@ -32,24 +33,15 @@ $light-green: rgba(51, 102, 0, 0.2);
 }
 
 .game-container {
+  @include main-grid;
   background-color: $grey-blue;
   padding: 1rem;
   display: grid;
   justify-items: center;
-  grid-gap: 10px;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 2fr 1fr 2fr 1fr 2fr 1fr 2fr;
   height: 100vh;
   max-height: 100vh;
   width: 130vh;
   max-width: 130vh;
-}
-
-.instruction {
-  grid-column: 3 / span 2;
-  grid-row: 1;
-  align-self: start;
-  width: 100%;
 }
 
 .finished-buttons {

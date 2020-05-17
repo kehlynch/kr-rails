@@ -1,6 +1,7 @@
 function updateHTML(stateName, oldValue, newValue) {
   const updaters = {
     [state.PLAYERS]: updatePlayers,
+    [state.CONTRACT]: updateContract,
     [stages.BID]: updateBids,
     [stages.KING]: updateKings,
     [stages.PICK_TALON]: updatePickTalon,

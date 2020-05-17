@@ -32,7 +32,6 @@ function createSubscriptions() {
 }
 
 $(document).ready(function() {
-  console.log("hello");
   createSubscriptions();
 })
 

@@ -30,6 +30,8 @@ class TrickPresenter
   end
 
   def instruction
+    return game_finished_instruction if @game.tricks.finished?
+
     return finished_instruction if @trick.finished?
 
     return nil unless @trick.next_player
@@ -41,5 +43,9 @@ class TrickPresenter
 
   def finished_instruction
     "#{@trick.winning_player.name} wins trick. Click to continue."
+  end
+
+  def game_finished_instruction
+    "#{@trick.winning_player.name} wins last trick. Click for scores."
   end
 end

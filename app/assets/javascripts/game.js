@@ -14,14 +14,13 @@ function attachClickers() {
 }
 
 function advance() {
-  console.log("page clicked")
+  console.log('advance()');
   if (advanceAvailable()) {
+    console.log('advancing stage');
     advanceStage();
   }
 }
 
 $(document).ready(function() {
-  console.log("game running");
-
   attachClickers();
 })

@@ -4,7 +4,10 @@ const state = {
   STAGES: 'stages',
   PLAYERS: 'players', // TODO get rid
   PATHS: 'paths', // TODO get rid - used for advance post
+
+
   CHANNEL: 'channel',
+  CONTRACT: 'contract',
   BIDS: 'bids',
   KINGS: 'kings',
   PICK_TALON: 'pick_talon',

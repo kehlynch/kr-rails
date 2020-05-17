@@ -1,9 +1,11 @@
-function toggleCard(checkbox, count) {
-  checkbox.checked = !checkbox.checked;
-  checkbox.nextElementSibling.classList.toggle('selected');
-  var selected = $("#js-resolve_talon-hand").find('input[type="checkbox"]:checked').length;
+function toggleCard(checkboxId, requiredCount) {
+  console.log('toggleCard', checkboxId, requiredCount);
+  const checkbox = $(`#${checkboxId}`)
+  checkbox.prop('checked', !checkbox.prop('checked'));
+  checkbox.next().toggleClass('picked');
+  const selectedCount = $("#js-resolve-talon-hand").find('input[type="checkbox"]:checked').length;
   var submitButton = document.getElementById('talon-submit')
-  submitButton.disabled = selected != count;
+  submitButton.disabled = selectedCount != requiredCount;
 }
 
 function showPickedTalon(index) {

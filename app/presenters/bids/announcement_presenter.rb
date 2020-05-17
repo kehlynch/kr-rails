@@ -32,7 +32,7 @@ class Bids::AnnouncementPresenter
   def kontra_name
     name, kontrable_slug, _id = @slug.split('-')
     kontrable_name = ANNOUNCEMENT_NAMES[kontrable_slug] || 'game'
-    "#{name} the #{kontrable_name}"
+    "#{name} #{kontrable_name}"
   end
 
   def shorthand

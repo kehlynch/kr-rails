@@ -1,0 +1,44 @@
+@mixin main-grid {
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 2fr 1fr 2fr 1fr 2fr;
+}
+
+@mixin centre {
+  grid-column: 3;
+  grid-row: 3 / span 3;
+}
+
+@mixin contract {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+
+@mixin header-centre {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+@mixin player-bids-north {
+  grid-row: 3;
+  grid-column: 3;
+  align-self: flex-start;
+}
+
+@mixin player-bids-east {
+  grid-row: 4;
+  grid-column: 4;
+  justify-self: flex-end;
+}
+
+@mixin player-bids-south {
+  grid-row: 5;
+  grid-column: 3;
+  align-self: flex-end;
+}
+
+@mixin player-bids-west {
+  grid-row: 4;
+  grid-column: 2;
+  justify-self: flex-start;
+}

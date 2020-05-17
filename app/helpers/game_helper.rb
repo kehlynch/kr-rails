@@ -43,14 +43,15 @@ module GameHelper
     card_tag(slug, classes: classes, onclick: onclick, id: id)
   end
 
-  def card_tag(card_slug, classes: '', onclick: nil, landscape: false, id: nil)
+  def card_tag(card_slug, classes: '', onclick: nil, landscape: false, id: nil, disabled: false)
     filename = landscape ? "landscape_#{card_slug}.jpg" : "#{card_slug}.jpg"
     image_tag(
       filename,
       alt: card_slug,
       class: "kr-card #{classes}",
       onclick: onclick,
-      id: id
+      id: id,
+      disabled: disabled
     )
   end
 

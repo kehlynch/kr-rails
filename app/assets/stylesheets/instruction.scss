@@ -1,0 +1,8 @@
+@import 'grid';
+
+.instruction {
+  @include header-centre;
+  // align-self: start;
+  text-align: center;
+  width: 100%;
+}
