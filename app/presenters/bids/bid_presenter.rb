@@ -8,7 +8,7 @@ class Bids::BidPresenter
     Bids::DREIER => 'Dreier',
     Bids::BETTEL => 'Bettel',
     Bids::SOLO_DREIER => 'Solo Dreier',
-    Bids::CALL_KING => 'Call a king',
+    Bids::CALL_KING => 'Call King',
     Bids::TRISCHAKEN => 'Trischaken',
     Bids::SECHSERDREIER => 'Sechserdreier'
   }

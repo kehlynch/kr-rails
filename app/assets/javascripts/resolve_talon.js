@@ -2,7 +2,7 @@ function updateResolveTalon(newData, oldData) {
   const updaters = {
     'instruction': setInstruction,
     'hand': updateHand,
-		'resolvable': (resolvable) => { toggle(sections.TALON_SUBMIT, resolvable) }
+		'resolvable': updateResolvable
   }
 
   Object.entries(newData).forEach ( ( [ name, newValue] ) => {
@@ -14,4 +14,8 @@ function updateResolveTalon(newData, oldData) {
       }
     }
   })
+}
+
+function updateResolvable(resolvable) {
+  $('#js-resolve-talon-button').toggleClass('d-none', !resolvable);
 }

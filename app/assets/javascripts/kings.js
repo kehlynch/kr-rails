@@ -27,7 +27,8 @@ function updateKingCards(newData, oldData) {
   })
 }
 
-function updateKingCard({ input_id, classes }) {
-  $(`#${input_id}`).next().attr('class', `kr-card ${classes}`)
+function updateKingCard({ input_id, classes, onclick }) {
+  $(`#${input_id}`).next().attr('class', `kr-card ${classes}`);
+  $(`#${input_id}`).next().attr('onclick', onclick);
 }
 

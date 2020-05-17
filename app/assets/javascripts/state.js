@@ -44,6 +44,10 @@ function getState(state) {
   }
 }
 
+function stateExists() {
+  return !!$(STATE_SELECTOR).length;
+}
+
 function setState(key, value) {
   $(STATE_SELECTOR).attr(key, JSON.stringify(value));
 }

@@ -4,17 +4,18 @@ function submitGame(checkbox) {
 }
 
 function attachClickers() {
-  console.log("attachClickers");
-  document.onclick = advance;
-  document.body.onkeyup = function(e){
-    if(e.keyCode == 32){
-        advance();
+  if (stateExists()) {
+    console.log("attachClickers");
+    document.onclick = advance;
+    document.body.onkeyup = function(e){
+      if(e.keyCode == 32){
+          advance();
+      }
     }
   }
 }
 
 function advance() {
-  console.log('advance()');
   if (advanceAvailable()) {
     console.log('advancing stage');
     advanceStage();

@@ -51,7 +51,7 @@ class PickTalonPresenter
   end
 
   def talon_pickable?
-    @active_player.declarer?
+    @active_player.declarer? && !@talon_picked
   end
 
   def half_props(cards, index)
