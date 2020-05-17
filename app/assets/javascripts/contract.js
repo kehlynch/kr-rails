@@ -21,5 +21,5 @@ function setWonBid(newBidName) {
 }
 
 function setCalledKing(newKingSlug) {
-  $('#js-contract-king').empty().append(`<img alt="${spade_8}" class="kr-card" src="${cardImagePath(slug)}">`);
+  $('#js-contract-king').empty().append(`<img alt="${newKingSlug}" class="kr-card" src="${cardImagePath(newKingSlug)}">`);
 }
