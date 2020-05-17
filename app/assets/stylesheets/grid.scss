@@ -10,6 +10,7 @@
 }
 
 @mixin contract {
+  justify-self: flex-start;
   grid-column: 1 / span 2;
   grid-row: 1;
 }
