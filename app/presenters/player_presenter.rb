@@ -32,6 +32,7 @@ class PlayerPresenter
     static_props
       .merge(indicator_props)
       .merge(points_props)
+      .merge(announcements: @player.announcements.map { |a| Bids::AnnouncementPresenter.new(a.slug).shorthand }.join(' '))
   end
 
   def props_for_bids

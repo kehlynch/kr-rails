@@ -29,14 +29,14 @@ function setPlayerBids(type, players, oldPlayers) {
   players.forEach((player, i) => {
     if ( JSON.stringify(player) != JSON.stringify(oldPlayers[i])) {
       const sectionSelector = `#js-player-${player.id}-${type}`
-      const bidIndicators = player.bids.map((bid) => (playerBidIndicator(bid)));
+      const bidIndicators = player.bids.map((bid) => (playerBidIndicator(bid, type)));
       $(sectionSelector).empty().append(bidIndicators);
     }
   })
 }
 
-function playerBidIndicator(bid) {
-	return `<div class="player-bid-made">${bid}</div>`
+function playerBidIndicator(bid, type) {
+	return `<div class="player-bid-made ${type}">${bid}</div>`
 }
 
 function toggleBidsFinishedMessage(type, visible) {

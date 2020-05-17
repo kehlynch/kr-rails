@@ -1,6 +1,6 @@
 <div class="player-bids <%= compass %>" id="js-player-<%= id %>-<%= stage %>">
   <% bids.each do |bid| %>
-    <div class='player-bid-made' >
+    <div class='player-bid-made <%= stage %>' >
       <%= bid %>
     </div>
   <% end %>

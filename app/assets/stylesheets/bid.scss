@@ -26,9 +26,21 @@
 .player-bid-made, .won-bid {
   &:before {
     font-family: "FontAwesome";
-    content: "\f0e3"; // gavel
     padding-right: 2px;
   }
+
+  &.announcements {
+    &:before {
+      content: "\f0a1"; // bullhorn
+    }
+  }
+
+  &.bids {
+    &:before {
+      content: "\f0e3"; // gavel
+    }
+  }
+
   border-radius: 20px;
   padding: 5px 10px;
   border: 1px solid black;

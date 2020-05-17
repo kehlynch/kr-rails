@@ -15,6 +15,11 @@ function updatePlayer(newData, oldData) {
   if (oldData.message != newData.message) {
     updateMessage(newData.id, newData.message);
   }
+
+  if (oldData.announcements !== newData.announcements) {
+    console.log('setting announcments');
+    $(`#js-player-${newData.id}-announcements-indicators`).empty().append(newData.announcements);
+  }
 }
 
 function updateRoleIndicators(newData, oldData) {

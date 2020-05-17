@@ -10,7 +10,7 @@ class Bids::AnnouncementPresenter
   }
 
   ANNOUNCEMENT_SHORTNAMES = {
-    Announcements::PASS => '-',
+    # Announcements::PASS => nil,
     Announcements::PAGAT => 'I',
     Announcements::UHU => 'II',
     Announcements::KAKADU => 'III',

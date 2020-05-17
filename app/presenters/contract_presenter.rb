@@ -6,7 +6,7 @@ class ContractPresenter
   def props
     {
       won_bid: won_bid,
-      called_king: @game.king,
+      called_king: @game.king
     }
   end
 
