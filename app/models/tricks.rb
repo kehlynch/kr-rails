@@ -48,8 +48,6 @@ class Tricks
       .select { |t| t.cards != [] }
       .max_by(&:trick_index)
 
-    p last_played_trick
-
     return @tricks.find { |t| t.trick_index == 0 } unless last_played_trick
     
     return last_played_trick unless last_played_trick.finished?
@@ -72,12 +70,7 @@ class Tricks
   def next_player
     return nil if finished?
 
-    # start of first trick - forehand player always leads for now
-    return @bids.lead unless current_trick
-
     return current_trick.won_player if current_trick.finished?
-
-    # return @tricks[-2].won_player if !current_trick.started?
 
     # mid trick - find next player
     current_trick.next_player

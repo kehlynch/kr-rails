@@ -60,7 +60,7 @@ class Trick < ApplicationRecord
   end
 
   def next_player
-    return game.declarer if trick_index == 0 && cards.empty?
+    return game.bids.lead if trick_index == 0 && cards.empty?
 
     return game.players.next_from(last_player) if last_player
 
