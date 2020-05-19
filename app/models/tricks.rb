@@ -19,7 +19,7 @@ class Tricks
   def initialize(tricks, game)
     @game = game
     @tricks = tricks.sort_by(&:id)
-    @players = game.players
+    @players = game.game_players
     @bids = game.bids
   end
 
@@ -93,6 +93,6 @@ class Tricks
   end
 
   def from_next_player?(card)
-    card && card.player.id == next_player.id
+    card && card.game_player.id == next_player.id
   end
 end

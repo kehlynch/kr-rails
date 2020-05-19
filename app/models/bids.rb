@@ -40,13 +40,13 @@ class Bids < BidsBase
 
   def valid_bids
     if first_round_finished?
-      return [PASS] unless highest&.player.id == next_bidder.id
+      return [PASS] unless highest&.game_player.id == next_bidder.id
 
       return RUFER_SLUGS if highest&.slug == RUFER
 
 			return []
     else
-      return [PASS] if any? { |b| b.slug == PASS && b.player == next_bidder }
+      return [PASS] if any? { |b| b.slug == PASS && b.game_player == next_bidder }
 
       lowest_rank = next_bidder.forehand? ? highest_rank : highest_rank + 1
 
@@ -69,7 +69,7 @@ class Bids < BidsBase
 
   def first_round_finished?
     passed_players = 
-      filter { |b| b.slug == PASS }.map(&:player_id).uniq.count
+      filter { |b| b.slug == PASS }.map(&:game_player_id).uniq.count
 
     passed_players >= 3
   end
@@ -92,7 +92,7 @@ class Bids < BidsBase
 
   def highest
     max_by do |b|
-      [b.rank, b.player.forehand? ? 1 : 0]
+      [b.rank, b.game_player.forehand? ? 1 : 0]
     end
   end
 
@@ -101,7 +101,7 @@ class Bids < BidsBase
   end
 
   def declarer
-    finished? ? highest&.player : nil
+    finished? ? highest&.game_player : nil
   end
 
   def lead
@@ -116,7 +116,7 @@ class Bids < BidsBase
   def next_bidder
     return first_bidder if empty?
 
-    @players.next_from(last.player)
+    last.game_player.next_game_player
   end
 
   def get_bot_bid
@@ -124,6 +124,6 @@ class Bids < BidsBase
   end
 
   def add_bid!(bid_slug)
-    Bid.create(slug: bid_slug, game_id: @game.id, player_id: next_bidder.id)
+    Bid.create(slug: bid_slug, game: @game, game_player: next_bidder)
   end
 end

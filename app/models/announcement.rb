@@ -2,10 +2,7 @@ class Announcement < ApplicationRecord
   include Kontrable
 
   belongs_to :game
-
-  def player
-    game.players.find { |p| p.id == player_id }
-  end
+  belongs_to :game_player
 
   def points
     Announcements::POINTS[slug]

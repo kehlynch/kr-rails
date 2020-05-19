@@ -9,4 +9,4 @@ end
 ActiveRecord::Base.logger = ActiveSupport::TaggedLogging.new(
   CacheFreeLogger.new(STDOUT)) unless Rails.env.test?
 
-ActiveRecord::Base.logger.level = 1
+# ActiveRecord::Base.logger.level = 1

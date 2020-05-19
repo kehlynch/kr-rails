@@ -2,12 +2,13 @@ class Bid < ApplicationRecord
   include Kontrable
 
   belongs_to :game
+  belongs_to :game_player
 
   validates :slug, inclusion: { in: Bids::RANKED_SLUGS }
 
-  def player
-    game.players.find { |p| p.id == player_id }
-  end
+  # def player
+  #   game_player
+  # end
 
   def rank
     Bids::RANKED_SLUGS.index(slug) || 0

@@ -38,7 +38,7 @@ module AnnouncementPoints
     def attempted?
       return false unless @trick
 
-      @team.include?(@trick.find_card(card_slug)&.player)
+      @team.include?(@trick.find_card(card_slug)&.game_player)
     end
 
     def card_slug

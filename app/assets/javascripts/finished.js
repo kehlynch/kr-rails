@@ -69,7 +69,7 @@ function updatePlayerGamePoints({ id, points, forehand, declarer, winner }) {
 
 function updateShorthands({ id, bid, announcements }) {
   const bidHtml = bidShorthand(bid);
-  const announcementsHtml = announcements.map(announcementsShorthand).join(' ');
+  const announcementsHtml = announcements.map(announcementShorthand).join(' ');
   $(`#${id}`).empty().append(bidHtml + announcementsHtml);
 }
 

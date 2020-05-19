@@ -24,7 +24,7 @@ class PlayerTeams
 
   def init_defence
     @defence = [] if @trischaken
-    players = @game.players.reject { |p| @declarers.map(&:id).include?(p.id) }
+    players = @game.game_players.reject { |p| @declarers.map(&:id).include?(p.id) }
     @defence = PlayerTeam.new(players, game: @game, defence: true, talon: @talon, bid: @bid, king: @king)
   end
 
@@ -39,12 +39,12 @@ class PlayerTeams
   def trischaken_winners
     return trischaken_zero_trick_winners if trischaken_zero_trick_winners.any?
 
-    highest = @game.players.map { |p| Points.individual_points_for(p) }.max
-    @game.players.reject { |p| Points.individual_points_for(p) == highest }
+    highest = @game.game_players.map { |p| Points.individual_points_for(p) }.max
+    @game.game_players.reject { |p| Points.individual_points_for(p) == highest }
   end
 
   def trischaken_zero_trick_winners
-    @game.players.select { |p| Points.individual_points_for(p) == 0 }
+    @game.game_players.select { |p| Points.individual_points_for(p) == 0 }
   end
 
   def trischaken_game_points_for(player)
@@ -104,6 +104,6 @@ class PlayerTeams
   end
 
   def partner
-    @game.cards.find { |c| c.slug == @king }&.player
+    @game.cards.find { |c| c.slug == @king }&.game_player
   end
 end

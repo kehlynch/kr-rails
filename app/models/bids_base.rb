@@ -21,7 +21,7 @@ class BidsBase
   def initialize(bids, game)
     @game = game
     @bids = bids
-    @players = game.players
+    @players = game.game_players
   end
 
   def make_bid!(bid_slug = nil)

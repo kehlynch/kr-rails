@@ -18,11 +18,11 @@ class Trick < ApplicationRecord
   end
 
   def lead_player
-    cards[0]&.player
+    cards[0]&.game_player
   end
 
   def won_player
-    winning_card.player if finished?
+    winning_card.game_player if finished?
   end
 
   def won_card
@@ -39,12 +39,7 @@ class Trick < ApplicationRecord
   end
 
   def winning_player
-    winning_card&.player
-  end
-
-  # deprecate
-  def winning_player_id
-    winning_card&.player_id
+    winning_card&.game_player
   end
 
   def finished?
@@ -56,13 +51,13 @@ class Trick < ApplicationRecord
   end
 
   def last_player
-    cards[-1]&.player
+    cards[-1]&.game_player
   end
 
   def next_player
     return game.bids.lead if trick_index == 0 && cards.empty?
 
-    return game.players.next_from(last_player) if last_player
+    return last_player.next_game_player if last_player
 
     return previous_trick&.won_player if previous_trick&.won_player
 
@@ -73,11 +68,6 @@ class Trick < ApplicationRecord
     game.tricks.find do |trick|
       trick.trick_index == trick_index - 1
     end
-  end
-
-  # deprecate
-  def last_player_id
-    cards[-1]&.player_id
   end
 
   def led_card

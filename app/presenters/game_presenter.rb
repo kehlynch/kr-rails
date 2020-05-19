@@ -95,7 +95,7 @@ class GamePresenter
   end
 
   def active_player
-    @game.players.find { |p| p.id == @active_player_id }
+    @game.game_players.find { |gp| gp.player_id == @active_player_id }
   end
 
   def my_move?

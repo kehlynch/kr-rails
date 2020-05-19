@@ -70,7 +70,7 @@ class Announcements < BidsBase
   end
 
   def finished?
-    return false unless map(&:player_id).uniq.count == 4
+    return false unless map(&:game_player_id).uniq.count == 4
 
     last(3).map(&:slug) == [PASS, PASS, PASS]
   end
@@ -82,9 +82,9 @@ class Announcements < BidsBase
   def next_bidder
     return first_bidder if empty?
 
-    return last.player if last.slug != PASS
+    return last.game_player if last.slug != PASS
 
-    @players.next_from(last.player)
+    last.game_player.next_game_player
   end
 
   def get_bot_bid
@@ -93,7 +93,7 @@ class Announcements < BidsBase
 
   def add_bid!(slug)
     add_kontra!(slug) if slug.include?('kontra')
-    Announcement.create(slug: slug, game_id: @game.id, player_id: next_bidder.id)
+    Announcement.create(slug: slug, game_id: @game.id, game_player: next_bidder)
   end
 
   private

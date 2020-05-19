@@ -1,7 +1,7 @@
 class Card < ApplicationRecord
   belongs_to :game
   belongs_to :trick, optional: true
-  belongs_to :_player, class_name: 'Player', foreign_key: 'player_id', optional: true
+  belongs_to :game_player, optional: true
 
   TRUMP_POINTS = {
     1 => 4,
@@ -16,6 +16,14 @@ class Card < ApplicationRecord
     5 => 1
   }.freeze
 
+  # def player
+  #   game_player
+  # end
+
+  # def player_id
+  #   game_player&.id
+  # end
+
   def self.build(game, suit, value)
     Card.create(game: game, suit: suit, value: value, slug: "#{suit}_#{value}")
   end
@@ -26,10 +34,6 @@ class Card < ApplicationRecord
     else
       NONTRUMP_POINTS[value] || 0
     end
-  end
-
-  def player
-    @player ||= game.players.find { |p| p.id == player_id } if player_id
   end
 
   def trump?
@@ -53,7 +57,7 @@ class Card < ApplicationRecord
   end
 
   def hand
-    player.hand
+    game_player.hand
   end
 
   def called_king?
@@ -68,13 +72,13 @@ class Card < ApplicationRecord
   def legal_for_trick?(trick = current_trick)
     return negative_legal? if game.bids.highest&.negative?
 
-    if player.forced_cards.any?
-      return true if player.forced_cards.include?(slug)
+    if game_player.forced_cards.any?
+      return true if game_player.forced_cards.include?(slug)
 
       return false
     end
 
-    return false if player.illegal_cards.include?(slug)
+    return false if game_player.illegal_cards.include?(slug)
 
     return true if !trick.winning_card # lead a card
 
@@ -84,7 +88,7 @@ class Card < ApplicationRecord
 
     return true if suit == 'trump'
 
-    return false if player.trumps.length > 0
+    return false if game_player.trumps.length > 0
 
     return true
   end
@@ -96,14 +100,14 @@ class Card < ApplicationRecord
 
     if !winning_card
       # leading pagat
-      return false if slug == 'trump_1' && player.trumps.length > 1 && game.bids.highest&.trischaken?
+      return false if slug == 'trump_1' && game_player.trumps.length > 1 && game.bids.highest&.trischaken?
 
       return true
     end
 
     led = game.current_trick&.led_card
 
-    play_ups = player.suit_cards(winning_card.suit).select { |c| c.value > winning_card.value }
+    play_ups = game_player.suit_cards(winning_card.suit).select { |c| c.value > winning_card.value }
 
     if suit == led.suit
       return true if winning_card.suit != led.suit
@@ -113,7 +117,7 @@ class Card < ApplicationRecord
       return true if play_ups.empty?
     end
 
-    return false if player.suit_cards(led.suit).any?
+    return false if game_player.suit_cards(led.suit).any?
 
     if suit == 'trump'
       return true if winning_card.suit != 'trump'
@@ -123,7 +127,7 @@ class Card < ApplicationRecord
       return true if play_ups.empty?
     end
 
-    return false if player.trumps.any?
+    return false if game_player.trumps.any?
 
     return true
   end
@@ -164,7 +168,7 @@ class Card < ApplicationRecord
   end
 
   def player_has_announced?(announcement_slug)
-    player.team_announcements.include?(announcement_slug)
+    game_player.team_announcements.include?(announcement_slug)
   end
 
   def current_trick

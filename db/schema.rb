@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_27_214934) do
+ActiveRecord::Schema.define(version: 2020_05_18_201523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,7 +21,9 @@ ActiveRecord::Schema.define(version: 2019_11_27_214934) do
     t.bigint "game_id"
     t.bigint "player_id"
     t.integer "kontra"
+    t.bigint "game_player_id"
     t.index ["game_id"], name: "index_announcements_on_game_id"
+    t.index ["game_player_id"], name: "index_announcements_on_game_player_id"
     t.index ["player_id"], name: "index_announcements_on_player_id"
   end
 
@@ -29,10 +31,10 @@ ActiveRecord::Schema.define(version: 2019_11_27_214934) do
     t.string "slug"
     t.integer "bid_index"
     t.bigint "game_id"
-    t.bigint "player_id"
     t.integer "kontra"
+    t.bigint "game_player_id"
     t.index ["game_id"], name: "index_bids_on_game_id"
-    t.index ["player_id"], name: "index_bids_on_player_id"
+    t.index ["game_player_id"], name: "index_bids_on_game_player_id"
   end
 
   create_table "cards", force: :cascade do |t|
@@ -43,13 +45,22 @@ ActiveRecord::Schema.define(version: 2019_11_27_214934) do
     t.integer "played_index"
     t.boolean "discard", default: false
     t.bigint "game_id"
-    t.bigint "player_id"
     t.bigint "trick_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "game_player_id"
     t.index ["game_id"], name: "index_cards_on_game_id"
-    t.index ["player_id"], name: "index_cards_on_player_id"
+    t.index ["game_player_id"], name: "index_cards_on_game_player_id"
     t.index ["trick_id"], name: "index_cards_on_trick_id"
+  end
+
+  create_table "game_players", force: :cascade do |t|
+    t.bigint "game_id"
+    t.bigint "player_id"
+    t.integer "position"
+    t.boolean "forehand", default: false
+    t.index ["game_id"], name: "index_game_players_on_game_id"
+    t.index ["player_id"], name: "index_game_players_on_player_id"
   end
 
   create_table "games", force: :cascade do |t|

@@ -4,10 +4,13 @@ class Game < ApplicationRecord
   has_many :_announcements, -> { order(:id) }, class_name: 'Announcement', dependent: :destroy
   has_many :_bids, -> { order(:id) }, class_name: 'Bid', dependent: :destroy
   has_many :_tricks, class_name: 'Trick', dependent: :destroy
+ 
+  has_many :game_players
 
-  def self.deal_game(match_id, players)
+  def self.deal_game(match_id, _players)
     game = Game.create(match_id: match_id)
-    Dealer.deal(game, players)
+    game_players = create_players_for(game)
+    Dealer.deal(game, game_players)
     (0..11).each do |index|
       Trick.create(game_id: game.id, trick_index: index)
     end
@@ -17,13 +20,24 @@ class Game < ApplicationRecord
     return game
   end
 
+  def self.create_players_for(game)
+    game.match.players.map do |p|
+      forehand = p.position == forehand_position_for(game)
+      GamePlayer.create(game: game, player: p, position: p.position, forehand: forehand)
+    end
+  end
+
+  def self.forehand_position_for(game)
+    game.match.earlier_games(game.id).count % 4
+  end
+
   def self.reset!(game_id)
     Bid.where(game_id: game_id).destroy_all
     Announcement.where(game_id: game_id).destroy_all
     Card.where(game_id: game_id).each do |card|
       card.update(discard: false, trick_id: nil, played_index: nil)
       if card.talon_half
-        card.update(player_id: nil)
+        card.update(game_player_id: nil)
       end
     end
     Game.update(king: nil, talon_picked: nil, talon_resolved: false)
@@ -38,9 +52,9 @@ class Game < ApplicationRecord
     @tricks ||= Tricks.new(_tricks, self)
   end
 
-  def players
-    @players ||= GamePlayers.new(self)
-  end
+  # def players
+  #   @players ||= GamePlayers.new(self)
+  # end
 
   def talon
     @talon ||= Talon.new(cards, self)
@@ -179,10 +193,10 @@ class Game < ApplicationRecord
     tricks.finished?
   end
 
-  def partner_known_by?(player_id)
+  def partner_known_by?(game_player_id)
     return false unless bids.finished?
 
-    return true if partner&.id == player_id
+    return true if partner&.id == game_player_id
 
     king_in_talon = talon.find { |c| c.slug == king }
     return true if king_in_talon && bids.highest.talon?

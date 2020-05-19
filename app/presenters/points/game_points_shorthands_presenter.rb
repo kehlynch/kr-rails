@@ -37,7 +37,6 @@ class Points::GamePointsShorthandsPresenter
       next unless team.made_announcement?(slug) || team.lost_announcement?(slug)
 
       {
-        id: "js-points-announcement-#{@game.id}-#{slug}",
         shorthand: Bids::AnnouncementPresenter.new(slug).shorthand,
         classes: classlist(
           kontra: team.announcement(slug)&.kontra || false,

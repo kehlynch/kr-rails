@@ -13,7 +13,7 @@ class ScoresPresenter
   private
 
   def players_props
-    @game.players.map do |player|
+    @game.game_players.map do |player|
       ScorePresenter.new(player, @game, @active_player).props
     end
   end

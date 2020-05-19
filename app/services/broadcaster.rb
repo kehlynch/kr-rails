@@ -5,8 +5,8 @@ class Broadcaster
 
   def broadcast(visible_stage=nil)
     @game.reload
-    @game.players.select(&:human?).each do |player|
-      broadcast_to_player(player.id, visible_stage)
+    @game.game_players.select(&:human?).each do |game_player|
+      broadcast_to_player(game_player.player_id, visible_stage)
     end
   end
 

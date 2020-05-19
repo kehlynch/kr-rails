@@ -10,7 +10,7 @@ class CardPresenter
       slug: @card.slug,
       stage: Stage::KING,
       classes: classlist(
-        own_king: @card.player&.id == @active_player.id,
+        own_king: @card.game_player&.id == @active_player.id,
         pickable: @active_player.declarer? && @card.game.king.blank?,
         picked: @card.game.king == @card.slug
       ).join(' '),
@@ -111,7 +111,7 @@ class CardPresenter
   end
 
   def compass
-    index = (@card.player.position - @active_player.position) % 4
+    index = (@card.game_player.position - @active_player.position) % 4
     ['south', 'east', 'north', 'west'][index]
   end
 

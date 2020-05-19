@@ -1,35 +1,47 @@
-class GamePlayer
-  attr_reader :player
-  delegate :id, :human?, :position, to: :player
-  def initialize(player, game)
-    @player = player
-    @game = game
+class GamePlayer <  ApplicationRecord
+  belongs_to :player
+  belongs_to :game
+
+  has_many :cards
+
+  delegate :name, :human?, to: :player
+
+  def self.forehand
+    find(&:forehand)
   end
 
-  def name
-    @player.name
+  # def initialize(player, game)
+  #   @player = player
+  #   @game = game
+  # end
+  #
+
+  def next_game_player
+    game.game_players.find do |p|
+      p.position == (position + 1) % 4
+    end
   end
 
   def original_hand
-    cards = @game.cards.select do |c|
-      c.player_id == id && c.talon_half
+    cards = game.cards.select do |c|
+      c.game_player_id == id && c.talon_half
     end
 
-    Hand.new(cards, @game)
+    Hand.new(cards, game)
   end
 
   def hand
-    cards = @game.cards.select do |c|
-      c.player_id == id && c.trick_id.nil? && !c.discard
+    cards = game.cards.select do |c|
+      c.game_player_id == id && c.trick_id.nil? && !c.discard
     end
 
-    Hand.new(cards, @game)
+    Hand.new(cards, game)
   end
 
   def played_in_current_trick?
-    return false unless @game.tricks.current_trick
+    return false unless game.tricks.current_trick
 
-    @game.tricks.current_trick.cards.map(&:player_id).include?(id)
+    game.tricks.current_trick.cards.map(&:game_player_id).include?(id)
   end
 
   def played_in_any_trick?
@@ -37,7 +49,7 @@ class GamePlayer
   end
 
   def won_tricks
-    @game.tricks.select { |t| t.won_player&.id == id }
+    game.tricks.select { |t| t.won_player&.id == id }
   end
 
   def won_cards
@@ -49,15 +61,15 @@ class GamePlayer
   end
 
   def discards
-    @game.cards.select { |c| c.player_id == id && c.discard }
+    game.cards.select { |c| c.game_player_id == id && c.discard }
   end
 
   def team
-    @team ||= @game.team_for(self)
+    @team ||= game.team_for(self)
   end
 
   def announcements
-    @game.announcements.select { |c| c.player_id == id }
+    game.announcements.select { |c| c.game_player_id == id }
   end
 
   def team_announcements
@@ -65,7 +77,7 @@ class GamePlayer
   end
 
   def bids
-    @game.bids.select { |b| b.player_id == id }
+    game.bids.select { |b| b.game_player_id == id }
   end
 
   def announced?(slug)
@@ -73,15 +85,11 @@ class GamePlayer
   end
 
   def announced_individually?(slug)
-    @game.announcements.any? { |a| a.player_id == id && a.slug == slug }
+    game.announcements.any? { |a| a.game_player_id == id && a.slug == slug }
   end
 
   def defence?
     team&.defence?
-  end
-
-  def forehand?
-    @player.forehand_for?(@game.id)
   end
 
   def trumps
@@ -101,15 +109,15 @@ class GamePlayer
   end
 
   def game_points
-    @game.player_teams.game_points_for(self)
+    game.player_teams.game_points_for(self)
   end
 
   def declarer?
-    @game.declarer&.id == id
+    game.declarer&.id == id
   end
 
   def winner?
-    @game.winners.include?(self)
+    game.winners.include?(self)
   end
 
   def pick_putdowns
@@ -129,7 +137,7 @@ class GamePlayer
   end
 
   def pick_announcement(_valid_announcements)
-    bird_required = @game.bids.bird_required? && declarer?
+    bird_required = game.bids.bird_required? && declarer?
     AnnouncementPicker.new(
       hand: hand,
       bird_required: bird_required && !announced_bird?
@@ -184,7 +192,7 @@ class GamePlayer
     if trick_index == (12 - number)
       @forced << slug if hand.trump_legal?
     else
-      trick = @game.tricks.current_trick
+      trick = game.tricks.current_trick
 
       must_play_trump =
         trick &&
@@ -201,9 +209,9 @@ class GamePlayer
 
   def init_forced_called_king
     if trick_index == 11
-      @forced << @game.king if hand.called_king_legal?
+      @forced << game.king if hand.called_king_legal?
     else
-      @illegal << @game.king unless hand.called_king_only_legal?
+      @illegal << game.king unless hand.called_king_only_legal?
     end
   end
 
@@ -246,6 +254,6 @@ class GamePlayer
   end
 
   def trick_index
-    @game.tricks.playable_trick_index
+    game.tricks.playable_trick_index
   end
 end

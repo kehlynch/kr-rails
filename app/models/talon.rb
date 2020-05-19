@@ -13,31 +13,31 @@ class Talon
     @cards = @talon.flatten
   end
 
-  def pick_whole_talon!(player)
+  def pick_whole_talon!(game_player)
     @talon.flatten.each do |talon_card|
-      talon_card.update(player_id: player.id)
+      talon_card.update(game_player_id: game_player.id)
     end
   end
 
-  def pick_talon!(talon_half_index, player)
-    talon_half_index ||= player.pick_talon
+  def pick_talon!(talon_half_index, game_player)
+    talon_half_index ||= game_player.pick_talon
 
     @talon[talon_half_index].each do |talon_card|
-      talon_card.update(player_id: player.id)
+      talon_card.update(game_player_id: game_player.id)
     end
 
     return talon_half_index
   end
 
-  def resolve_talon!(putdown_card_slugs, player)
-    putdown_card_slugs = player.pick_putdowns.map(&:slug) if !putdown_card_slugs
+  def resolve_talon!(putdown_card_slugs, game_player)
+    putdown_card_slugs = game_player.pick_putdowns.map(&:slug) if !putdown_card_slugs
 
-    player.hand
+    game_player.hand
       .select { |card| putdown_card_slugs.include?(card.slug) }
       .each { |card| card.update(discard: true) }
   end
 
   def unpicked
-    @talon.flatten.filter { |t| t.player_id.nil? }
+    @talon.flatten.filter { |t| t.game_player_id.nil? }
   end
 end

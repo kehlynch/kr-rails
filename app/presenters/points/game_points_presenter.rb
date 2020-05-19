@@ -20,12 +20,12 @@ class Points::GamePointsPresenter
         acc.each_with_index.map { |p, i| p + raw_points[i] }
       end
 
-    @game.players.each_with_index.map do |player, i|
+    @game.game_players.each_with_index.map do |player, i|
       Points::PlayerPointsPresenter.new(player, @game, points[i]).props
     end
   end
 
   def raw_points(game)
-    game.players.map(&:game_points)
+    game.game_players.map(&:game_points)
   end
 end

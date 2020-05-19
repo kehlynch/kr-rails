@@ -34,7 +34,7 @@ class GamesController < ApplicationController
     game = find_game
     runner = Runner.new(game, params[:player_id].to_i)
 
-    if find_player.id == game.next_player.id
+    if find_player.id == game.next_player.player_id
       game = runner.advance!(**game_params)
     end
   end

@@ -61,4 +61,7 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.action_cable.url = "ws://localhost:3002/cable"
+
+  # turn off channel logging
+  ActionCable.server.config.logger = Logger.new(nil)
 end
