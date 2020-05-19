@@ -56,7 +56,7 @@ class PlayerTeam
 
   def announcements
     @game.announcements
-      .select { |a| players.map(&:id).include?(a.player_id) }
+      .select { |a| players.map(&:id).include?(a.game_player.id) }
   end
 
   def announced?(slug)

@@ -1,4 +1,5 @@
 function submitGame(checkbox) {
+  console.log('submitGame', checkbox);
   if (checkbox) { $(checkbox).prop('checked', true); }
   document.getElementById('gameForm').submit();
 }
