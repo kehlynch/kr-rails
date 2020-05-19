@@ -17,11 +17,11 @@ class Points::GamePointsShorthandsPresenter
     winning_bid = @game.bids.highest
     {
       id: "js-points-bid-#{@game.id}",
-      shorthand: Bids::BidPresenter.new(winning_bid.slug).shorthand,
+      shorthand: winning_bid && Bids::BidPresenter.new(winning_bid.slug).shorthand,
       classes: classlist(
-        kontra: winning_bid.kontra,
+        kontra: winning_bid && winning_bid.kontra,
         off: !@game.winners.include?(@game.declarer),
-        vs_three:  @game.player_teams.defence.length == 3 && @game.bids&.highest&.king?
+        vs_three:  @game.player_teams.defence.length == 3 && winning_bid&.king?
       ).join(' ')
     }
   end

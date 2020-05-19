@@ -11,7 +11,7 @@ class Points::PlayerPointsPresenter
       points: @points,
       forehand: @player.forehand?,
       winner: @game.winners.map(&:id).include?(@player.id),
-      declarer: @game.declarer.id == @player.id
+      declarer: @game&.declarer&.id == @player.id
     }
   end
 

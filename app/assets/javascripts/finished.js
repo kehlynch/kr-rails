@@ -81,17 +81,6 @@ function announcementShorthand({ shorthand, classes }) {
   return `<span class="announcement-shorthand ${classes}">${shorthand}</span>`
 }
 
-function updateGameAnnouncementsShorthands(announcements) {
-  announcements.forEach(({ id, shorthand, classes }) => {
-
-  })
-}
-
-
-function kontraClass(kontra) {
-  return { 2: 'kontra', 4: 'rekontra', 8: 'subkontra' }[kontra];
-}
-
 function showScores() {
   hideStage(stages.PICK_TALON);
   hide(sections.POINTS);

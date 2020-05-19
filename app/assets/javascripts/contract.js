@@ -2,7 +2,7 @@ function updateContract(newData, oldData) {
   console.log('updateContract', newData);
   const updaters = {
     'won_bid': setWonBid,
-    'calledKing': setCalledKing
+    'called_king': setCalledKing
   }
 
   Object.entries(newData).forEach ( ( [ name, newValue] ) => {

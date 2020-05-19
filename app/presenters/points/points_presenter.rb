@@ -14,7 +14,7 @@ class Points::PointsPresenter
   private
 
   def games
-    @match.games.select(&:finished?).map do |game|
+    @match.games.map do |game|
       Points::GamePointsPresenter.new(game).props
     end
   end
