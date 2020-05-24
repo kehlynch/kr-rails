@@ -16,16 +16,29 @@ class Card < ApplicationRecord
     5 => 1
   }.freeze
 
-  # def player
-  #   game_player
-  # end
+  def self.trumps
+    select(&:trump?)
+  end
 
-  # def player_id
-  #   game_player&.id
-  # end
+  def self.include_slug?(slug)
+    find { |c| c.slug == slug }.present?
+  end
 
-  def self.build(game, suit, value)
-    Card.create(game: game, suit: suit, value: value, slug: "#{suit}_#{value}")
+  def self.add(suit:, value:)
+    create(suit: suit, value: value, slug: "#{suit}_#{value}")
+  end
+
+  def promised_on_trick_index
+    case slug
+    when 'trump_1'
+      11
+    when 'trump_2'
+      10
+    when 'trump_3'
+      9
+    when /.*_8/
+      11
+    end
   end
 
   def points
@@ -64,74 +77,9 @@ class Card < ApplicationRecord
     game.king == slug
   end
 
-  def legal?
-    return legal_for_trick?
+  def legal_for_trick?(trick)
+    LegalTrickCardService.new(self, trick, game.won_bid).legal?
   end
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def legal_for_trick?(trick = current_trick)
-    return negative_legal? if game.bids.highest&.negative?
-
-    if game_player.forced_cards.any?
-      return true if game_player.forced_cards.include?(slug)
-
-      return false
-    end
-
-    return false if game_player.illegal_cards.include?(slug)
-
-    return true if !trick.winning_card # lead a card
-
-    return true if suit == led_suit
-
-    return false if hand.cards_in_led_suit?
-
-    return true if suit == 'trump'
-
-    return false if game_player.trumps.length > 0
-
-    return true
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def negative_legal?
-    winning_card = game.current_trick&.winning_card
-
-    if !winning_card
-      # leading pagat
-      return false if slug == 'trump_1' && game_player.trumps.length > 1 && game.bids.highest&.trischaken?
-
-      return true
-    end
-
-    led = game.current_trick&.led_card
-
-    play_ups = game_player.suit_cards(winning_card.suit).select { |c| c.value > winning_card.value }
-
-    if suit == led.suit
-      return true if winning_card.suit != led.suit
-
-      return true if value > winning_card.value
-
-      return true if play_ups.empty?
-    end
-
-    return false if game_player.suit_cards(led.suit).any?
-
-    if suit == 'trump'
-      return true if winning_card.suit != 'trump'
-
-      return true if value > winning_card.value
-
-      return true if play_ups.empty?
-    end
-
-    return false if game_player.trumps.any?
-
-    return true
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def legal_putdown?(hand, current_putdowns)
     return false if points == 4
@@ -155,27 +103,5 @@ class Card < ApplicationRecord
     return false if points == 4 || suit == 'trump'
 
     return true
-  end
-
-  def only_legal_card
-    if current_trick.trick_index == 12
-      return if player_has_announced?(Announcements::KING) && hand.has_called_king?
-    end
-
-    if player_has_announced?(Announcements::PAGAT) && hand.find_by(slug: 'trump_1').present?
-      return true
-    end
-  end
-
-  def player_has_announced?(announcement_slug)
-    game_player.team_announcements.include?(announcement_slug)
-  end
-
-  def current_trick
-    game.current_trick
-  end
-
-  def led_suit
-    current_trick&.led_suit
   end
 end

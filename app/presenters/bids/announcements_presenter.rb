@@ -12,7 +12,7 @@ class Bids::AnnouncementsPresenter < Bids::BidsBasePresenter
   end
 
   def biddable_props
-    @game.announcements.valid_announcements.map do |slug|
+    @game.valid_announcements.map do |slug|
       {
         slug: slug,
         name: Bids::AnnouncementPresenter.new(slug).name

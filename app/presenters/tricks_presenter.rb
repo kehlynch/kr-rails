@@ -1,19 +1,11 @@
 class TricksPresenter
-  attr_reader :tricks
-
-  delegate(
-    :[],
-    :current_trick_finished?,
-    :length,
-    to: :tricks
-  )
-
   def initialize(game, active_player, visible_stage, visible_trick_index)
     @game = game
     @tricks = game.tricks
     @active_player = active_player
     @visible_stage = visible_stage
     @visible_trick_index = visible_trick_index
+    @playable_trick_index = @tricks.playable_trick_index
   end
 
   def props
@@ -21,7 +13,7 @@ class TricksPresenter
       stage: Stage::TRICK,
       visible: @visible_stage == Stage::TRICK,
       tricks: tricks_props,
-      playable_trick_index: @tricks.playable_trick_index,
+      playable_trick_index: @playable_trick_index,
       finished: @game.tricks.finished?
     }
   end
@@ -29,7 +21,7 @@ class TricksPresenter
   private
 
   def tricks_props
-    @tricks.each_with_index.map do |trick, index|
+    @tricks.includes(:cards).each_with_index.map do |trick, index|
       TrickPresenter.new(
         @game,
         @active_player,

@@ -5,15 +5,15 @@ class PlayerPresenter
 
   delegate(
     :announcements,
+    :card_points,
     :declarer?,
     :forehand?,
     :game_points,
     :human?,
     :id,
-    :points,
-    :position,
     :played_in_any_trick?,
     :played_in_current_trick?,
+    :position,
     :team_points,
     :winner?,
     :won_tricks,
@@ -23,7 +23,6 @@ class PlayerPresenter
   def initialize(player, game, active_player)
     @player = player
     @game = game
-    @player_teams = game.player_teams
     @active_player = active_player
     @active = active_player.id == player.id
   end
@@ -76,8 +75,8 @@ class PlayerPresenter
   def points_props
     {
       won_tricks_count: won_tricks_count,
-      points: points,
-      team_points: team_points,
+      points: card_points,
+      team_points: @player.team_members.map(&:card_points).compact.sum,
       game_points: game_points,
       winner: winner?
     }

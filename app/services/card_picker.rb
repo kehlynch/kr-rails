@@ -7,9 +7,10 @@ class CardPicker
   def pick
     fail 'trying to pick card when hand is empty' if @hand.empty?
 
-    legal_cards = @hand.select(&:legal?)
+    # TODO:
+    # legal_cards = @hand.select(&:legal?)
 
-    # TODO stop the bots leading trumps till they're out when declarer
+    # TODO: stop the bots leading trumps till they're out when declarer
     if @bird_announced && legal_cards.any?(&:trump?)
       return legal_cards.select(&:trump?).sample if perc(80)
     end

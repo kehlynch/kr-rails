@@ -41,7 +41,7 @@ class GamesController < ApplicationController
 
   def reset
     game = find_game
-    Game.reset!(game.id)
+    game.reset!
 
     redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
   end

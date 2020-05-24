@@ -81,16 +81,17 @@ class CardPresenter
     }
   end
 
-  def hand_props_for_trick(trick, trick_index)
+  def hand_props_for_trick(trick, trick_index, legal)
     id = "trick#{trick_index}_#{id(Stage::TRICK)}"
-    active_player_next = trick&.next_player&.id == @active_player.id
+    active_player_next = @card.game.next_player&.id == @active_player.id
+    # legal = @card.legal_for_trick?(trick)
     {
       slug: @card.slug,
       stage: Stage::TRICK,
       pickable: active_player_next,
-      illegal: active_player_next &&! @card.legal?,
+      illegal: active_player_next &&! legal,
       input_id: id,
-      onclick: active_player_next && @card.legal? && "playCard(#{id})",
+      onclick: active_player_next && legal && "playCard(#{id})",
     }
   end
 

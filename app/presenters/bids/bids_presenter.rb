@@ -22,7 +22,7 @@ class Bids::BidsPresenter < Bids::BidsBasePresenter
   end
 
   def biddable_props
-    @game.bids.valid_bids.map do |slug|
+    @game.valid_bids.map do |slug|
       {
         slug: slug,
         name: Bids::BidPresenter.new(slug).name

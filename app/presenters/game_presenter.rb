@@ -3,33 +3,10 @@ class GamePresenter
 
   include Rails.application.routes.url_helpers  
 
-  delegate(
-    :announcements,
-    :bids,
-    :cards,
-    :current_trick,
-    :declarer,
-    :declarer_human?,
-    :finished?,
-    :id,
-    :king,
-    :next_player,
-    :next_player_human?,
-    :partner,
-    :player_teams,
-    :stage,
-    :talon,
-    :talon_picked,
-    :tricks,
-    :winners,
-    to: :game
-  )
-
   def initialize(game, active_player_id)
     @game = game
-    @active_player = game.game_players.find_by(player_id: active_player_id)
-    @message_presenter = MessagePresenter.new(game)
-    @remarks = Remarks.remarks_for(@game)
+    @active_player = game.game_players.find { |gp| gp.player_id == active_player_id }
+    # @remarks = Remarks.remarks_for(@game)
   end
 
   def props(visible_stage=nil)
@@ -54,7 +31,7 @@ class GamePresenter
       Stage::RESOLVE_TALON => ResolveTalonPresenter.new(@game, @active_player, visible_stage).props,
       Stage::ANNOUNCEMENT => Bids::AnnouncementsPresenter.new(@game, @active_player, visible_stage).props,
       Stage::TRICK => TricksPresenter.new(@game, @active_player, visible_stage, visible_trick_index).props,
-      Stage::FINISHED => FinishedPresenter.new(@game, @active_player, visible_stage).props,
+      # Stage::FINISHED => FinishedPresenter.new(@game, @active_player, visible_stage).props,
     }
   end
 
@@ -74,14 +51,10 @@ class GamePresenter
     }
   end
 
-  def forehand
-    @players.find { |p| p.forehand? }
-  end
-
   def visible_trick_index
     return 11 if @game.tricks.finished?
 
-    show_penultimate_trick? ? @game.tricks.playable_trick_index - 1 : tricks.playable_trick_index
+    show_penultimate_trick? ? @game.tricks.playable_trick_index - 1 : @game.tricks.playable_trick_index
   end
 
   def show_penultimate_trick?

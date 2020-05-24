@@ -6,7 +6,7 @@ class Runner
   class RunnerError < StandardError; end
 
   def initialize(game, active_player_id=nil)
-    @game = game
+    @game = Game.includes(:bids).find(game.id)
     @broadcaster = Broadcaster.new(game)
   end
 
@@ -37,6 +37,20 @@ class Runner
 
   private
 
+  def advance_bidding!(bid_slug)
+    bid = @game.make_bid!(bid_slug)
+    @broadcaster.broadcast
+
+    while bid
+      bid = @game.make_bid!
+      @broadcaster.broadcast
+    end
+
+    if @game.won_bid.present?
+      advance!
+    end
+  end
+
   def pick_king!(king_slug)
     @game.pick_king!(king_slug)
     @broadcaster.broadcast
@@ -64,27 +78,12 @@ class Runner
     end
   end
 
-
-  def advance_bidding!(bid_slug)
-    bid = @game.bids.make_bid!(bid_slug)
-    @broadcaster.broadcast
-
-    while bid
-      bid = @game.bids.make_bid!
-      @broadcaster.broadcast
-    end
-
-    if @game.bids.finished?
-      advance!
-    end
-  end
-
   def advance_announcements!(announcement_slug)
-    announcement = @game.announcements.make_bid!(announcement_slug)
+    announcement = @game.make_announcement!(announcement_slug)
     @broadcaster.broadcast
 
     while announcement
-      announcement = @game.announcements.make_bid!
+      announcement = @game.make_announcement!
       @broadcaster.broadcast
     end
 
@@ -95,13 +94,11 @@ class Runner
 
   def advance_tricks!(card_slug)
     card = Card.find_by(game_id: @game.id, slug: card_slug)
-    card = @game.tricks.play_card!(card)
+    card = @game.play_card!(card)
     @broadcaster.broadcast
     while card
-      card = @game.tricks.play_card!
+      card = @game.play_card!
       @broadcaster.broadcast
     end
   end
-
-  
 end

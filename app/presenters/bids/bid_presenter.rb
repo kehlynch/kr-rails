@@ -1,28 +1,28 @@
 class Bids::BidPresenter
   BID_NAMES = {
-    Bids::PASS => 'Pass',
-    Bids::RUFER => 'Rufer',
-    Bids::SOLO => 'Solo',
-    Bids::PICCOLO => 'Piccolo',
-    Bids::BESSER_RUFER => 'Besser Rufer',
-    Bids::DREIER => 'Dreier',
-    Bids::BETTEL => 'Bettel',
-    Bids::SOLO_DREIER => 'Solo Dreier',
-    Bids::CALL_KING => 'Call King',
-    Bids::TRISCHAKEN => 'Trischaken',
-    Bids::SECHSERDREIER => 'Sechserdreier'
+    Bid::PASS => 'Pass',
+    Bid::RUFER => 'Rufer',
+    Bid::SOLO => 'Solo',
+    Bid::PICCOLO => 'Piccolo',
+    Bid::BESSER_RUFER => 'Besser Rufer',
+    Bid::DREIER => 'Dreier',
+    Bid::BETTEL => 'Bettel',
+    Bid::SOLO_DREIER => 'Solo Dreier',
+    Bid::CALL_KING => 'Call King',
+    Bid::TRISCHAKEN => 'Trischaken',
+    Bid::SECHSERDREIER => 'Sechserdreier'
   }
 
   BID_SHORTNAMES = {
-    Bids::BESSER_RUFER => 'BR',
-    Bids::SOLO => 'S',
-    Bids::PICCOLO => 'P',
-    Bids::DREIER => 'D',
-    Bids::BETTEL => 'B',
-    Bids::SOLO_DREIER => 'SD',
-    Bids::CALL_KING => 'R',
-    Bids::TRISCHAKEN => 'T',
-    Bids::SECHSERDREIER => 'XI'
+    Bid::BESSER_RUFER => 'BR',
+    Bid::SOLO => 'S',
+    Bid::PICCOLO => 'P',
+    Bid::DREIER => 'D',
+    Bid::BETTEL => 'B',
+    Bid::SOLO_DREIER => 'SD',
+    Bid::CALL_KING => 'R',
+    Bid::TRISCHAKEN => 'T',
+    Bid::SECHSERDREIER => 'XI'
   }
 
   def initialize(slug)
@@ -30,7 +30,7 @@ class Bids::BidPresenter
   end
 
   def name(declared: false)
-    return BID_NAMES[Bids::RUFER] if declared && @slug == Bids::CALL_KING
+    return BID_NAMES[Bid::RUFER] if declared && @slug == Bid::CALL_KING
 
     BID_NAMES[@slug] if @slug
   end

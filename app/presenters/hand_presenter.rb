@@ -28,7 +28,7 @@ class HandPresenter
   def props_for_trick(trick, index)
     {
       id: id("trick-#{index}"),
-      hand: sorted_hand_with(:hand_props_for_trick, trick, index)
+      hand: hand_props_for_trick(trick, index)
     }
   end
 
@@ -58,6 +58,13 @@ class HandPresenter
     end
   end
 
+  def hand_props_for_trick(trick, trick_index)
+    ltcs = LegalTrickCardService.new(sorted_cards, trick)
+    ltcs.map_to_legal.map do |card, legal|
+      CardPresenter.new(card, @active_player).hand_props_for_trick(trick, trick_index, legal, @game.won_bid)
+    end
+  end
+
   def sorted_hand_with(props_method, *args)
     sorted_cards.map do |c|
       CardPresenter.new(c, @active_player).public_send(props_method, *args)
@@ -65,7 +72,7 @@ class HandPresenter
   end
 
   def sorted_cards(cards=nil)
-    cards ||= @active_player.hand
+    cards ||= @active_player.hand_cards
     display_order = ['trump', 'heart', 'spade', 'diamond', 'club']
     cards.sort_by do |c|
       [display_order.index(c.suit), -c.value]

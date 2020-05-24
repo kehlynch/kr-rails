@@ -7,13 +7,18 @@ class AnnouncementPicker
   def pick
     return pick_bird if @bird_required
 
-    return Announcements::PASS
+    return Announcement::PASS
   end
 
   def pick_bird
-    return Announcements::PAGAT if @hand.pagat
-    return Announcements::UHU if @hand.uhu
-    return Announcements::KAKADU if @hand.kakadu
-    return Announcements::PAGAT
+    return Announcement::PAGAT if @hand.include_slug?('trump_1')
+    return Announcement::UHU if @hand.include_slug?('trump_2')
+    return Announcement::KAKADU if @hand.include_slug?('trump_3')
+    return Announcement::PAGAT
+  end
+
+  private
+
+  def pagat?
   end
 end

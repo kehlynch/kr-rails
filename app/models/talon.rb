@@ -32,7 +32,7 @@ class Talon
   def resolve_talon!(putdown_card_slugs, game_player)
     putdown_card_slugs = game_player.pick_putdowns.map(&:slug) if !putdown_card_slugs
 
-    game_player.hand
+    game_player.hand_cards
       .select { |card| putdown_card_slugs.include?(card.slug) }
       .each { |card| card.update(discard: true) }
   end

@@ -21,6 +21,13 @@ class TrickPresenter
 
   private
 
+  attr_reader :game
+
+  delegate(
+    :next_player,
+    to: :game
+  )
+
   def cards_props
     return [] unless @trick
 
@@ -34,11 +41,9 @@ class TrickPresenter
 
     return finished_instruction if @trick.finished?
 
-    return nil unless @trick.next_player
+    return "play a card" if next_player&.id == @active_player.id
 
-    return "play a card" if @trick.next_player&.id == @active_player.id
-
-    "Waiting for #{trick.next_player.name} to play a card"
+    "Waiting for #{next_player.name} to play a card"
   end
 
   def finished_instruction

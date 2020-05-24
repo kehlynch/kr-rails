@@ -19,9 +19,8 @@ class KingsPresenter
   private
 
   def kings_props
-    ['club_8', 'diamond_8', 'heart_8', 'spade_8'].map do |king_slug|
-      king_card = Card.find_by(game: @game, slug: king_slug)
-      CardPresenter.new(king_card, @active_player).props_for_call_king
+    @game.kings.map do |king|
+      CardPresenter.new(king, @active_player).props_for_call_king
     end
   end
 

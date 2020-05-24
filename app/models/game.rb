@@ -1,11 +1,33 @@
 class Game < ApplicationRecord
   belongs_to :match
-  has_many :cards, dependent: :destroy
-  has_many :_announcements, -> { order(:id) }, class_name: 'Announcement', dependent: :destroy
-  has_many :_bids, -> { order(:id) }, class_name: 'Bid', dependent: :destroy
-  has_many :_tricks, class_name: 'Trick', dependent: :destroy
+
+  has_many :game_players, -> { includes(:bids, :announcements, :hand_cards) }
+  has_one :forehand, -> { where(forehand: true) }, class_name: 'GamePlayer'
+  has_one :partner, -> { where(partner: true) }, class_name: 'GamePlayer'
+  has_many :declarers, -> { where(team: GamePlayer::DECLARERS) }, class_name: 'GamePlayer'
+  has_many :defenders, -> { where(team: GamePlayer::DEFENDERS) }, class_name: 'GamePlayer'
+
+  has_many :cards, -> { includes(:game_player) }, dependent: :destroy
+  has_many :announcements, -> { order(:id).includes(:game_player) }, dependent: :destroy
+  has_many :bids, -> { order(:id).includes(:game_player) }, dependent: :destroy
+  has_one :won_bid, -> { where(won: true) }, class_name: 'Bid'
+
+  has_many :tricks, dependent: :destroy
+
+  has_many :announcement_scores
  
-  has_many :game_players
+
+  delegate :declarer, to: :bids
+
+  default_scope {
+    includes(
+      # :cards,
+      # :game_players,
+      :bids,
+      # :announcements,
+      # :tricks,
+    )
+  }
 
   def self.deal_game(match_id, _players)
     game = Game.create(match_id: match_id)
@@ -23,7 +45,7 @@ class Game < ApplicationRecord
   def self.create_players_for(game)
     game.match.players.map do |p|
       forehand = p.position == forehand_position_for(game)
-      GamePlayer.create(game: game, player: p, position: p.position, forehand: forehand)
+      game.game_players.create(player: p, position: p.position, forehand: forehand, human: p.human, name: p.name)
     end
   end
 
@@ -31,42 +53,30 @@ class Game < ApplicationRecord
     game.match.earlier_games(game.id).count % 4
   end
 
-  def self.reset!(game_id)
-    Bid.where(game_id: game_id).destroy_all
-    Announcement.where(game_id: game_id).destroy_all
-    Card.where(game_id: game_id).each do |card|
-      card.update(discard: false, trick_id: nil, played_index: nil)
-      if card.talon_half
-        card.update(game_player_id: nil)
-      end
+  def reset!
+    bids.destroy_all
+    announcements.destroy_all
+    game_players.update_all(delcarer: false, partner: false, team: nil)
+    cards.update_all(discard: false, trick_id: nil, played_index: nil)
+    cards.where.not(talon_half: nil).update_all(game_player_id: nil)
+    update(king: nil, talon_picked: nil, talon_resolved: false)
+    Runner.new(self).advance!
+  end
+
+  def kings
+    ['club_8', 'diamond_8', 'heart_8', 'spade_8'].map do |king_slug|
+      # don't hit the db here
+      cards.find { |c| c.slug == king_slug }
     end
-    Game.update(king: nil, talon_picked: nil, talon_resolved: false)
-    Runner.new(Game.find(game_id)).advance!
   end
-
-  def bids
-    @bids ||= Bids.new(_bids, self)
-  end
-
-  def tricks
-    @tricks ||= Tricks.new(_tricks, self)
-  end
-
-  # def players
-  #   @players ||= GamePlayers.new(self)
-  # end
 
   def talon
     @talon ||= Talon.new(cards, self)
   end
 
-  def player_teams
-    @player_teams ||= PlayerTeams.new(self)
-  end
-
-  def announcements
-    @announcements ||= Announcements.new(_announcements, self)
-  end
+  # def player_teams
+  #   @player_teams ||= PlayerTeams.new(self)
+  # end
 
   def stages
     [
@@ -86,24 +96,59 @@ class Game < ApplicationRecord
     end || Stage::FINISHED
   end
 
-  def winners
-    player_teams.winners
+  # def winners
+  #   player_teams.winners
+  # end
+
+  # def team_for(player)
+  #   player_teams.team_for(player)
+  # end
+
+  def valid_announcements
+    ValidAnnouncementsService.new(self).valid_announcements
   end
 
-  def team_for(player)
-    player_teams.team_for(player)
+  def valid_bids
+    ValidBidsService.new(self).valid_bids
   end
 
   def make_bid!(bid_slug = nil)
-    bids.make_bid!(bid_slug)
+    return nil if (next_player_human? && !bid_slug)
+
+    bid_slug ||= next_player.pick_bid(valid_bids)
+    return unless valid_bids.include?(bid_slug)
+
+    bid = bids.create(slug: bid_slug, game_player: next_player)
+
+    if bids.second_round_finished?
+      bids.highest.update(won: true)
+      bids.highest.game_player.update(declarer: true, team: GamePlayer::DECLARERS)
+      if !bids.highest.king?
+        set_defenders
+      end
+    end
+
+    return bid
+  end
+
+  def make_announcement!(slug = nil)
+    return nil if (next_player_human? && !slug)
+
+    slug ||= next_player.pick_announcement(valid_announcements)
+    return unless valid_announcements.include?(slug)
+
+    announcements.create(slug: slug, game_player: next_player)
   end
 
   def pick_king!(king_slug)
-    return if declarer_human? && !king_slug
+    return if declarer&.human? && !king_slug
 
     self.king = king_slug || declarer.pick_king
-
     save
+
+    partner = cards.find { |c| c.slug == king }.game_player
+    partner&.update(partner: true, team: GamePlayer::DECLARERS)
+    set_defenders
   end
 
   def pick_talon!(talon_half_index=nil)
@@ -134,8 +179,17 @@ class Game < ApplicationRecord
     update(talon_resolved: true)
   end
 
-  def play_tricks!(card_slug = nil)
-    tricks.play_tricks!(card_slug)
+  def play_card!(card=nil)
+    return nil if next_player_human? && !card
+
+    card ||= next_player.pick_card
+    card = tricks.add_card!(card)
+
+    if finished?
+      PointsService.new(self).record_points
+    end
+
+    return card
   end
 
   def human_player
@@ -146,23 +200,25 @@ class Game < ApplicationRecord
     next_player&.human?
   end
 
+  def next_player_forehand?
+    next_player&.forehand?
+  end
+
   def next_player
     case stage
     when Stage::BID
-      bids.next_bidder
+      game_players.next_from(bids.last&.game_player) || forehand
     when Stage::ANNOUNCEMENT
-      announcements.next_bidder
+      game_players.next_from(announcements.last_passed_player) || declarer
     when Stage::KING, Stage::PICK_TALON, Stage::RESOLVE_TALON
       declarer
     when Stage::TRICK
-      tricks.next_player
+      current_trick.won_player ||
+        game_players.next_from(current_trick.last_player) ||
+        bid_lead
     when Stage::FINISHED
       nil
     end
-  end
-
-  def forehand
-    players.forehand
   end
 
   def human_forehand?
@@ -177,37 +233,25 @@ class Game < ApplicationRecord
     declarer&.human?
   end
 
-  def partner
-    player_teams.partner
-  end
+  # def partner
+  #   player_teams.partner
+  # end
 
   def current_trick
     tricks.current_trick
   end
 
-  def current_trick_finished?
-    tricks.current_trick_finished?
-  end
-  
   def finished?
     tricks.finished?
   end
 
-  def partner_known_by?(game_player_id)
-    return false unless bids.finished?
-
-    return true if partner&.id == game_player_id
-
-    king_in_talon = talon.find { |c| c.slug == king }
-    return true if king_in_talon && bids.highest.talon?
-
-    king_played = cards.find do |c|
-      c.trick_id.present? && c.slug == king
-    end.present?
-
-    return king_played
-  end
-
   private
 
+  def bid_lead
+    bids.highest&.declarer_leads? ? declarer : forehand
+  end
+
+  def set_defenders
+    game_players.where.not(team: GamePlayer::DECLARERS).update(team: GamePlayer::DEFENDERS)
+  end
 end

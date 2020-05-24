@@ -64,4 +64,7 @@ Rails.application.configure do
 
   # turn off channel logging
   ActionCable.server.config.logger = Logger.new(nil)
+
+
+  # ActiveRecordQueryTrace.enabled = true
 end

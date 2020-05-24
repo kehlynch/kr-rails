@@ -1,55 +1,63 @@
 class GamePlayer <  ApplicationRecord
+  DECLARERS = 'declarers'
+  DEFENDERS = 'defenders'
+
+  validates :team, inclusion: { in: [DECLARERS, DEFENDERS] }, allow_nil: true
+
   belongs_to :player
   belongs_to :game
 
   has_many :cards
+  has_many :hand_cards, -> { where(trick_id: nil, discard: false) }, class_name: 'Card'
+  has_many :original_hand_cards, -> { where(trick_half: nil) }, class_name: 'Card'
 
-  delegate :name, :human?, to: :player
+
+  has_many :discards, -> { where(discard: true) }, class_name: 'Card'
+
+  has_many :announcements
+  has_many :bids
+  has_many :tricks
+
+  has_many :co_players, through: :game, source: :game_players
+
+  scope :declarers, -> { where(team: DECLARERS) }
+  scope :defenders, -> { where(team: DEFENDERS) }
+
 
   def self.forehand
     find(&:forehand)
   end
 
-  # def initialize(player, game)
-  #   @player = player
-  #   @game = game
+  def self.next_from(game_player)
+    return nil unless game_player
+
+    find do |p|
+      p.position == (game_player.position + 1) % 4
+    end
+  end
+
+  def team_members
+    game.game_players.where(team: team)
+  end
+    
+  # def next_game_player
+  #   @next_game_player ||= game.game_players.find do |p|
+  #     p.position == (position + 1) % 4
+  #   end
   # end
-  #
-
-  def next_game_player
-    game.game_players.find do |p|
-      p.position == (position + 1) % 4
-    end
-  end
-
-  def original_hand
-    cards = game.cards.select do |c|
-      c.game_player_id == id && c.talon_half
-    end
-
-    Hand.new(cards, game)
-  end
-
-  def hand
-    cards = game.cards.select do |c|
-      c.game_player_id == id && c.trick_id.nil? && !c.discard
-    end
-
-    Hand.new(cards, game)
-  end
 
   def played_in_current_trick?
-    return false unless game.tricks.current_trick
+    return false unless game.current_trick
 
-    game.tricks.current_trick.cards.map(&:game_player_id).include?(id)
+    cards.find { |c| c.trick_id == game.current_trick.id }.present?
   end
 
   def played_in_any_trick?
-    hand.select(&:trick_id).any?
+    cards.select(&:trick_id).any?
   end
 
   def won_tricks
-    game.tricks.select { |t| t.won_player&.id == id }
+    tricks.select { |t| t.won_player&.id == id }
   end
 
   def won_cards
@@ -60,36 +68,34 @@ class GamePlayer <  ApplicationRecord
     (won_cards + discards).flatten
   end
 
-  def discards
-    game.cards.select { |c| c.game_player_id == id && c.discard }
+  def promised_birds
+    promised_card_slugs = {
+      Announcement::PAGAT => 'trump_1',
+      Announcement::UHU => 'trump_2',
+      Announcement::PAGAT => 'trump_3'
+    }.select do |ann_slug, _card_slug|
+      team_announced?(k)
+    end
+
+    hand_cards.where(slug: promised_card_slugs)
   end
 
-  def team
-    @team ||= game.team_for(self)
-  end
+  def promised_king
+    return nil unless team_announced(Announcement::KING)
 
-  def announcements
-    game.announcements.select { |c| c.game_player_id == id }
-  end
-
-  def team_announcements
-    team&.announcements
-  end
-
-  def bids
-    game.bids.select { |b| b.game_player_id == id }
+    hand_cards.find_by(slug: game.king)
   end
 
   def announced?(slug)
-    team.announced?(slug)
+    announcements.find { |a| a.slug == slug }.present?
   end
 
-  def announced_individually?(slug)
-    game.announcements.any? { |a| a.game_player_id == id && a.slug == slug }
+  def team_announced?(slug)
+    team_members.any? { |gp| gp.announced?(slug) }
   end
 
-  def defence?
-    team&.defence?
+  def forehand?
+    forehand
   end
 
   def trumps
@@ -97,35 +103,19 @@ class GamePlayer <  ApplicationRecord
   end
 
   def suit_cards(suit)
-    hand.select { |c| c.suit == suit }
-  end
-
-  def points
-    Points.individual_points_for(self)
-  end
-
-  def team_points
-    team&.points
-  end
-
-  def game_points
-    game.player_teams.game_points_for(self)
+    hand_cards.select { |c| c.suit == suit }
   end
 
   def declarer?
     game.declarer&.id == id
   end
 
-  def winner?
-    game.winners.include?(self)
-  end
-
   def pick_putdowns
     putdowns = []
-    putdown_count = hand.length - 12
+    putdown_count = hand_cards.length - 12
     until putdowns.length == putdown_count
-      putdowns << hand.filter do |c|
-        c.legal_putdown?(hand, putdowns)
+      putdowns << hand_cards.filter do |c|
+        c.legal_putdown?(hand_cards, putdowns)
       end.sample
     end
 
@@ -133,26 +123,27 @@ class GamePlayer <  ApplicationRecord
   end
 
   def pick_bid(valid_bids)
-    BidPicker.new(bids: valid_bids, hand: hand).pick
+    BidPicker.new(bids: valid_bids, hand: hand_cards).pick
   end
 
   def pick_announcement(_valid_announcements)
     bird_required = game.bids.bird_required? && declarer?
     AnnouncementPicker.new(
-      hand: hand,
+      hand: hand_cards,
       bird_required: bird_required && !announced_bird?
     ).pick
   end
 
   def announced_bird?
-    ['pagat', 'uhu', 'kakadu'].any? { |a| announced_individually?(a) }
+    ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
   end
 
   def pick_card
-    return nil unless hand.any?
+    return nil unless hand_cards.any?
 
+    # TODO this needs to check if the team announced them - current just checks if this player did
     bird_announced = ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
-    CardPicker.new(hand: hand, bird_announced: bird_announced).pick
+    CardPicker.new(hand: hand_cards, bird_announced: bird_announced).pick
   end
 
   def pick_talon
@@ -187,10 +178,11 @@ class GamePlayer <  ApplicationRecord
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
+  # TODO: What is this doing??? oh noooooooeee
   def init_forced_bird(number)
     slug = "trump_#{number}"
     if trick_index == (12 - number)
-      @forced << slug if hand.trump_legal?
+      @forced << slug if hand_cards.trump_legal?
     else
       trick = game.tricks.current_trick
 
@@ -226,31 +218,31 @@ class GamePlayer <  ApplicationRecord
   end
 
   def pagat?
-    pagat_announced? && hand.pagat.present?
+    pagat_announced? && hand_cards.include_slug?('trump_1')
   end
 
   def uhu?
-    uhu_announced? && hand.uhu.present?
+    uhu_announced? && hand_cards.include_slug?('trump_2')
   end
 
   def kakadu?
-    kakadu_announced? && hand.kakadu.present?
+    kakadu_announced? && hand_cards.include_slug('trump_3')
   end
 
   def pagat_announced?
-    announced?(Announcements::PAGAT)
+    announced?(Announcement::PAGAT)
   end
 
   def uhu_announced?
-    announced?(Announcements::UHU)
+    announced?(Announcement::UHU)
   end
 
   def kakadu_announced?
-    announced?(Announcements::KAKADU)
+    announced?(Announcement::KAKADU)
   end
 
   def king_announced?
-    announced?(Announcements::KING)
+    announced?(Announcement::KING)
   end
 
   def trick_index

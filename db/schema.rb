@@ -15,6 +15,17 @@ ActiveRecord::Schema.define(version: 2020_05_18_201523) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "announcement_scores", force: :cascade do |t|
+    t.bigint "game_id"
+    t.string "slug"
+    t.integer "kontra"
+    t.boolean "off"
+    t.boolean "declared"
+    t.string "team"
+    t.integer "points"
+    t.index ["game_id"], name: "index_announcement_scores_on_game_id"
+  end
+
   create_table "announcements", force: :cascade do |t|
     t.string "slug"
     t.integer "announcement_index"
@@ -31,10 +42,13 @@ ActiveRecord::Schema.define(version: 2020_05_18_201523) do
     t.string "slug"
     t.integer "bid_index"
     t.bigint "game_id"
+    t.bigint "player_id"
     t.integer "kontra"
     t.bigint "game_player_id"
+    t.boolean "won"
     t.index ["game_id"], name: "index_bids_on_game_id"
     t.index ["game_player_id"], name: "index_bids_on_game_player_id"
+    t.index ["player_id"], name: "index_bids_on_player_id"
   end
 
   create_table "cards", force: :cascade do |t|
@@ -45,20 +59,30 @@ ActiveRecord::Schema.define(version: 2020_05_18_201523) do
     t.integer "played_index"
     t.boolean "discard", default: false
     t.bigint "game_id"
+    t.bigint "player_id"
     t.bigint "trick_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "game_player_id"
     t.index ["game_id"], name: "index_cards_on_game_id"
     t.index ["game_player_id"], name: "index_cards_on_game_player_id"
+    t.index ["player_id"], name: "index_cards_on_player_id"
     t.index ["trick_id"], name: "index_cards_on_trick_id"
   end
 
   create_table "game_players", force: :cascade do |t|
     t.bigint "game_id"
     t.bigint "player_id"
+    t.boolean "human"
+    t.string "name"
     t.integer "position"
     t.boolean "forehand", default: false
+    t.string "team"
+    t.boolean "declarer"
+    t.boolean "partner"
+    t.integer "game_points"
+    t.integer "card_points"
+    t.boolean "winner"
     t.index ["game_id"], name: "index_game_players_on_game_id"
     t.index ["player_id"], name: "index_game_players_on_player_id"
   end
@@ -94,7 +118,10 @@ ActiveRecord::Schema.define(version: 2020_05_18_201523) do
     t.boolean "viewed", default: false
     t.integer "trick_index"
     t.bigint "game_id"
+    t.bigint "game_player_id"
+    t.boolean "finished", default: false
     t.index ["game_id"], name: "index_tricks_on_game_id"
+    t.index ["game_player_id"], name: "index_tricks_on_game_player_id"
   end
 
 end

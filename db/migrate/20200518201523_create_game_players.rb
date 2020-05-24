@@ -3,8 +3,26 @@ class CreateGamePlayers < ActiveRecord::Migration[5.2]
     create_table :game_players do |t|
       t.references :game
       t.references :player
+      t.boolean :human
+      t.string :name
       t.integer :position
       t.boolean :forehand, default: false
+      t.string :team
+      t.boolean :declarer
+      t.boolean :partner
+      t.integer :game_points
+      t.integer :card_points
+      t.boolean :winner
+    end
+
+    create_table :announcement_scores do |t|
+      t.references :game
+      t.string :slug
+      t.integer :kontra
+      t.boolean :off
+      t.boolean :declared
+      t.string :team
+      t.integer :points
     end
 
     change_table :cards do |t|
@@ -13,10 +31,16 @@ class CreateGamePlayers < ActiveRecord::Migration[5.2]
 
     change_table :bids do |t|
       t.references :game_player
+      t.boolean :won
     end
 
     change_table :announcements do |t|
       t.references :game_player
+    end
+
+    change_table :tricks do |t|
+      t.references :game_player, optional: :true
+      t.boolean :finished, default: false
     end
   end
 

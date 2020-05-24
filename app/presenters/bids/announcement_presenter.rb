@@ -1,22 +1,22 @@
 class Bids::AnnouncementPresenter
   ANNOUNCEMENT_NAMES = {
-    Announcements::PASS => 'pass',
-    Announcements::PAGAT => 'pagat',
-    Announcements::UHU => 'uhu',
-    Announcements::KAKADU => 'kakadu',
-    Announcements::KING => 'king ultimo',
-    Announcements::FORTY_FIVE => '45',
-    Announcements::VALAT => 'valat'
+    Announcement::PASS => 'pass',
+    Announcement::PAGAT => 'pagat',
+    Announcement::UHU => 'uhu',
+    Announcement::KAKADU => 'kakadu',
+    Announcement::KING => 'king ultimo',
+    Announcement::FORTY_FIVE => '45',
+    Announcement::VALAT => 'valat'
   }
 
   ANNOUNCEMENT_SHORTNAMES = {
-    # Announcements::PASS => nil,
-    Announcements::PAGAT => 'I',
-    Announcements::UHU => 'II',
-    Announcements::KAKADU => 'III',
-    Announcements::KING => 'K',
-    Announcements::FORTY_FIVE => '45',
-    Announcements::VALAT => 'V'
+    # Announcement::PASS => nil,
+    Announcement::PAGAT => 'I',
+    Announcement::UHU => 'II',
+    Announcement::KAKADU => 'III',
+    Announcement::KING => 'K',
+    Announcement::FORTY_FIVE => '45',
+    Announcement::VALAT => 'V'
   }
 
   def initialize(slug)
