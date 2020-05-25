@@ -18,17 +18,6 @@ class GamePlayer <  ApplicationRecord
 
   has_many :co_players, through: :game, source: :game_players
 
-  scope :declarers, -> { where(team: DECLARERS) }
-  scope :defenders, -> { where(team: DEFENDERS) }
-
-  def self.forehand
-    find(&:forehand)
-  end
-
-  def self.declarer
-    find(&:declarer)
-  end
-
   def self.next_from(game_player)
     return nil unless game_player
 

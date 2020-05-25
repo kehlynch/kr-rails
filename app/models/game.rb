@@ -1,11 +1,12 @@
 class Game < ApplicationRecord
   belongs_to :match
 
-  has_many :game_players, -> { includes(:bids, :announcements, :hand_cards) }
-  has_one :forehand, -> { where(forehand: true) }, class_name: 'GamePlayer'
-  has_one :partner, -> { where(partner: true) }, class_name: 'GamePlayer'
+  has_many :game_players
   has_many :declarers, -> { where(team: GamePlayer::DECLARERS) }, class_name: 'GamePlayer'
   has_many :defenders, -> { where(team: GamePlayer::DEFENDERS) }, class_name: 'GamePlayer'
+  has_one :forehand, -> { where(forehand: true) }, class_name: 'GamePlayer'
+  has_one :declarer, -> { where(declarer: true) }, class_name: 'GamePlayer'
+  has_one :partner, -> { where(partner: true) }, class_name: 'GamePlayer'
 
   has_many :cards, -> { includes(:game_player) }, dependent: :destroy
   has_many :talon_cards, -> { where.not(talon_half: nil) }, class_name: 'Card'
@@ -17,6 +18,19 @@ class Game < ApplicationRecord
 
   has_many :announcement_scores
 
+  default_scope {
+    includes(
+      :game_players,
+      :declarers,
+      :defenders,
+      :forehand,
+      :declarer,
+      :partner,
+      :bids,
+      :won_bid
+    )
+  }
+
   def self.deal_game(match_id, _players)
     game = Game.create(match_id: match_id)
     create_players_for(game)
@@ -25,9 +39,6 @@ class Game < ApplicationRecord
     end
 
     Dealer.deal(game)
-
-    # game.reload
-
     return game
   end
 
@@ -79,11 +90,6 @@ class Game < ApplicationRecord
     won_bid&.slug == Bid::BESSER_RUFER
   end
 
-
-  # def player_teams
-  #   @player_teams ||= PlayerTeams.new(self)
-  # end
-
   def stages
     [
       [Stage::BID, true],
@@ -101,14 +107,6 @@ class Game < ApplicationRecord
       !Stage.finished?(self, stage)
     end || Stage::FINISHED
   end
-
-  # def winners
-  #   player_teams.winners
-  # end
-
-  # def team_for(player)
-  #   player_teams.team_for(player)
-  # end
 
   def valid_announcements
     ValidAnnouncementsService.new(self).valid_announcements
@@ -198,12 +196,12 @@ class Game < ApplicationRecord
     return card
   end
 
-  def human_player
-    players.human_player
-  end
-
   def next_player_human?
     next_player&.human?
+  end
+
+  def declarer_human?
+    declarer&.human?
   end
 
   def next_player_forehand?
@@ -225,18 +223,6 @@ class Game < ApplicationRecord
     when Stage::FINISHED
       nil
     end
-  end
-
-  def human_forehand?
-    forehand.human?
-  end
-
-  def declarer
-    game_players.declarer
-  end
-
-  def declarer_human?
-    declarer&.human?
   end
 
   def current_trick

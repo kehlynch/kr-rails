@@ -39,7 +39,6 @@ class Bid < ApplicationRecord
   belongs_to :game_player
 
   validates :slug, inclusion: { in: RANKED_SLUGS }
-  scope :won, -> { where(won: true) }
 
   def self.second_round_finished?
     first_round_finished? && (highest&.slug != RUFER)
@@ -56,7 +55,7 @@ class Bid < ApplicationRecord
   end
 
   def self.highest
-    all.max_by do |b|
+    includes(:game_player).all.max_by do |b|
       [b.rank, b.game_player.forehand? ? 1 : 0]
     end
   end

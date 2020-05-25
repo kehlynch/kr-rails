@@ -9,7 +9,6 @@ class LegalTrickCardService
     @legal_mapping = @cards.map { |c| [c, false] } .to_h
 
     if @bid && @trick.cards.none? { |c| c.game_player == @game_player }
-      p 'generating'
       generate_legal_mapping
     end
   end
@@ -19,7 +18,6 @@ class LegalTrickCardService
   end
 
   def legal_cards
-    # p 'hand_cards', @cards.map { |c| [c.game_player.name, c.slug] }
     @legal_mapping.select { |k, v| v }.keys
   end
 

@@ -6,7 +6,7 @@ class Runner
   class RunnerError < StandardError; end
 
   def initialize(game, active_player_id=nil)
-    @game = Game.includes(:bids).find(game.id)
+    @game = game
     @broadcaster = Broadcaster.new(game)
   end
 
