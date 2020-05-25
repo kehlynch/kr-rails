@@ -9,9 +9,11 @@ class Points::PlayerPointsPresenter
     {
       id: id,
       points: @points,
-      forehand: @player.forehand?,
-      winner: winner?,
-      declarer: @game&.declarer&.id == @player.id
+      classes: classlist(
+        forehand: @player.forehand?,
+        winner: winner?,
+        declarer: @game&.declarer&.id == @player.id
+      ).join(' ')
     }
   end
 
@@ -25,5 +27,9 @@ class Points::PlayerPointsPresenter
     winning_team = @game.won_bid&.off ? GamePlayer::DEFENDERS : GamePlayer::DECLARERS
 
     @player.team == winning_team
+  end
+
+  def classlist(**args)
+    args.select{ |_k, v| v }.keys
   end
 end

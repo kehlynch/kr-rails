@@ -17,10 +17,9 @@ function updatePickTalon(newData, oldData) {
 }
 
 function updateTalonHalves(halves) {
-  halves.forEach(({ pickable, picked, index } ) => {
+  halves.forEach(({ disabled, classes, index } ) => {
     const selector = `#js-talon-half-${index}`
-    $(selector).toggleClass('pickable', pickable)
-    $(selector).toggleClass('picked', picked)
-    $(selector).prop('disabled', !pickable)
+    $(selector).attr('class', `talon-half-container ${classes}`);
+    $(selector).prop('disabled', disabled);
   })
 }

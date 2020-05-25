@@ -58,13 +58,10 @@ function updateGamePoints({ players, shorthands }) {
   updateShorthands(shorthands);
 }
 
-function updatePlayerGamePoints({ id, points, forehand, declarer, winner }) {
-  const html = `<div class="game-point-inner">${points}</div>`
+function updatePlayerGamePoints({ id, points, classes }) {
+  const html = `<div class="game-point-inner ${classes}">${points}</div>`
   const node = $(`#${id}`);
   node.empty().append(html);
-  node.toggleClass('forehand', forehand);
-  node.toggleClass('declarer', declarer);
-  node.toggleClass('winner', winner);
 }
 
 function updateShorthands({ id, bid, announcements }) {

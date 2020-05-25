@@ -56,10 +56,19 @@ class PickTalonPresenter
 
   def half_props(cards, index)
     {
-      pickable: talon_pickable?,
-      picked: @talon_picked == index,
       index: index,
-      cards: cards.map { |c| CardPresenter.new(c, @active_player).props_for_pick_talon }
+      cards: cards.map { |c| CardPresenter.new(c, @active_player).props_for_pick_talon },
+      disabled: !talon_pickable?,
+      classes: classlist(
+        pickable: talon_pickable?,
+        picked: @talon_picked == index
+      ).join(' ')
     }
+  end
+
+  private
+
+  def classlist(**args)
+    args.select{ |_k, v| v }.keys
   end
 end

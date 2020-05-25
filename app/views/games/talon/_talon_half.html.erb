@@ -1,9 +1,9 @@
 <%= content_tag(
   :div,
   onclick: "submitGame(talon_#{index})",
-  disabled: !pickable,
-  class: talon_half_classes(pickable, picked),
-   id: "js-talon-half-#{index}"
+  disabled: disabled,
+  class: "talon-half-container #{classes}",
+  id: "js-talon-half-#{index}"
 ) do %>
   <input hidden=true id="talon_<%= index %>" name="game[pick_talon]" type="checkbox" value="<%= index %>" />
   <% cards.each do |card| %>
