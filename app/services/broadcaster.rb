@@ -11,8 +11,7 @@ class Broadcaster
   end
 
   def broadcast_to_player(player_id, visible_stage=nil)
-    # data = GamePresenter.new(@game, player_id).props(visible_stage)
-    data = {}
+    data = GamePresenter.new(@game, player_id).props(visible_stage)
     channel = "#{player_id}-#{@game.id}"
     ActionCable.server.broadcast(channel, data)
   end
