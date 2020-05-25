@@ -53,7 +53,7 @@ class LegalTrickCardService
   end
 
   def set_all_cards_illegal_except(card)
-    @legal_mapping.update(@legal_mapping) { |k, v| k != card }
+    @legal_mapping.update(@legal_mapping) { |k, v| k == card }
   end
   
   def set_legal(card)
@@ -140,9 +140,11 @@ class LegalTrickCardService
   end
 
   def update_legal_from_promised_cards
+    p ['promised_cards', promised_cards]
     if promised_cards.any?
       promised_cards.each do |promised_card|
         pertinent_trick = promised_card.promised_on_trick_index == trick_index
+        p ['pertinene_tric', pertinent_trick]
         if pertinent_trick && legal?(promised_card)
           set_all_cards_illegal_except(promised_card)
         elsif !pertinent_trick && legal?(promised_card)

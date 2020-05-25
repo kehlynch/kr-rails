@@ -12,6 +12,7 @@ class PointsService
     elsif @bid.negative?
       Points::NegativeGamePointsService.new(@game).record_game_points
     else
+      @game.announcement_scores.destroy_all
       create_announcement_scores
       Points::PositiveGamePointsService.new(@game).record_game_points
     end

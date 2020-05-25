@@ -27,14 +27,15 @@ class Points::PositiveGamePointsService
   end
 
   def game_points_for(gp)
-    bid_points = @bid.points * @bid.kontra_multiplier
-    team_announcement_points = announcement_points_for(gp.team)
+    bid_points = @bid.points * @bid.kontra_multiplier # 3
+    bid_points = bid_points * 2 if off_double?
+    team_announcement_points = announcement_points_for(gp.team) # 0
 
-    if gp.winner
-      team_announcement_points + bid_points
-    else
-      team_announcement_points - bid_points
-    end
+    team_count = gp.team_members.count # 1 -- 3
+    opposition_count = 4 - team_count # 3 -- 1
+    points_swing = gp.winner ?  team_announcement_points + bid_points : team_announcement_points - bid_points # 3 -- -3
+
+    points_swing * opposition_count # 9
   end
 
   def announcement_points_for(team_name)
@@ -50,6 +51,10 @@ class Points::PositiveGamePointsService
     else
       return declarers
     end
+  end
+
+  def off_double?
+    @bid.slug == Bid::SECHSERDREIER && bid_off?
   end
 
   def bid_off?

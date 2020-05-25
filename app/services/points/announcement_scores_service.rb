@@ -24,9 +24,10 @@ class Points::AnnouncementScoresService
       Announcement::VALAT => valat_status,
     }.each do |slug, status|
       a = team_announcement(slug)
+      p [slug, status]
       case status
       when :not_attempted
-        return unless a.present?
+        next unless a.present?
 
         maybe_create_announcement_score(slug, a, off: true)
       when :succeeded

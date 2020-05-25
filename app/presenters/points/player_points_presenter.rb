@@ -22,6 +22,8 @@ class Points::PlayerPointsPresenter
   end
 
   def winner?
-    @game.won_bid&.off || @player.team == GamePlayer::DEFENDERS
+    winning_team = @game.won_bid&.off ? GamePlayer::DEFENDERS : GamePlayer::DECLARERS
+
+    @player.team == winning_team
   end
 end
