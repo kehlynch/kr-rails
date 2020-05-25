@@ -43,17 +43,17 @@ class Bid < ApplicationRecord
   validates :slug, inclusion: { in: RANKED_SLUGS }
   scope :won, -> { where(won: true) }
 
-  default_scope { includes(:game_player) }
+  # default_scope { includes(:game_player) }
 
   # # if this returns nil, bidder is forehand
   # def self.next_bidder
   #   last&.game_player&.next_game_player
   # end
 
-  def self.finished?
-    find { |b| b.won }.present?
-    # won.size > 0
-  end
+  # def self.finished?
+  #   find { |b| b.won }.present?
+  #   # won.size > 0
+  # end
 
   def self.second_round_finished?
     first_round_finished? && (highest&.slug != RUFER)
@@ -67,22 +67,6 @@ class Bid < ApplicationRecord
     select do |bid|
       bid.slug == PASS
     end.map(&:game_player_id).uniq.size
-  end
-
-  def self.talon_cards_to_pick
-    return nil if !finished? || !highest&.talon?
-
-    return 6 if highest&.slug == SECHSERDREIER
-
-    return 3
-  end
-
-  def self.pick_king?
-    finished? && highest&.king?
-  end
-
-  def self.bird_required?
-    finished? && highest.slug == BESSER_RUFER
   end
 
   def self.highest

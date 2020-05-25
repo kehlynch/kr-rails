@@ -21,12 +21,12 @@ class ResolveTalonPresenter
   def instruction
     return finished_instruction if @game.talon_resolved
 
-    return "select #{@game.bids.talon_cards_to_pick} cards to put down" if @active_player.declarer?
+    return "select #{@game.talon_cards_to_pick} cards to put down" if @active_player.declarer?
 
-    "waiting for #{@game.declarer&.name} to put down #{@game.bids.talon_cards_to_pick} cards"
+    "waiting for #{@game.declarer&.name} to put down #{@game.talon_cards_to_pick} cards"
   end
 
   def finished_instruction
-    "#{@game.declarer&.name} puts down #{@game.bids.talon_cards_to_pick} cards. Click to continue"
+    "#{@game.declarer&.name} puts down #{@game.talon_cards_to_pick} cards. Click to continue"
   end
 end

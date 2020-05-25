@@ -13,7 +13,7 @@ class ContractPresenter
   private
 
   def won_bid
-    return nil unless @game.bids.finished?
+    return nil unless Stage.finished?(@game, Stage::BID)
     Bids::BidPresenter.new(@game.bids.highest&.slug).name(declared: true)
   end
 end

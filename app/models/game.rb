@@ -8,8 +8,8 @@ class Game < ApplicationRecord
   has_many :defenders, -> { where(team: GamePlayer::DEFENDERS) }, class_name: 'GamePlayer'
 
   has_many :cards, -> { includes(:game_player) }, dependent: :destroy
-  has_many :announcements, -> { order(:id).includes(:game_player) }, dependent: :destroy
-  has_many :bids, -> { order(:id).includes(:game_player) }, dependent: :destroy
+  has_many :announcements, -> { includes(:game_player) }, dependent: :destroy
+  has_many :bids, dependent: :destroy
   has_one :won_bid, -> { where(won: true) }, class_name: 'Bid'
 
   has_many :tricks, dependent: :destroy
@@ -19,25 +19,26 @@ class Game < ApplicationRecord
 
   delegate :declarer, to: :bids
 
-  default_scope {
-    includes(
-      # :cards,
-      # :game_players,
-      :bids,
-      # :announcements,
-      # :tricks,
-    )
-  }
+#   default_scope {
+#     includes(
+#       # :cards,
+#       # :game_players,
+# e     # :bids,
+#       # :announcements,
+#       # :tricks,
+#     )
+#   }
 
   def self.deal_game(match_id, _players)
     game = Game.create(match_id: match_id)
-    game_players = create_players_for(game)
-    Dealer.deal(game, game_players)
+    create_players_for(game)
     (0..11).each do |index|
       Trick.create(game_id: game.id, trick_index: index)
     end
 
-    game.reload
+    Dealer.deal(game)
+
+    # game.reload
 
     return game
   end
@@ -56,7 +57,7 @@ class Game < ApplicationRecord
   def reset!
     bids.destroy_all
     announcements.destroy_all
-    game_players.update_all(delcarer: false, partner: false, team: nil)
+    game_players.update_all(declarer: false, partner: false, team: nil)
     cards.update_all(discard: false, trick_id: nil, played_index: nil)
     cards.where.not(talon_half: nil).update_all(game_player_id: nil)
     update(king: nil, talon_picked: nil, talon_resolved: false)
@@ -74,6 +75,19 @@ class Game < ApplicationRecord
     @talon ||= Talon.new(cards, self)
   end
 
+  def talon_cards_to_pick
+    return nil if won_bid.nil? || !won_bid.talon?
+
+    return 6 if won_bid.slug == Bid::SECHSERDREIER
+
+    return 3
+  end
+
+  def bird_required?
+    won_bid&.slug == Bid::BESSER_RUFER
+  end
+
+
   # def player_teams
   #   @player_teams ||= PlayerTeams.new(self)
   # end
@@ -81,9 +95,9 @@ class Game < ApplicationRecord
   def stages
     [
       [Stage::BID, true],
-      [Stage::KING, bids.pick_king?],
-      [Stage::PICK_TALON, bids.talon_cards_to_pick.present?],
-      [Stage::RESOLVE_TALON, bids.talon_cards_to_pick.present?],
+      [Stage::KING, won_bid&.king?],
+      [Stage::PICK_TALON, talon_cards_to_pick.present?],
+      [Stage::RESOLVE_TALON, talon_cards_to_pick.present?],
       [Stage::ANNOUNCEMENT, bids.highest&.announcements?],
       [Stage::TRICK, true],
       [Stage::FINISHED, true]
@@ -113,7 +127,7 @@ class Game < ApplicationRecord
   end
 
   def make_bid!(bid_slug = nil)
-    return nil if (next_player_human? && !bid_slug)
+    return nil if (next_player_human? && !bid_slug) || won_bid.present?
 
     bid_slug ||= next_player.pick_bid(valid_bids)
     return unless valid_bids.include?(bid_slug)
@@ -132,7 +146,7 @@ class Game < ApplicationRecord
   end
 
   def make_announcement!(slug = nil)
-    return nil if (next_player_human? && !slug)
+    return nil if (next_player_human? && !slug) || announcements.finished?
 
     slug ||= next_player.pick_announcement(valid_announcements)
     return unless valid_announcements.include?(slug)
@@ -152,7 +166,7 @@ class Game < ApplicationRecord
   end
 
   def pick_talon!(talon_half_index=nil)
-    if bids.talon_cards_to_pick == 6
+    if talon_cards_to_pick == 6
       pick_whole_talon!
     else
       puts 'pick_talon!', declarer_human?, talon_half_index
@@ -180,9 +194,9 @@ class Game < ApplicationRecord
   end
 
   def play_card!(card=nil)
-    return nil if next_player_human? && !card
+    return nil if (next_player_human? && !card) || finished?
 
-    card ||= next_player.pick_card
+    card ||= next_player.pick_card_for(current_trick, won_bid)
     card = tricks.add_card!(card)
 
     if finished?
@@ -213,8 +227,8 @@ class Game < ApplicationRecord
     when Stage::KING, Stage::PICK_TALON, Stage::RESOLVE_TALON
       declarer
     when Stage::TRICK
-      current_trick.won_player ||
-        game_players.next_from(current_trick.last_player) ||
+      game_players.next_from(current_trick.last_player) ||
+        tricks.last_finished_trick&.won_player ||
         bid_lead
     when Stage::FINISHED
       nil
@@ -226,7 +240,7 @@ class Game < ApplicationRecord
   end
 
   def declarer
-    bids.declarer
+    game_players.declarer
   end
 
   def declarer_human?
@@ -252,6 +266,7 @@ class Game < ApplicationRecord
   end
 
   def set_defenders
-    game_players.where.not(team: GamePlayer::DECLARERS).update(team: GamePlayer::DEFENDERS)
+    # https://thoughtbot.com/blog/activerecord-s-where-not-and-nil
+    game_players.where.not(team: GamePlayer::DECLARERS).or(game_players.where(team: nil)).update(team: GamePlayer::DEFENDERS)
   end
 end

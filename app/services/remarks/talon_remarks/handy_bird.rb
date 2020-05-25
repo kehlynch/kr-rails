@@ -7,7 +7,7 @@ module Remarks::TalonRemarks
     private
 
     def handy_bird?
-      return true if @game.bids.bird_required? && bird?
+      return true if @game.bird_required? && bird?
 
       false
     end

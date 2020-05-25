@@ -10,8 +10,8 @@ class CreateGamePlayers < ActiveRecord::Migration[5.2]
       t.string :team
       t.boolean :declarer
       t.boolean :partner
-      t.integer :game_points
-      t.integer :card_points
+      t.integer :game_points, default: 0
+      t.integer :card_points, default: 0
       t.boolean :winner
     end
 
@@ -31,7 +31,8 @@ class CreateGamePlayers < ActiveRecord::Migration[5.2]
 
     change_table :bids do |t|
       t.references :game_player
-      t.boolean :won
+      t.boolean :won, default: false
+      t.boolean :off, default: false
     end
 
     change_table :announcements do |t|

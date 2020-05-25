@@ -1,9 +1,9 @@
 class Trick < ApplicationRecord
   belongs_to :game
-  has_many :cards
+  has_many :cards, -> { order(:played_index) }
   belongs_to :won_player, class_name: 'GamePlayer', foreign_key: 'game_player_id', optional: true
 
-  before_save :record_winning_player
+  before_save :record_won_player
 
   def self.finished?
     find_by(trick_index: 11, finished: true).present?
@@ -14,17 +14,24 @@ class Trick < ApplicationRecord
   end
 
   def self.current_trick
-    last_played_trick = where.not(cards: []).order(trick_index: :desc).first
+    # last_played_trick = where.not(cards: []).reorder(:trick_index).last
 
-    last_played_trick || find_by(trick_index: 0)
+    # https://solidfoundationwebdev.com/blog/posts/how-to-find-records-based-on-has_many-relationship-being-empty-or-not-in-rails
+    last_played_trick = joins(:cards).reorder(:trick_index).last
 
-    # return last_played_trick unless last_played_trick.finished?
+    return find_by(trick_index: 0) unless last_played_trick
 
-    # return find_by(trick_index: last_played_trick.trick_index + 1)
+    return find_by(trick_index: last_played_trick.trick_index + 1) if last_played_trick.finished?
+
+    return last_played_trick
+  end
+
+  def self.last_finished_trick
+    joins(:cards).group('tricks.id').having('count(trick_id) = 4').reorder(:trick_index).last
   end
 
   def self.playable_trick_index
-    current_trick.trick_index
+    current_trick&.trick_index
   end
 
   # def self.next_player
@@ -43,6 +50,14 @@ class Trick < ApplicationRecord
     update(finished: true) if cards.size == 4
 
     return card
+  end
+
+  def led_card
+    cards[0]
+  end
+
+  def last_player
+    cards[-1]&.game_player
   end
 
   def started?
@@ -75,20 +90,16 @@ class Trick < ApplicationRecord
     finished? ? winning_card : nil
   end
 
-  def next_player
-    return lead_player if cards.empty?
+  # def next_player
+  #   return lead_player if cards.empty?
 
-    last_player.next_game_player
-  end
+  #   last_player.next_game_player
+  # end
 
   private
 
   def next_played_index
     (cards.maximum(:played_index) || 0) + 1
-  end
-
-  def last_player
-    cards[-1]&.game_player
   end
 
   def previous_trick
@@ -109,13 +120,9 @@ class Trick < ApplicationRecord
     end
   end
 
-  def led_card
-    cards[0]
-  end
-
-  def record_winning_player
+  def record_won_player
     if finished?
-      self.won_player = highest.game_player
+      self.won_player = won_card.game_player
     end
   end
 end

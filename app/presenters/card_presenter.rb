@@ -46,7 +46,7 @@ class CardPresenter
       pickable: @active_player.declarer?,
       illegal: @active_player.declarer? && !@card.simple_legal_putdown?,
       input_id: id,
-      onclick: @active_player.declarer? && @card.simple_legal_putdown? && "toggleCard('#{id}', #{@card.game.bids.talon_cards_to_pick})",
+      onclick: @active_player.declarer? && @card.simple_legal_putdown? && "toggleCard('#{id}', #{@card.game.talon_cards_to_pick})",
     }
   end
 

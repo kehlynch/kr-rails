@@ -1,124 +1,157 @@
 class LegalTrickCardService
-  def initialize(hand_cards, trick, bid)
-    @card = card
+  attr_reader :legal_mapping
+
+  def initialize(game_player, trick, won_bid)
+    @cards = game_player.hand_cards
     @trick = trick
-    @bid = bid
+    @bid = won_bid
+    @game_player = game_player
+    @legal_mapping = @cards.map { |c| [c, false] } .to_h
+
+    if @bid && @trick.cards.none? { |c| c.game_player == @game_player }
+      p 'generating'
+      generate_legal_mapping
+    end
   end
 
-  def legal?
-    return false unless @bid
+  def legal?(card)
+    @legal_mapping[card]
+  end
 
-    return negative_legal? if @bid.negative?
-
-    return false if  illegal_through_announcements?
-
-    if forced_cards.any?
-      return true if game_player.forced_cards.include?(slug)
-
-      return false
-    end
-
-    return false if game_player.illegal_cards.include?(slug)
-
-    return true if !winning_card # lead a card
-
-    return true if suit == led_suit
-
-    return false if game_player.hand_cards.cards_in_led_suit?
-
-    return true if trump?
-
-    return false if game_player.trumps.length > 0
-
-    return true
+  def legal_cards
+    # p 'hand_cards', @cards.map { |c| [c.game_player.name, c.slug] }
+    @legal_mapping.select { |k, v| v }.keys
   end
 
   private
 
-  attr_reader :card, :trick
+  attr_reader :trick, :cards, :game_player
 
-  delegate(
-    :game,
-    :game_player,
-    :slug,
-    :suit,
-    :trump?,
-    to: :card
-  )
+  delegate(:led_suit, :winning_card, :led_card, :trick_index, to: :trick)
+  delegate(:promised_cards, to: :game_player)
+  delegate(:trumps, to: :cards)
 
-  delegate(
-    :led_suit,
-    :winning_card,
-    :led_card,
-    :trick_index,
-    to: :trick
-  )
-
-  def illegal_through_bird?
-    promised_birds = game_player.promised_birds
-    return false unless promised_birds.any?
-
-    # if trumps are otherwise legal and they only have promised bird left, they'll have one of them, so don't mark other cards ilelga
-    # TODO: unless they're lead!!
-    return false if game_player.hand_cards.trumps.length == promised_birds.length
-
-    promised_birds.any? do |card|
-      illegal_through_promised_card?(card)
+  def generate_legal_mapping
+    if @bid.negative?
+      update_negative_legal
+    else
+      update_positive_legal
     end
   end
 
-  def illegal_through_king?
-    promised_king = game_player.promised_king
-
-    return false unless game_player.promised_king
-
-    # if it's the last card in this suit, and it's legal, they'll have to play it
-    # TODO: unless they're lead!!
-    return false
-
+  def lead?
+    led_card.blank?
   end
 
-  def illegal_through_promised_card?(promised_card)
-    pertinent_trick = promised_card.promised_on_trick_index == trick_index
-    pertinent_card = promised_card == @card
-
-    return false if pertinent_trick && pertinent_card
-
-    return true if pertinent_trick || pertinent_card
+  def set_trumps_legal(except_pagat = false)
+    # https://makandracards.com/makandra/36475-ruby-how-to-update-all-values-of-a-hash
+    @legal_mapping.update(@legal_mapping) { |k, v| k.trump? && (!except_pagat || k.slug != 'trump_1') }
   end
 
-  def negative_legal?
-    winning_card = @trick&.winning_card
+  def set_all_cards_legal(except_pagat = false)
+    @legal_mapping.update(@legal_mapping) { |k, v| !except_pagat || k.slug != 'trump_1' }
+  end
 
-    if !winning_card
-      # leading pagat
-      return false if @card.pagat? && game_player.trumps.length > 1 && @bid.trischaken?
+  def set_all_cards_illegal_except(card)
+    @legal_mapping.update(@legal_mapping) { |k, v| k != card }
+  end
+  
+  def set_legal(card)
+    @legal_mapping[card] = true
+  end
 
-      return true
+  def set_illegal(card)
+    @legal_mapping[card] = false
+  end
+
+  def no_cards_legal?
+    @legal_mapping.values.none?
+  end
+
+  def legal_card_count
+    @legal_mapping.select { |k, v| v }.count
+  end
+
+  def update_negative_nonlead_legal
+    led_suit_cards = @cards.cards_in_suit(led_suit)
+    winning_card_in_led_suit = winning_card.suit == led_suit
+    legal_led_suit_cards =
+      winning_card_in_led_suit ? 
+        led_suit_cards.select { |c| c.value > led_suit.value } :
+        led_suit_cards
+
+    return if legal_cards
+
+
+    if legal_led_suit_cards.any? # play up if possible
+      legal_led_suit_cards.each { |c| set_legal(c) }
+    elsif led_suit_cards.any?
+      led_suit_cards.each { |c| set_legal(c) }
+    elsif trumps.any?
+      set_trumps_legal(except_pagat: @bid.trischaken?)
+    else
+      set_all_cards_legal(except_pagat: @bid.trischaken?)
     end
 
-    play_ups = game_player.suit_cards(winning_card.suit).select { |c| c.value > winning_card.value }
+    # Pagat the only trump left in Trischaken - this shouldn't happen otherwise
+    if no_cards_legal?
+      pagat = @cards.find { |c| c.slug == 'trump_1' }
+      @legal_mapping[pagat] = true
+    end
+  end
 
-    if suit == led_suit
-      return true if winning_card.suit != led.suit
-
-      return true if value > winning_card.value
-
-      return true if play_ups.empty?
+  def update_negative_legal
+    p @cards.map { |c| c.slug }
+    if lead? && @bid.trischaken?
+      set_all_cards_legal(except_pagat: @bid.trischaken?)
+    elsif lead?
+      set_all_cards_legal
+    else
+      update_negative_nonlead_legal
     end
 
-    return false if game_player.suit_cards(led_suit).any?
+    fail 'found no legal cards for negative bid' if no_cards_legal?
+  end
 
-    if trump?
-      return true if !winning_card.trump?
+  def update_positive_legal
+    update_simple_positive_legal
 
-      return true if value > winning_card.value
+    update_legal_from_promised_cards
 
-      return true if play_ups.empty?
+    fail 'found no legal cards for positiive bid' if no_cards_legal?
+  end
+
+  def update_simple_positive_legal
+    p 'update_simple_positive_legal'
+    return set_all_cards_legal if lead?
+
+    led_suit_cards = @cards.cards_in_suit(led_suit)
+
+    if led_suit_cards.any?
+      p 'led suit cards'
+      led_suit_cards.each { |c| set_legal(c) }
+    elsif trumps.any?
+      p 'trumps'
+      set_trumps_legal
+    else
+      p 'anything'
+      set_all_cards_legal
     end
+  end
 
-    return false if game_player.trumps.any?
+  def update_legal_from_promised_cards
+    if promised_cards.any?
+      promised_cards.each do |promised_card|
+        pertinent_trick = promised_card.promised_on_trick_index == trick_index
+        if pertinent_trick && legal?(promised_card)
+          set_all_cards_illegal_except(promised_card)
+        elsif !pertinent_trick && legal?(promised_card)
+          set_illegal(promised_card)
+        end
+      end
 
-    return true
+      # if we have to play a promised card, reset everything as if nothing was promised.
+      update_simple_position_legal if no_cards_legal?
+    end
   end
 end

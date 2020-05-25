@@ -9,7 +9,7 @@ class PointsService
 
     if @bid.trischaken?
       Points::TrischakenGamePointsService.new(@game).record_game_points
-    elsif @bids.negative?
+    elsif @bid.negative?
       Points::NegativeGamePointsService.new(@game).record_game_points
     else
       create_announcement_scores
@@ -21,19 +21,19 @@ class PointsService
 
   attr_reader :game
 
-  delegate(:game_players, to: game)
-  delegate(:defenders, :declarers, to: game_players)
+  delegate(:game_players, to: :game)
+  delegate(:defenders, :declarers, to: :game_players)
 
   def create_announcement_scores
     [GamePlayer::DEFENDERS, GamePlayer::DECLARERS].each do |team_name|
-      team = game_players.select { |gp| gp.team == team_name }
-      Points::AnnouncementScoresService.new(@game, team).create_announcement_scores
+      team = game_players.where(team: team_name)
+      Points::AnnouncementScoresService.new(@game, team, team_name).create_announcement_scores
     end
   end
 
   def record_card_points
     @game.game_players.each do |gp|
-      card_points = card_point_for(gp.tricks.cards)
+      card_points = card_points_for(gp.tricks.map(&:cards).flatten)
       gp.update(card_points: card_points)
     end
   end

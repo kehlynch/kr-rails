@@ -10,7 +10,7 @@ class Points::PlayerPointsPresenter
       id: id,
       points: @points,
       forehand: @player.forehand?,
-      winner: @game.winners.map(&:id).include?(@player.id),
+      winner: winner?,
       declarer: @game&.declarer&.id == @player.id
     }
   end
@@ -19,5 +19,9 @@ class Points::PlayerPointsPresenter
 
   def id
     "js-points-#{@game.id}-#{@player.id}"
+  end
+
+  def winner?
+    @game.won_bid&.off || @player.team == GamePlayer::DEFENDERS
   end
 end

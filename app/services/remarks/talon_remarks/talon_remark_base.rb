@@ -34,7 +34,7 @@ module Remarks::TalonRemarks
     end
 
     def turned_over?
-      @game.bids.talon_cards_to_pick == 6
+      @game.talon_cards_to_pick == 6
     end
   end
 end

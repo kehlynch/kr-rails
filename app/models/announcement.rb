@@ -5,7 +5,7 @@ class Announcement < ApplicationRecord
   belongs_to :game
   belongs_to :game_player
 
-  default_scope { order(:id).includes(:game_player) }
+  default_scope { includes(:game_player) }
 
   PASS = 'pass'
   PAGAT = 'pagat'
@@ -33,7 +33,7 @@ class Announcement < ApplicationRecord
   # end
 
   def self.last_passed_player
-    order(:id).find_by(slug: PASS)&.game_player
+    reorder(id: :desc).find_by(slug: PASS)&.game_player
   end
 
   def self.finished?

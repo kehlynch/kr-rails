@@ -31,7 +31,7 @@ class GamePresenter
       Stage::RESOLVE_TALON => ResolveTalonPresenter.new(@game, @active_player, visible_stage).props,
       Stage::ANNOUNCEMENT => Bids::AnnouncementsPresenter.new(@game, @active_player, visible_stage).props,
       Stage::TRICK => TricksPresenter.new(@game, @active_player, visible_stage, visible_trick_index).props,
-      # Stage::FINISHED => FinishedPresenter.new(@game, @active_player, visible_stage).props,
+      Stage::FINISHED => FinishedPresenter.new(@game, @active_player, visible_stage).props,
     }
   end
 

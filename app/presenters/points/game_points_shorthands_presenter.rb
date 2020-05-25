@@ -14,38 +14,34 @@ class Points::GamePointsShorthandsPresenter
   private
 
   def bid_props
-    winning_bid = @game.bids.highest
+    won_bid = @game.won_bid
     {
       id: "js-points-bid-#{@game.id}",
-      shorthand: winning_bid && Bids::BidPresenter.new(winning_bid.slug).shorthand,
+      shorthand: won_bid && Bids::BidPresenter.new(won_bid.slug).shorthand,
       classes: classlist(
-        kontra: winning_bid && winning_bid.kontra,
-        off: !@game.winners.include?(@game.declarer),
-        vs_three:  @game.player_teams.defence.length == 3 && winning_bid&.king?
+        kontra: won_bid&.kontra,
+        off: won_bid&.off,
+        vs_three:  @game.defenders.count == 3 && won_bid&.king?
       ).join(' ')
     }
   end
 
   def announcements_props
-    Announcements::SLUGS.map do |slug|
-      announcement_props_for_points(slug)
-    end.flatten
+    @game.announcement_scores.map do |announcement_score|
+      announcement_props_for_points(announcement_score)
+    end
   end
 
-  def announcement_props_for_points(slug)
-    @game.player_teams.map do |team|
-      next unless team.made_announcement?(slug) || team.lost_announcement?(slug)
-
-      {
-        shorthand: Bids::AnnouncementPresenter.new(slug).shorthand,
-        classes: classlist(
-          kontra: team.announcement(slug)&.kontra || false,
-          off: team.lost_announcement?(slug),
-          defence: team.defence?,
-          declared: team.announced?(slug)
-        ).join(' ')
-      }
-    end.compact
+  def announcement_props_for_points(a)
+    {
+      shorthand: Bids::AnnouncementPresenter.new(a.slug).shorthand,
+      classes: classlist(
+        kontra: a.kontra,
+        off: a.off,
+        defence: a.team == GamePlayer::DEFENDERS,
+        declared: a.declared
+      ).join(' ')
+    }
   end
 
   def classlist(**args)
@@ -57,5 +53,3 @@ class Points::GamePointsShorthandsPresenter
     { 2 => 'kontra', 4 => 'rekontra', 8 => 'subkontra' }[kontra]
   end
 end
-
-

@@ -31,7 +31,7 @@ module Stage
   def self.finished?(game, stage)
     case stage
     when BID
-      game.bids.finished?
+      game.won_bid.present?
     when KING
       game.king.present?
     when PICK_TALON

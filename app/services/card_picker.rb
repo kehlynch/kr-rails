@@ -1,6 +1,9 @@
 class CardPicker
-  def initialize(hand:, bird_announced:)
+  def initialize(hand:, trick:, bid:, bird_announced:, game_player:)
     @hand = hand
+    @trick = trick
+    @bid = bid
+    @game_player = game_player
     @bird_announced = bird_announced
   end
 
@@ -8,7 +11,7 @@ class CardPicker
     fail 'trying to pick card when hand is empty' if @hand.empty?
 
     # TODO:
-    # legal_cards = @hand.select(&:legal?)
+    legal_cards = LegalTrickCardService.new(@game_player, @trick, @bid).legal_cards
 
     # TODO: stop the bots leading trumps till they're out when declarer
     if @bird_announced && legal_cards.any?(&:trump?)

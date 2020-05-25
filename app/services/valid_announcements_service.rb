@@ -65,6 +65,6 @@ class ValidAnnouncementsService
   end
 
   def must_announce_bird?
-    bids.bird_required? && next_player.declarer? && !next_player.announced_bird?
+    game.bird_required? && next_player.declarer? && !next_player.announced_bird?
   end
 end

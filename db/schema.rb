@@ -45,7 +45,8 @@ ActiveRecord::Schema.define(version: 2020_05_18_201523) do
     t.bigint "player_id"
     t.integer "kontra"
     t.bigint "game_player_id"
-    t.boolean "won"
+    t.boolean "won", default: false
+    t.boolean "off", default: false
     t.index ["game_id"], name: "index_bids_on_game_id"
     t.index ["game_player_id"], name: "index_bids_on_game_player_id"
     t.index ["player_id"], name: "index_bids_on_player_id"
@@ -80,8 +81,8 @@ ActiveRecord::Schema.define(version: 2020_05_18_201523) do
     t.string "team"
     t.boolean "declarer"
     t.boolean "partner"
-    t.integer "game_points"
-    t.integer "card_points"
+    t.integer "game_points", default: 0
+    t.integer "card_points", default: 0
     t.boolean "winner"
     t.index ["game_id"], name: "index_game_players_on_game_id"
     t.index ["player_id"], name: "index_game_players_on_player_id"

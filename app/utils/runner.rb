@@ -46,6 +46,8 @@ class Runner
       @broadcaster.broadcast
     end
 
+    # maybe ned this cos won_bid hasn't been recorded - haven't checked - it's all too slow atm!
+    @game.reload
     if @game.won_bid.present?
       advance!
     end

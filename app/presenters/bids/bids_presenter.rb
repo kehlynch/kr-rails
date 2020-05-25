@@ -12,11 +12,11 @@ class Bids::BidsPresenter < Bids::BidsBasePresenter
   end
 
   def finished?
-    @game.bids.finished?
+    Stage.finished?(@game, Stage::BID)
   end
 
   def finished_message
-    return nil unless @game.bids.finished?
+    return nil unless finished?
 
     "#{@game.declarer.name} wins bidding with #{Bids::BidPresenter.new(@game.bids.highest.slug).name(declared: true)}"
   end
@@ -39,7 +39,7 @@ class Bids::BidsPresenter < Bids::BidsBasePresenter
   end
 
   def instruction
-    return 'bidding finished, click to continue' if @game.bids.finished?
+    return 'bidding finished, click to continue' if finished?
 
     return 'make a bid' if @game.next_player.id == @active_player.id
 

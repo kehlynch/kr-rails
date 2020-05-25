@@ -10,7 +10,7 @@ class ValidBidsService
 
   def valid_bids
     if bids.first_round_finished?
-      return [Bid::PASS] unless bids.highest&.game_player.id == next_player.id
+      return [Bid::PASS] unless bids.highest&.game_player.id == next_player&.id
 
       return Bid::RUFER_SLUGS if winning_bid_slug == Bid::RUFER
 

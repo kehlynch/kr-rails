@@ -1,4 +1,4 @@
-class Points::AnnouncementPointsService
+class Points::AnnouncementScoresService
   POINTS = {
     Announcement::PAGAT => [2, 1],
     Announcement::UHU => [3, 1],
@@ -40,7 +40,7 @@ class Points::AnnouncementPointsService
   private
 
   def maybe_create_announcement_score(slug, announcement, off:)
-    kontra = announcement&.kontra
+    kontra = announcement&.kontra || 1
     declared = announcement.present?
     absolute_points = declared ? declared_points(slug) * kontra : undeclared_points(slug)
 
@@ -67,28 +67,28 @@ class Points::AnnouncementPointsService
   end
 
   def team_announcement(slug)
-    @team.announcements.find { |a| a.slug = slug }
+    @team.map(&:announcements).flatten.find { |a| a.slug == slug }
   end
 
   def bird_status(number)
     slug = "trump_#{number}"
     trick_index = 12 - number
-    card_played_on_trick_status(slug, trick_index, @team)
+    card_played_on_trick_status(slug, trick_index)
   end
 
   def king_status
-    card_played_on_trick_status(@game.king, 11, @team)
+    card_played_on_trick_status(@game.king, 11)
   end
 
   def card_played_on_trick_status(slug, trick_index)
     played_in_trick = @game.tricks
       .find { |t| t.trick_index == trick_index }
       .cards.find { |c|  c.slug == slug }.present?
-    team_played_card = @team.cards.find { |c| c.slug == slug }.present?
+    team_played_card = @team.map(&:cards).flatten.find { |c| c.slug == slug }.present?
 
     return :not_attempted unless played_in_trick && team_played_card
 
-    team_won_trick = @team.tricks.find { |t| t.trick_index == trick_index }.present?
+    team_won_trick = @team.map(&:tricks).flatten.find { |t| t.trick_index == trick_index }.present?
 
     return :succeeded if team_won_trick
 
@@ -96,10 +96,10 @@ class Points::AnnouncementPointsService
   end
 
   def forty_five_status
-    @team.card_points.sum? >= 45 ? :succeeded : :not_attempted
+    @team.map(&:card_points).sum >= 45 ? :succeeded : :not_attempted
   end
 
   def valat_status
-    @team.tricks.size == 12 ? :succeeded : :not_attempted
+    @team.map(&:tricks).flatten.size == 12 ? :succeeded : :not_attempted
   end
 end

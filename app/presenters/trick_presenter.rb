@@ -1,21 +1,20 @@
 class TrickPresenter
   attr_reader :trick, :trick_index
 
-  def initialize(game, active_player, index, trick, visible)
+  def initialize(game, active_player, trick, visible)
     @game = game
     @active_player = active_player
-    @index = index
     @trick = trick
     @visible = visible
   end
 
   def props
     {
-      index: @index,
+      index: @trick.trick_index,
       visible: @visible,
       cards: cards_props,
-      instruction: InstructionPresenter.new(instruction, Stage::TRICK, @index).props,
-      hand: HandPresenter.new(@game, @active_player).props_for_trick(@trick, @index)
+      instruction: InstructionPresenter.new(instruction, Stage::TRICK, @trick.trick_index).props,
+      hand: HandPresenter.new(@game, @active_player).props_for_trick(@trick, @trick.trick_index)
     }
   end
 
@@ -47,10 +46,10 @@ class TrickPresenter
   end
 
   def finished_instruction
-    "#{@trick.winning_player.name} wins trick. Click to continue."
+    "#{@trick.won_player.name} wins trick. Click to continue."
   end
 
   def game_finished_instruction
-    "#{@trick.winning_player.name} wins last trick. Click for scores."
+    "#{@trick.won_player.name} wins last trick. Click for scores."
   end
 end

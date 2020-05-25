@@ -1,4 +1,4 @@
-class TrischakenGamePointsService
+class Points::TrischakenGamePointsService
   def initialize(game)
     @game = game
   end

@@ -9,7 +9,9 @@ class GamePlayer <  ApplicationRecord
 
   has_many :cards
   has_many :hand_cards, -> { where(trick_id: nil, discard: false) }, class_name: 'Card'
-  has_many :original_hand_cards, -> { where(trick_half: nil) }, class_name: 'Card'
+  has_many :original_hand_cards, -> { where(talon_half: nil) }, class_name: 'Card'
+  # debug
+  has_many :played_cards, -> { where.not(trick_id: nil) }, class_name: 'Card'
 
 
   has_many :discards, -> { where(discard: true) }, class_name: 'Card'
@@ -28,12 +30,24 @@ class GamePlayer <  ApplicationRecord
     find(&:forehand)
   end
 
+  def self.declarer
+    find(&:declarer)
+  end
+
   def self.next_from(game_player)
     return nil unless game_player
 
     find do |p|
       p.position == (game_player.position + 1) % 4
     end
+  end
+
+  def forehand?
+    forehand
+  end
+
+  def declarer?
+    declarer
   end
 
   def team_members
@@ -68,22 +82,17 @@ class GamePlayer <  ApplicationRecord
     (won_cards + discards).flatten
   end
 
-  def promised_birds
+  def promised_cards
     promised_card_slugs = {
       Announcement::PAGAT => 'trump_1',
       Announcement::UHU => 'trump_2',
-      Announcement::PAGAT => 'trump_3'
+      Announcement::PAGAT => 'trump_3',
+      Announcement::KING => game.king
     }.select do |ann_slug, _card_slug|
-      team_announced?(k)
-    end
+      team_announced?(ann_slug)
+    end.values
 
     hand_cards.where(slug: promised_card_slugs)
-  end
-
-  def promised_king
-    return nil unless team_announced(Announcement::KING)
-
-    hand_cards.find_by(slug: game.king)
   end
 
   def announced?(slug)
@@ -94,20 +103,12 @@ class GamePlayer <  ApplicationRecord
     team_members.any? { |gp| gp.announced?(slug) }
   end
 
-  def forehand?
-    forehand
-  end
-
   def trumps
     suit_cards('trump')
   end
 
   def suit_cards(suit)
     hand_cards.select { |c| c.suit == suit }
-  end
-
-  def declarer?
-    game.declarer&.id == id
   end
 
   def pick_putdowns
@@ -127,7 +128,7 @@ class GamePlayer <  ApplicationRecord
   end
 
   def pick_announcement(_valid_announcements)
-    bird_required = game.bids.bird_required? && declarer?
+    bird_required = game.bird_required? && declarer?
     AnnouncementPicker.new(
       hand: hand_cards,
       bird_required: bird_required && !announced_bird?
@@ -138,12 +139,12 @@ class GamePlayer <  ApplicationRecord
     ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
   end
 
-  def pick_card
+  def pick_card_for(trick, bid)
     return nil unless hand_cards.any?
 
     # TODO this needs to check if the team announced them - current just checks if this player did
     bird_announced = ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
-    CardPicker.new(hand: hand_cards, bird_announced: bird_announced).pick
+    CardPicker.new(hand: hand_cards, trick: trick, bid: bid, bird_announced: bird_announced, game_player: self).pick
   end
 
   def pick_talon

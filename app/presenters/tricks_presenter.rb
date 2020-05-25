@@ -21,13 +21,12 @@ class TricksPresenter
   private
 
   def tricks_props
-    @tricks.includes(:cards).each_with_index.map do |trick, index|
+    @tricks.includes(:cards).map do |trick|
       TrickPresenter.new(
         @game,
         @active_player,
-        index,
         trick,
-        index == @visible_trick_index
+        trick.trick_index == @visible_trick_index
       ).props
     end
   end

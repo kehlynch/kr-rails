@@ -1,4 +1,4 @@
-class PositiveGamePointsService
+class Points::PositiveGamePointsService
   def initialize(game)
     @game = game
     @bid = game.bids.highest
@@ -10,9 +10,15 @@ class PositiveGamePointsService
       game_points = game_points_for(gp)
       gp.update(game_points: game_points)
     end
+
+    update_bid_result
   end
 
   private
+
+  def update_bid_result
+    @game.won_bid.update(off: bid_off?)
+  end
 
   def record_winners
     @game.game_players.each do |gp|
@@ -22,7 +28,7 @@ class PositiveGamePointsService
 
   def game_points_for(gp)
     bid_points = @bid.points * @bid.kontra_multiplier
-    team_announcement_points = announcment_points_for(gp.team)
+    team_announcement_points = announcement_points_for(gp.team)
 
     if gp.winner
       team_announcement_points + bid_points
@@ -39,16 +45,26 @@ class PositiveGamePointsService
   end
 
   def winners
-    declarers = @game.game_players.declarers
-    defenders = @game.game_players.defenders
-    declarers_card_points = declarers.map(&:card_points).sum
-
-    defenders_card_points = defenders.map(&:card_points).sum
-
-    if defenders_card_points >= declarers_card_points
+    if bid_off?
       return defenders
     else
       return declarers
     end
+  end
+
+  def bid_off?
+    declarers_card_points = declarers.map(&:card_points).sum
+
+    defenders_card_points = defenders.map(&:card_points).sum
+
+    defenders_card_points >= declarers_card_points
+  end
+
+  def declarers
+    @game.game_players.declarers
+  end
+
+  def defenders
+    @game.game_players.defenders
   end
 end

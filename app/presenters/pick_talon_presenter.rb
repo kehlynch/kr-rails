@@ -45,7 +45,7 @@ class PickTalonPresenter
   end
 
   def active_instruction
-    return 'pick half of the talon' if @game.bids.talon_cards_to_pick == 3
+    return 'pick half of the talon' if @game.talon_cards_to_pick == 3
 
     'click to take the whole talon'
   end

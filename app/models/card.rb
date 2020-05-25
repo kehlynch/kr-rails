@@ -3,6 +3,10 @@ class Card < ApplicationRecord
   belongs_to :trick, optional: true
   belongs_to :game_player, optional: true
 
+  before_save :record_slug
+
+  TRUMP = 'trump'
+
   TRUMP_POINTS = {
     1 => 4,
     21 => 4,
@@ -17,15 +21,15 @@ class Card < ApplicationRecord
   }.freeze
 
   def self.trumps
-    select(&:trump?)
+    cards_in_suit(TRUMP)
+  end
+
+  def self.cards_in_suit(suit)
+    select { |c| c.suit == suit }
   end
 
   def self.include_slug?(slug)
     find { |c| c.slug == slug }.present?
-  end
-
-  def self.add(suit:, value:)
-    create(suit: suit, value: value, slug: "#{suit}_#{value}")
   end
 
   def promised_on_trick_index
@@ -50,7 +54,7 @@ class Card < ApplicationRecord
   end
 
   def trump?
-    suit == 'trump'
+    suit == TRUMP
   end
 
   def pagat?
@@ -77,22 +81,18 @@ class Card < ApplicationRecord
     game.king == slug
   end
 
-  def legal_for_trick?(trick)
-    LegalTrickCardService.new(self, trick, game.won_bid).legal?
-  end
-
   def legal_putdown?(hand, current_putdowns)
     return false if points == 4
 
-    return true if suit != 'trump'
+    return true if suit != TRUMP
 
-    simple_legal_putdowns_in_hand = hand.filter { |c| c.suit != 'trump' && c.points != 4 }.length
+    simple_legal_putdowns_in_hand = hand.filter { |c| c.suit != TRUMP && c.points != 4 }.length
 
     trumps_allowed = 3 - simple_legal_putdowns_in_hand
 
     return false if trumps_allowed <= 0
 
-    trumps_already_put_down = current_putdowns.filter { |h| h.suit == 'trump' }
+    trumps_already_put_down = current_putdowns.filter { |h| h.suit == TRUMP }
 
     return false if trumps_already_put_down >= trumps_allowed
 
@@ -100,8 +100,12 @@ class Card < ApplicationRecord
   end
 
   def simple_legal_putdown?
-    return false if points == 4 || suit == 'trump'
+    return false if points == 4 || suit == TRUMP
 
     return true
+  end
+
+  def record_slug
+    self.slug = "#{suit}_#{value}" if !slug
   end
 end

@@ -53,15 +53,18 @@ class HandPresenter
   end
 
   def finished_hand_props
-    sorted_cards(@active_player.original_hand).map do |c|
+    sorted_cards(@active_player.original_hand_cards).map do |c|
       CardPresenter.new(c, @active_player).hand_props_for_finished
     end
   end
 
   def hand_props_for_trick(trick, trick_index)
-    ltcs = LegalTrickCardService.new(sorted_cards, trick)
-    ltcs.map_to_legal.map do |card, legal|
-      CardPresenter.new(card, @active_player).hand_props_for_trick(trick, trick_index, legal, @game.won_bid)
+    ltcs = LegalTrickCardService.new(@active_player, trick, @game.won_bid)
+    sorted_cards.map do |card|
+      legal = ltcs.legal?(card)
+      CardPresenter
+        .new(card, @active_player)
+        .hand_props_for_trick(trick, trick_index, legal)
     end
   end
 
