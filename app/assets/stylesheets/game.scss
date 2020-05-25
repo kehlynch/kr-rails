@@ -46,12 +46,13 @@ $light-green: rgba(51, 102, 0, 0.2);
 
 .finished-buttons {
   grid-column: 1 / span 3;
-  grid-row: 7;
+  grid-row: 2;
   display: grid;
   grid-template-columns: auto auto auto;
   grid-gap: 2px;
 
   grid-template-rows: auto;
+  justify-self: flex-start;
   align-items: flex-end;
 }
 
