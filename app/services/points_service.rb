@@ -34,7 +34,7 @@ class PointsService
 
   def record_card_points
     @game.game_players.each do |gp|
-      card_points = card_points_for(gp.tricks.map(&:cards).flatten)
+      card_points = card_points_for(gp.scorable_cards)
       gp.update(card_points: card_points)
     end
   end

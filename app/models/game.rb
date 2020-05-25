@@ -8,6 +8,7 @@ class Game < ApplicationRecord
   has_many :defenders, -> { where(team: GamePlayer::DEFENDERS) }, class_name: 'GamePlayer'
 
   has_many :cards, -> { includes(:game_player) }, dependent: :destroy
+  has_many :talon_cards, -> { where.not(talon_half: nil) }, class_name: 'Card'
   has_many :announcements, -> { includes(:game_player) }, dependent: :destroy
   has_many :bids, dependent: :destroy
   has_one :won_bid, -> { where(won: true) }, class_name: 'Bid'
@@ -15,19 +16,6 @@ class Game < ApplicationRecord
   has_many :tricks, dependent: :destroy
 
   has_many :announcement_scores
- 
-
-  delegate :declarer, to: :bids
-
-#   default_scope {
-#     includes(
-#       # :cards,
-#       # :game_players,
-# e     # :bids,
-#       # :announcements,
-#       # :tricks,
-#     )
-#   }
 
   def self.deal_game(match_id, _players)
     game = Game.create(match_id: match_id)
@@ -71,8 +59,12 @@ class Game < ApplicationRecord
     end
   end
 
-  def talon
-    @talon ||= Talon.new(cards, self)
+  def talon_service
+    TalonService.new(self)
+  end
+
+  def talon_halves
+    talon_service.talon
   end
 
   def talon_cards_to_pick
@@ -172,14 +164,14 @@ class Game < ApplicationRecord
       puts 'pick_talon!', declarer_human?, talon_half_index
       return if declarer_human? && talon_half_index.nil?
 
-      talon_half_index = talon.pick_talon!(talon_half_index, declarer)
+      talon_half_index = talon_service.pick_talon!(talon_half_index, declarer)
 
       update(talon_picked: talon_half_index)
     end
   end
 
   def pick_whole_talon!
-    talon.pick_whole_talon!(declarer)
+    talon_service.pick_whole_talon!(declarer)
 
     # TODO: using 3 to mean all 6, since this is an int field and used to refer to the talon_half_index - sort this out!
     update(talon_picked: 3)
@@ -188,7 +180,7 @@ class Game < ApplicationRecord
   def resolve_talon!(putdown_card_slugs)
     return if declarer_human? && putdown_card_slugs.blank?
 
-    talon.resolve_talon!(putdown_card_slugs, declarer)
+    talon_service.resolve_talon!(putdown_card_slugs, declarer)
 
     update(talon_resolved: true)
   end
@@ -246,10 +238,6 @@ class Game < ApplicationRecord
   def declarer_human?
     declarer&.human?
   end
-
-  # def partner
-  #   player_teams.partner
-  # end
 
   def current_trick
     tricks.current_trick

@@ -73,20 +73,12 @@ class Card < ApplicationRecord
     ['trump_1', 'trump_2', 'trump_3'].include?(slug)
   end
 
-  def hand
-    game_player.hand
-  end
-
-  def called_king?
-    game.king == slug
-  end
-
   def legal_putdown?(hand, current_putdowns)
     return false if points == 4
 
     return true if suit != TRUMP
 
-    simple_legal_putdowns_in_hand = hand.filter { |c| c.suit != TRUMP && c.points != 4 }.length
+    simple_legal_putdowns_in_hand = hand.filter(&:simple_legal_putdown?).length
 
     trumps_allowed = 3 - simple_legal_putdowns_in_hand
 

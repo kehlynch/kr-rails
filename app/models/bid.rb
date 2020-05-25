@@ -10,8 +10,6 @@ class Bid < ApplicationRecord
 
   PICCOLO = 'piccolo'
   BETTEL = 'bettel'
-  # PICCOLO_OUVERT = 'piccolo_ouvert'
-  # BETTEL_OUVERT = 'piccolo_ouvert'
 
   CALL_KING = 'call_king'
   TRISCHAKEN = 'trischaken'
@@ -43,18 +41,6 @@ class Bid < ApplicationRecord
   validates :slug, inclusion: { in: RANKED_SLUGS }
   scope :won, -> { where(won: true) }
 
-  # default_scope { includes(:game_player) }
-
-  # # if this returns nil, bidder is forehand
-  # def self.next_bidder
-  #   last&.game_player&.next_game_player
-  # end
-
-  # def self.finished?
-  #   find { |b| b.won }.present?
-  #   # won.size > 0
-  # end
-
   def self.second_round_finished?
     first_round_finished? && (highest&.slug != RUFER)
   end
@@ -73,10 +59,6 @@ class Bid < ApplicationRecord
     all.max_by do |b|
       [b.rank, b.game_player.forehand? ? 1 : 0]
     end
-  end
-
-  def self.declarer
-    finished? ? highest&.game_player : nil
   end
 
   def rank

@@ -14,8 +14,6 @@ class Trick < ApplicationRecord
   end
 
   def self.current_trick
-    # last_played_trick = where.not(cards: []).reorder(:trick_index).last
-
     # https://solidfoundationwebdev.com/blog/posts/how-to-find-records-based-on-has_many-relationship-being-empty-or-not-in-rails
     last_played_trick = joins(:cards).reorder(:trick_index).last
 
@@ -34,15 +32,6 @@ class Trick < ApplicationRecord
     current_trick&.trick_index
   end
 
-  # def self.next_player
-  #   return nil if finished?
-
-  #   return current_trick.won_player if current_trick.finished?
-
-  #   # mid trick - find next player
-  #   current_trick.next_player
-  # end
-
   def add_card!(card)
     card.update(played_index: next_played_index, trick_id: id)
 
@@ -56,6 +45,10 @@ class Trick < ApplicationRecord
     cards[0]
   end
 
+  def led_suit
+    led_card&.suit
+  end
+
   def last_player
     cards[-1]&.game_player
   end
@@ -66,15 +59,6 @@ class Trick < ApplicationRecord
 
   def finished?
     finished
-  end
-
-  def led_suit
-    led_card&.suit
-  end
-
-  def find_card(slug)
-    # cheap to do in memory so don't hit the DB here
-    cards.find { |c| c.slug == slug }
   end
 
   def winning_card
@@ -90,34 +74,10 @@ class Trick < ApplicationRecord
     finished? ? winning_card : nil
   end
 
-  # def next_player
-  #   return lead_player if cards.empty?
-
-  #   last_player.next_game_player
-  # end
-
   private
 
   def next_played_index
     (cards.maximum(:played_index) || 0) + 1
-  end
-
-  def previous_trick
-    game.tricks.find_by(trick_index: trick_index - 1)
-  end
-
-  def lead_player
-    return first_trick_lead_player if trick_index == 0
-
-    previous_trick.won_player
-  end
-
-  def first_trick_lead_player
-    if game.bids.highest&.declarer_leads?
-      game.declarer
-    else
-      game.forehand
-    end
   end
 
   def record_won_player

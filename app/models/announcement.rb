@@ -15,22 +15,7 @@ class Announcement < ApplicationRecord
   FORTY_FIVE = 'forty_five'
   VALAT = 'valat'
 
-  SLUGS = [
-    PAGAT,
-    UHU,
-    KAKADU,
-    KING,
-    FORTY_FIVE,
-    VALAT
-  ]
-
-  # def self.next_bidder
-  #   return nil unless any?
-
-  #   return last.game_player if last.slug != PASS
-
-  #   return last.game_player.next_game_player
-  # end
+  SLUGS = [PAGAT, UHU, KAKADU, KING, FORTY_FIVE, VALAT]
 
   def self.last_passed_player
     reorder(id: :desc).find_by(slug: PASS)&.game_player
@@ -50,9 +35,5 @@ class Announcement < ApplicationRecord
   def self.add_kontra!(kontra_slug)
     kontrable = Kontrable.find_kontrable(kontra_slug)
     kontrable.update_kontra(kontra_slug)
-  end
-
-  def is_kontra?
-    slug.include?('kontra')
   end
 end

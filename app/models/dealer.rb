@@ -1,6 +1,5 @@
 class Dealer
   def self.deal(game)
-    # @cards = []
     card_params = (1..8).map do |value|
       %i[club diamond heart spade].map do |suit|
         {suit: suit, value: value}
@@ -13,11 +12,6 @@ class Dealer
 
     card_params = card_params.concat(trump_card_params).shuffle
     talon_card_params = card_params.pop(6)
-
-    # card_params.concat(trump_card_params).shuffle.each do |params|
-    #   p 'params', params
-    #   game.cards.add(**params)
-    # end
 
     talon_card_params.first(3).each do |params|
       game.cards.create(**params.merge(talon_half: 0))

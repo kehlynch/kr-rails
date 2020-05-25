@@ -16,9 +16,4 @@ class AnnouncementPicker
     return Announcement::KAKADU if @hand.include_slug?('trump_3')
     return Announcement::PAGAT
   end
-
-  private
-
-  def pagat?
-  end
 end

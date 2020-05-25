@@ -122,29 +122,23 @@ class LegalTrickCardService
   end
 
   def update_simple_positive_legal
-    p 'update_simple_positive_legal'
     return set_all_cards_legal if lead?
 
     led_suit_cards = @cards.cards_in_suit(led_suit)
 
     if led_suit_cards.any?
-      p 'led suit cards'
       led_suit_cards.each { |c| set_legal(c) }
     elsif trumps.any?
-      p 'trumps'
       set_trumps_legal
     else
-      p 'anything'
       set_all_cards_legal
     end
   end
 
   def update_legal_from_promised_cards
-    p ['promised_cards', promised_cards]
     if promised_cards.any?
       promised_cards.each do |promised_card|
         pertinent_trick = promised_card.promised_on_trick_index == trick_index
-        p ['pertinene_tric', pertinent_trick]
         if pertinent_trick && legal?(promised_card)
           set_all_cards_illegal_except(promised_card)
         elsif !pertinent_trick && legal?(promised_card)

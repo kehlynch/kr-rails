@@ -1,7 +1,7 @@
 class PickTalonPresenter
   def initialize(game, active_player, visible_stage)
     @game = game
-    @talon = @game.talon
+    @talon_halves = @game.talon_halves
     @talon_picked = @game.talon_picked
     @declarer = @game.declarer
     @active_player = active_player
@@ -12,7 +12,7 @@ class PickTalonPresenter
     {
       stage: Stage::PICK_TALON,
       visible: Stage::PICK_TALON == @visible_stage,
-      halves: @talon.each_with_index.map { |h, i| half_props(h, i) },
+      halves: @talon_halves.each_with_index.map { |h, i| half_props(h, i) },
       finished: finished?,
       instruction: InstructionPresenter.new(instruction, Stage::PICK_TALON).props,
       hand: HandPresenter.new(@game, @active_player).props_for_pick_talon

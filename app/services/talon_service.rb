@@ -1,15 +1,13 @@
-class Talon
+class TalonService
 
   attr_reader :talon, :cards
 
   delegate :each_with_index, :flatten, :map, to: :talon
   delegate :find, to: :cards
 
-  def initialize(cards, game)
+  def initialize(game)
     @game_id = game.id
-    @talon = cards.select do |c|
-      c.talon_half.present? 
-    end.sort_by(&:id).group_by(&:talon_half).values
+    @talon = game.talon_cards.sort_by(&:id).group_by(&:talon_half).values
     @cards = @talon.flatten
   end
 
@@ -35,9 +33,5 @@ class Talon
     game_player.hand_cards
       .select { |card| putdown_card_slugs.include?(card.slug) }
       .each { |card| card.update(discard: true) }
-  end
-
-  def unpicked
-    @talon.flatten.filter { |t| t.game_player_id.nil? }
   end
 end
