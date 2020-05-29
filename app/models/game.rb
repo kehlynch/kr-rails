@@ -125,6 +125,14 @@ class Game < ApplicationRecord
     won_bid&.slug == Bid::BESSER_RUFER
   end
 
+  def stages_for(game_player)
+    if game_player == declarer
+      stages
+    else
+      stages.reject { |s| s == Stage::RESOLVE_TALON }
+    end
+  end
+
   def stages
     [
       [Stage::BID, true],

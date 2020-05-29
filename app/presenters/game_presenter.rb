@@ -16,7 +16,7 @@ class GamePresenter
       channel: channel_props,
       players: PlayersPresenter.new(@game, @active_player).static_props,
       contract: ContractPresenter.new(@game).props,
-      stages: @game.stages,
+      stages: @game.stages_for(@active_player),
       visible_stage: visible_stage,
       visible_trick_index: visible_trick_index
     }.merge(stage_props(visible_stage))
