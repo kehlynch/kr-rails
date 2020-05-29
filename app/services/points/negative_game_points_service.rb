@@ -16,7 +16,7 @@ class Points::NegativeGamePointsService
   private
 
   def update_bid_result
-    @game.won_bid.update(off: bid_off?)
+    @game.won_bid.update(off: !bid_made?)
   end
 
   def game_points_for(game_player)
@@ -29,16 +29,11 @@ class Points::NegativeGamePointsService
   end
 
   def winner?(game_player)
-    trick_count = @bid.contracted_trick_count
-    if game_player.team == GamePlayer::Defenders
-      game_player.tricks.length != (12 - trick_count)
-    else
-      game_player.tricks.length == trick_count
-    end
+    game_player == @game.declarer ? bid_made? : !bid_made?
   end
 
-  def bid_off?
+  def bid_made?
     trick_count = @bid.contracted_trick_count
-    @game.declarer.tricks.length != (12 - trick_count)
+    @game.declarer.won_tricks.length == trick_count
   end
 end

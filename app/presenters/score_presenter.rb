@@ -11,7 +11,7 @@ class ScorePresenter
       name: @player.name,
       won_tricks_count: @player.won_tricks.count,
       points: @player.card_points,
-      team_points: @player.team_members.map(&:card_points).sum,
+      team_points: team_points,
       game_points: @player.game_points,
       winner: @player.winner?
     }
@@ -21,5 +21,16 @@ class ScorePresenter
 
   def winner?
     @game.won_bid&.off || @player.team == GamePlayer::DEFENDERS
+  end
+
+  def team_points
+    case @player.team
+    when GamePlayer::DECLARERS
+      @game.declarers.map(&:card_points).compact.sum
+    when GamePlayer::DEFENDERS
+      @game.defenders.map(&:card_points).compact.sum
+    else
+      @player.card_points
+    end
   end
 end

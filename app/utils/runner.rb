@@ -89,7 +89,7 @@ class Runner
       @broadcaster.broadcast
     end
 
-    if @game.announcements.finished?
+    if @game.announcements_finished?
       advance!
     end
   end

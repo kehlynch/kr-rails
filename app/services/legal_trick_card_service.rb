@@ -1,13 +1,16 @@
 class LegalTrickCardService
   attr_reader :legal_mapping
 
-  def initialize(game_player, trick, won_bid)
-    @cards = game_player.hand_cards
-    @trick = trick
-    @bid = won_bid
+  def initialize(game, game_player, trick)
+    @game = game
     @game_player = game_player
-    @legal_mapping = @cards.map { |c| [c, false] } .to_h
+    @trick = trick
 
+    @cards = game_player.hand_cards
+    @bid = game.won_bid
+    @king = game.king
+
+    @legal_mapping = @cards.map { |c| [c, false] } .to_h
     if @bid && @trick.cards.none? { |c| c.game_player == @game_player }
       generate_legal_mapping
     end
@@ -23,11 +26,11 @@ class LegalTrickCardService
 
   private
 
-  attr_reader :trick, :cards, :game_player
+  attr_reader :game, :trick, :cards, :game_player
+
+  delegate(:declarers, :defenders, to: :game)
 
   delegate(:led_suit, :winning_card, :led_card, :trick_index, to: :trick)
-  delegate(:promised_cards, to: :game_player)
-  delegate(:trumps, to: :cards)
 
   def generate_legal_mapping
     if @bid.negative?
@@ -71,15 +74,12 @@ class LegalTrickCardService
   end
 
   def update_negative_nonlead_legal
-    led_suit_cards = @cards.cards_in_suit(led_suit)
+    led_suit_cards = cards_in_suit(led_suit)
     winning_card_in_led_suit = winning_card.suit == led_suit
     legal_led_suit_cards =
       winning_card_in_led_suit ? 
-        led_suit_cards.select { |c| c.value > led_suit.value } :
+        led_suit_cards.select { |c| c.value > winning_card.value } :
         led_suit_cards
-
-    return if legal_cards
-
 
     if legal_led_suit_cards.any? # play up if possible
       legal_led_suit_cards.each { |c| set_legal(c) }
@@ -99,6 +99,7 @@ class LegalTrickCardService
   end
 
   def update_negative_legal
+    p led_card
     p @cards.map { |c| c.slug }
     if lead? && @bid.trischaken?
       set_all_cards_legal(except_pagat: @bid.trischaken?)
@@ -122,7 +123,7 @@ class LegalTrickCardService
   def update_simple_positive_legal
     return set_all_cards_legal if lead?
 
-    led_suit_cards = @cards.cards_in_suit(led_suit)
+    led_suit_cards = cards_in_suit(led_suit)
 
     if led_suit_cards.any?
       led_suit_cards.each { |c| set_legal(c) }
@@ -147,5 +148,30 @@ class LegalTrickCardService
       # if we have to play a promised card, reset everything as if nothing was promised.
       update_simple_position_legal if no_cards_legal?
     end
+  end
+
+  def promised_cards
+    promised_card_slugs = {
+      Announcement::PAGAT => 'trump_1',
+      Announcement::UHU => 'trump_2',
+      Announcement::PAGAT => 'trump_3',
+      Announcement::KING => @king
+    }.select do |ann_slug, _card_slug|
+      team_members.map(&:announcements).flatten.any? { |a| a.slug == ann_slug }
+    end.values
+
+    game_player.hand_cards.select { |c| c.slug == promised_card_slugs }
+  end
+
+  def team_members
+    @game.team_for(@game_player)
+  end
+
+  def trumps
+    cards_in_suit(Card::TRUMP)
+  end
+
+  def cards_in_suit(suit)
+    @cards.select { |c| c.suit == suit }
   end
 end

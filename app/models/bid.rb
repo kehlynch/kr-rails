@@ -40,20 +40,6 @@ class Bid < ApplicationRecord
 
   validates :slug, inclusion: { in: RANKED_SLUGS }
 
-  def self.second_round_finished?(winning_bid)
-    first_round_finished? && (winning_bid.slug != RUFER)
-  end
-
-  def self.first_round_finished?
-    passed_player_count >= 3
-  end
-
-  def self.passed_player_count
-    select do |bid|
-      bid.slug == PASS
-    end.map(&:game_player_id).uniq.size
-  end
-
   def rank
     RANKED_SLUGS.index(slug) || 0
   end

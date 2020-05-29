@@ -43,9 +43,18 @@ class ValidAnnouncementsService
   )
 
   def announced_by_team?(slug)
-    next_player.team_members.any? do |game_player|
-      game_player.announced?(slug)
+    case next_player.team
+    when GamePlayer::DEFENDERS
+      announced_by?(game.defenders, slug)
+    when GamePlayer::DECLARERS
+      announced_by?(game.declarers, slug)
+    else
+      next_player.announcements.any? { |a| a.slug == slug }
     end
+  end
+
+  def announced_by?(players, slug)
+    players.map(&:announcements).flatten.any? { |a| a.slug == slug }
   end
 
   def valid_kontras

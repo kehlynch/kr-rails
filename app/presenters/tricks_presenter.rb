@@ -14,14 +14,14 @@ class TricksPresenter
       visible: @visible_stage == Stage::TRICK,
       tricks: tricks_props,
       playable_trick_index: @playable_trick_index,
-      finished: @game.tricks.finished?
+      finished: @game.tricks_finished?
     }
   end
 
   private
 
   def tricks_props
-    @tricks.includes(:cards).map do |trick|
+    @tricks.map do |trick|
       TrickPresenter.new(
         @game,
         @active_player,

@@ -1,25 +1,29 @@
 class Game < ApplicationRecord
   belongs_to :match
 
-  has_many :game_players, -> { includes(:won_tricks, :announcements) }
+  has_many :game_players 
   has_many :cards, dependent: :destroy
-  has_many :talon_cards, -> { where.not(talon_half: nil) }, class_name: 'Card'
-  has_many :announcements, -> { includes(:game_player) }, dependent: :destroy
-  has_many :bids, -> { includes(:game_player) }, dependent: :destroy
-  has_one :won_bid, -> { where(won: true) }, class_name: 'Bid'
+  has_many :announcements, dependent: :destroy
+  has_many :bids, dependent: :destroy
 
-  has_many :tricks, -> { includes(:cards) }, dependent: :destroy
+  has_many :tricks, dependent: :destroy
 
   has_many :announcement_scores
 
-  default_scope {
+  scope :with_associations, -> {
     includes(
-      :game_players,
-      :bids,
-      :won_bid,
-      :announcements,
-      :cards,
-      :tricks
+      :cards, 
+      tricks: :cards,
+      bids: :game_player,
+      announcements: :game_player,
+      game_players: [:won_tricks, :bids, :announcements]
+    )
+  }
+
+  scope :for_scores, -> {
+    includes(
+      :announcement_scores,
+      game_players: :won_tricks
     )
   }
 
@@ -75,11 +79,26 @@ class Game < ApplicationRecord
     game_players.select { |gp| gp.team == GamePlayer::DEFENDERS }
   end
 
+  def team_for(game_player)
+    case game_player.team
+    when GamePlayer::DEFENDERS
+      defenders
+    when GamePlayer::DECLARERS
+      declarers
+    else
+      [game_player]
+    end
+  end
+
   def kings
     ['club_8', 'diamond_8', 'heart_8', 'spade_8'].map do |king_slug|
       # don't hit the db here
       cards.find { |c| c.slug == king_slug }
     end
+  end
+
+  def won_bid
+    bids.find(&:won)
   end
 
   def talon_service
@@ -88,6 +107,10 @@ class Game < ApplicationRecord
 
   def talon_halves
     talon_service.talon
+  end
+
+  def talon_cards
+    cards.select { |c| c.talon_half.present? }
   end
 
   def talon_cards_to_pick
@@ -136,7 +159,7 @@ class Game < ApplicationRecord
 
     bid = bids.create(slug: bid_slug, game_player: next_player)
 
-    if bids.second_round_finished?(winning_bid)
+    if bid_second_round_finished?(winning_bid)
       winning_bid.update(won: true)
       winning_bid.game_player.update(declarer: true, team: GamePlayer::DECLARERS)
       if !winning_bid.king?
@@ -148,7 +171,7 @@ class Game < ApplicationRecord
   end
 
   def make_announcement!(slug = nil)
-    return nil if (next_player_human? && !slug) || announcements.finished?
+    return nil if (next_player_human? && !slug) || announcements_finished?
 
     slug ||= next_player.pick_announcement(valid_announcements)
     return unless valid_announcements.include?(slug)
@@ -198,7 +221,7 @@ class Game < ApplicationRecord
   def play_card!(card=nil)
     return nil if (next_player_human? && !card) || finished?
 
-    card ||= next_player.pick_card_for(current_trick, won_bid)
+    card ||= CardPicker.new(self, next_player).pick
     card = current_trick.add_card!(card)
 
     if finished?
@@ -207,6 +230,11 @@ class Game < ApplicationRecord
 
     return card
   end
+
+  # TODO: this looks like it should go up a level
+  def pick_card_for!(trick, bid, king)
+  end
+
 
   def next_player_human?
     next_player&.human?
@@ -263,10 +291,35 @@ class Game < ApplicationRecord
   end
 
   def finished?
-    tricks.finished?
+    tricks_finished?
+  end
+
+
+  def announcements_finished?
+    return false unless announcements.select(&:game_player_id).uniq.count == 4
+
+    announcements.last(3).map(&:slug) == [Announcement::PASS] * 3
+  end
+
+  def bid_first_round_finished?
+    bid_passed_player_count >= 3
+  end
+
+  def tricks_finished?
+    tricks.find { |t| t.trick_index == 11 }.finished
   end
 
   private
+
+  def bid_second_round_finished?(winning_bid)
+    bid_first_round_finished? && (winning_bid.slug != Bid::RUFER)
+  end
+
+  def bid_passed_player_count
+    bids.select do |bid|
+      bid.slug == Bid::PASS
+    end.map(&:game_player_id).uniq.size
+  end
 
   def next_player_by_position(game_player)
     return nil unless game_player

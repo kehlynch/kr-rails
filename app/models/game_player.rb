@@ -8,16 +8,25 @@ class GamePlayer <  ApplicationRecord
   belongs_to :game
 
   has_many :cards
-  has_many :hand_cards, -> { where(trick_id: nil, discard: false) }, class_name: 'Card'
-  has_many :original_hand_cards, -> { where(talon_half: nil) }, class_name: 'Card'
   has_many :discards, -> { where(discard: true) }, class_name: 'Card'
   has_many :won_tricks, class_name: 'Trick'
 
   has_many :announcements
   has_many :bids
-  has_many :tricks
 
   has_many :co_players, through: :game, source: :game_players
+
+  def hand_cards
+    cards.select do |c|
+      c.trick_id.nil? && !c.discard
+    end
+  end
+
+  def original_hand_cards
+    cards.select do |c|
+      c.talon_half.nil?
+    end
+  end
 
   def forehand?
     forehand
@@ -44,19 +53,6 @@ class GamePlayer <  ApplicationRecord
 
   def scorable_cards
     (won_cards + discards).flatten
-  end
-
-  def promised_cards
-    promised_card_slugs = {
-      Announcement::PAGAT => 'trump_1',
-      Announcement::UHU => 'trump_2',
-      Announcement::PAGAT => 'trump_3',
-      Announcement::KING => game.king
-    }.select do |ann_slug, _card_slug|
-      team_announced?(ann_slug)
-    end.values
-
-    hand_cards.where(slug: promised_card_slugs)
   end
 
   def announced?(slug)
@@ -91,14 +87,6 @@ class GamePlayer <  ApplicationRecord
     ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
   end
 
-  def pick_card_for(trick, bid)
-    return nil unless hand_cards.any?
-
-    # TODO this needs to check if the team announced them - current just checks if this player did
-    bird_announced = ['pagat', 'uhu', 'kakadu'].any? { |a| announced?(a) }
-    CardPicker.new(hand: hand_cards, trick: trick, bid: bid, bird_announced: bird_announced, game_player: self).pick
-  end
-
   def pick_talon
     [0, 1].sample
   end
@@ -111,9 +99,5 @@ class GamePlayer <  ApplicationRecord
 
   def won_cards
     won_tricks.map(&:cards).flatten
-  end
-
-  def team_announced?(slug)
-    team_members.any? { |gp| gp.announced?(slug) }
   end
 end

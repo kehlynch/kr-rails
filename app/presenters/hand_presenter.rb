@@ -59,12 +59,12 @@ class HandPresenter
   end
 
   def hand_props_for_trick(trick, trick_index)
-    ltcs = LegalTrickCardService.new(@active_player, trick, @game.won_bid)
+    ltcs = LegalTrickCardService.new(@game, @active_player, trick)
     sorted_cards.map do |card|
       legal = ltcs.legal?(card)
       CardPresenter
         .new(card, @active_player)
-        .hand_props_for_trick(trick, trick_index, legal)
+        .hand_props_for_trick(trick, trick_index, legal, @game.next_player == @active_player)
     end
   end
 

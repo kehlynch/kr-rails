@@ -28,7 +28,6 @@ class PlayerPresenter
   def props
     static_props
       .merge(indicator_props)
-      .merge(points_props)
       .merge(announcements: @player.announcements.map { |a| Bids::AnnouncementPresenter.new(a.slug).shorthand }.join(' '))
   end
 
@@ -70,16 +69,6 @@ class PlayerPresenter
     }
   end
 
-  def points_props
-    {
-      won_tricks_count: won_tricks_count,
-      points: card_points,
-      team_points: team_points,
-      game_points: game_points,
-      winner: winner?
-    }
-  end
-
   def compass
     index = (@player.position - @active_player.position) % 4
     ['south', 'east', 'north', 'west'][index]
@@ -116,16 +105,5 @@ class PlayerPresenter
     return 'partner' if @game.partner&.id == @player.id
 
     return ''
-  end
-
-  def team_points
-    case @player.team
-    when GamePlayer::DECLARERS
-      @game.declarers.map(&:card_points).compact.sum
-    when GamePlayer::DEFENDERS
-      @game.defenders.map(&:card_points).compact.sum
-    else
-      game_player.card_points
-    end
   end
 end

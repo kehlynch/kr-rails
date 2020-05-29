@@ -1,20 +1,15 @@
 class CardPicker
-  def initialize(hand:, trick:, bid:, bird_announced:, game_player:)
-    @hand = hand
-    @trick = trick
-    @bid = bid
+  def initialize(game, game_player)
+    @game = game
     @game_player = game_player
-    @bird_announced = bird_announced
+    @trick = game.current_trick
   end
 
   def pick
-    fail 'trying to pick card when hand is empty' if @hand.empty?
-
-    # TODO:
-    legal_cards = LegalTrickCardService.new(@game_player, @trick, @bid).legal_cards
+    legal_cards = LegalTrickCardService.new(@game, @game_player, @trick).legal_cards
 
     # TODO: stop the bots leading trumps till they're out when declarer
-    if @bird_announced && legal_cards.any?(&:trump?)
+    if bird_announced? && legal_cards.any?(&:trump?)
       return legal_cards.select(&:trump?).sample if perc(80)
     end
     card = legal_cards.sample
@@ -27,5 +22,11 @@ class CardPicker
 
   def perc(percentage)
     rand > percentage / 100
+  end
+
+  def bird_announced?
+    @game.team_for(@game_player).map(&:announcements).flatten.any? do |a|
+      [Announcement::PAGAT, Announcement::UHU, Announcement::KAKADU].include?(a)
+    end
   end
 end

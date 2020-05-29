@@ -9,7 +9,7 @@ class ValidBidsService
   end
 
   def valid_bids
-    if bids.first_round_finished?
+    if game.bid_first_round_finished?
       return [Bid::PASS] unless winning_bid&.game_player.id == next_player&.id
 
       return Bid::RUFER_SLUGS if winning_bid_slug == Bid::RUFER
@@ -39,6 +39,13 @@ class ValidBidsService
     :empty?,
     to: :bids
   )
+
+  def passed_player_count
+    bids.select do |bid|
+      bid.slug == Bid::PASS
+    end.map(&:game_player_id).uniq.size
+  end
+
 
   def highest_rank
     winning_bid&.rank || 0

@@ -10,7 +10,7 @@ class CardPresenter
       slug: @card.slug,
       stage: Stage::KING,
       classes: classlist(
-        own_king: @card.game_player&.id == @active_player.id,
+        own_king: @card.game_player_id == @active_player.id,
         pickable: @active_player.declarer? && @card.game.king.blank?,
         picked: @card.game.king == @card.slug
       ).join(' '),
@@ -81,9 +81,8 @@ class CardPresenter
     }
   end
 
-  def hand_props_for_trick(trick, trick_index, legal)
+  def hand_props_for_trick(trick, trick_index, legal, active_player_next)
     id = "trick#{trick_index}_#{id(Stage::TRICK)}"
-    active_player_next = @card.game.next_player&.id == @active_player.id
     # legal = @card.legal_for_trick?(trick)
     {
       slug: @card.slug,

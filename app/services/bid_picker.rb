@@ -21,10 +21,14 @@ class BidPicker
 
   private
 
+  def trumps
+    @hand.select { |c| c.suit == :trump }
+  end
+
   def besser_rufer
-    return true if pagat? && @hand.trumps.length > 6 && perc(80)
-    return true if uhu? && @hand.trumps.length > 6 && perc(60)
-    return true if kakadu? && @hand.trumps.length > 7 && perc(60)
+    return true if pagat? && trumps.length > 6 && perc(80)
+    return true if uhu? && trumps.length > 6 && perc(60)
+    return true if kakadu? && trumps.length > 7 && perc(60)
   end
 
   def perc(percentage)
@@ -32,7 +36,7 @@ class BidPicker
   end
 
   def trump_count
-    @hand.filter { |c| c.suit == 'trump' }.length
+    trumps.size
   end
 
   def pagat?

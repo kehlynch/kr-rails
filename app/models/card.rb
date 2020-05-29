@@ -20,18 +20,6 @@ class Card < ApplicationRecord
     5 => 1
   }.freeze
 
-  def self.trumps
-    cards_in_suit(TRUMP)
-  end
-
-  def self.cards_in_suit(suit)
-    select { |c| c.suit == suit }
-  end
-
-  def self.include_slug?(slug)
-    find { |c| c.slug == slug }.present?
-  end
-
   def promised_on_trick_index
     case slug
     when 'trump_1'

@@ -59,9 +59,10 @@ function updateGamePoints({ players, shorthands }) {
 }
 
 function updatePlayerGamePoints({ id, points, classes }) {
-  const html = `<div class="game-point-inner ${classes}">${points}</div>`
+  const html = `<div class="game-point-inner">${points}</div>`
   const node = $(`#${id}`);
   node.empty().append(html);
+  node.attr('class', `d-flex justify-content-center game-point ${classes}`);
 }
 
 function updateShorthands({ id, bid, announcements }) {

@@ -5,8 +5,6 @@ class Announcement < ApplicationRecord
   belongs_to :game
   belongs_to :game_player
 
-  default_scope { includes(:game_player) }
-
   PASS = 'pass'
   PAGAT = 'pagat'
   UHU = 'uhu'
@@ -19,12 +17,6 @@ class Announcement < ApplicationRecord
 
   def self.last_passed_player
     reorder(id: :desc).find_by(slug: PASS)&.game_player
-  end
-
-  def self.finished?
-    return false unless select(&:game_player_id).uniq.count == 4
-
-    last(3).map(&:slug) == [PASS, PASS, PASS]
   end
 
   def self.create(slug, game_player)

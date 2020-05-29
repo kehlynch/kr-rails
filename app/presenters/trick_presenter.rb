@@ -36,7 +36,7 @@ class TrickPresenter
   end
 
   def instruction
-    return game_finished_instruction if @game.tricks.finished?
+    return game_finished_instruction if @game.tricks_finished?
 
     return finished_instruction if @trick.finished?
 

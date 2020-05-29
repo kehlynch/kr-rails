@@ -3,10 +3,6 @@ class Bids::AnnouncementsPresenter < Bids::BidsBasePresenter
     Stage::ANNOUNCEMENT
   end
 
-  def finished?
-    @game.announcements.finished?
-  end
-
   def finished_message
     "announcments are done, ready to play?"
   end
@@ -31,10 +27,14 @@ class Bids::AnnouncementsPresenter < Bids::BidsBasePresenter
   private
 
   def instruction
-    return 'announcements finished, click to continue' if @game.announcements.finished?
+    return 'announcements finished, click to continue' if finished?
 
     return 'make an announcement or pass' if @game.next_player&.id == @active_player.id
 
     "waiting for #{@game.next_player&.name} to make announcements"
+  end
+
+  def finished?
+    @game.announcements_finished?
   end
 end

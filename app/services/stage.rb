@@ -39,15 +39,9 @@ module Stage
     when RESOLVE_TALON
       game.talon_resolved.present?
     when ANNOUNCEMENT
-      announcements_finished?(game)
+      game.announcements_finished?
     when TRICK
-      game.tricks.finished?
+      game.tricks_finished?
     end
-  end
-
-  def self.announcements_finished?(game)
-    return false unless game.announcements.select(&:game_player_id).uniq.count == 4
-
-    game.announcements.last(3).map(&:slug) == [PASS, PASS, PASS]
   end
 end

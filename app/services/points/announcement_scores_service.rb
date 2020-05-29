@@ -101,6 +101,6 @@ class Points::AnnouncementScoresService
   end
 
   def valat_status
-    @team.map(&:tricks).flatten.size == 12 ? :succeeded : :not_attempted
+    @team.map(&:won_tricks).flatten.size == 12 ? :succeeded : :not_attempted
   end
 end
