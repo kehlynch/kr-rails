@@ -8,7 +8,7 @@ class Game < ApplicationRecord
   has_many :bids, -> { includes(:game_player) }, dependent: :destroy
   has_one :won_bid, -> { where(won: true) }, class_name: 'Bid'
 
-  has_many :tricks, dependent: :destroy
+  has_many :tricks, -> { includes(:cards) }, dependent: :destroy
 
   has_many :announcement_scores
 
@@ -18,7 +18,8 @@ class Game < ApplicationRecord
       :bids,
       :won_bid,
       :announcements,
-      :cards
+      :cards,
+      :tricks
     )
   }
 
@@ -198,7 +199,7 @@ class Game < ApplicationRecord
     return nil if (next_player_human? && !card) || finished?
 
     card ||= next_player.pick_card_for(current_trick, won_bid)
-    card = tricks.add_card!(card)
+    card = current_trick.add_card!(card)
 
     if finished?
       PointsService.new(self).record_points
@@ -237,7 +238,22 @@ class Game < ApplicationRecord
   end
 
   def current_trick
-    tricks.current_trick
+    last_played_trick =
+      tricks
+      .sort_by(&:trick_index)
+      .reverse
+      .find { |t| t.cards.any? }
+
+
+    return tricks.find { |t| t.trick_index == 0 } unless last_played_trick
+
+    return tricks.find { |t| t.trick_index == last_played_trick.trick_index + 1 } if last_played_trick.finished?
+
+    return last_played_trick
+  end
+
+  def playable_trick_index
+    current_trick&.trick_index
   end
 
   def winning_bid

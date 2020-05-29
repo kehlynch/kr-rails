@@ -5,8 +5,7 @@ class GamePresenter
 
   def initialize(game, active_player_id)
     @game = game
-    @active_player = game.game_players.find { |gp| gp.player_id == active_player_id }
-    # @remarks = Remarks.remarks_for(@game)
+    @active_player = GamePlayer.includes(:cards, :announcements).find_by(player_id: active_player_id, game_id: game.id)
   end
 
   def props(visible_stage=nil)
@@ -52,17 +51,17 @@ class GamePresenter
   end
 
   def visible_trick_index
-    return 11 if @game.tricks.finished?
+    return 11 unless @game.current_trick.present?
 
-    show_penultimate_trick? ? @game.tricks.playable_trick_index - 1 : @game.tricks.playable_trick_index
+    show_penultimate_trick? ? @game.playable_trick_index - 1 : @game.playable_trick_index
   end
 
   def show_penultimate_trick?
-    return false if @active_player.played_in_current_trick?
+    return false if @active_player.played_in?(@game.current_trick)
     
-    return false if @game.tricks&.current_trick&.finished?
+    return false if @game&.current_trick&.finished?
 
-    return false if @game.tricks.playable_trick_index == 0
+    return false if @game.playable_trick_index == 0
 
     return true
   end

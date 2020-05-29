@@ -32,10 +32,10 @@ class GamePlayer <  ApplicationRecord
   end
 
   # TODO: this might be really inefficient
-  def played_in_current_trick?
-    return false unless game.current_trick
+  def played_in?(trick)
+    return false unless trick
 
-    cards.find { |c| c.trick_id == game.current_trick.id }.present?
+    trick.cards.find { |c| c.game_player_id == id }
   end
 
   def played_in_any_trick?

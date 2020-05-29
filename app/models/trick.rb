@@ -9,27 +9,8 @@ class Trick < ApplicationRecord
     find_by(trick_index: 11, finished: true).present?
   end
 
-  def self.add_card!(card)
-    current_trick.add_card!(card)
-  end
-
-  def self.current_trick
-    # https://solidfoundationwebdev.com/blog/posts/how-to-find-records-based-on-has_many-relationship-being-empty-or-not-in-rails
-    last_played_trick = joins(:cards).reorder(:trick_index).last
-
-    return find_by(trick_index: 0) unless last_played_trick
-
-    return find_by(trick_index: last_played_trick.trick_index + 1) if last_played_trick.finished?
-
-    return last_played_trick
-  end
-
   def self.last_finished_trick
     joins(:cards).group('tricks.id').having('count(trick_id) = 4').reorder(:trick_index).last
-  end
-
-  def self.playable_trick_index
-    current_trick&.trick_index
   end
 
   def add_card!(card)

@@ -5,7 +5,7 @@ class TricksPresenter
     @active_player = active_player
     @visible_stage = visible_stage
     @visible_trick_index = visible_trick_index
-    @playable_trick_index = @tricks.playable_trick_index
+    @playable_trick_index = @game.playable_trick_index
   end
 
   def props
