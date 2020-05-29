@@ -177,6 +177,8 @@ class Game < ApplicationRecord
       end
     end
 
+    game_players.reload
+
     return bid
   end
 
@@ -186,7 +188,10 @@ class Game < ApplicationRecord
     slug ||= next_player.pick_announcement(valid_announcements)
     return unless valid_announcements.include?(slug)
 
-    announcements.create(slug: slug, game_player: next_player)
+    announcement = announcements.create(slug: slug, game_player: next_player)
+    game_players.reload
+
+    return announcement
   end
 
   def pick_king!(king_slug)
@@ -237,6 +242,8 @@ class Game < ApplicationRecord
     if finished?
       PointsService.new(self).record_points
     end
+
+    game_players.reload
 
     return card
   end

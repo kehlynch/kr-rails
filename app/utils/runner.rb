@@ -41,12 +41,12 @@ class Runner
     bid = @game.make_bid!(bid_slug)
 
     while bid
-      @broadcaster.broadcast
+      @broadcaster.broadcast(@game)
       bid = @game.make_bid!
     end
 
     # maybe ned this cos won_bid hasn't been recorded - haven't checked - it's all too slow atm!
-    @game.reload
+    # @game.reload
     if @game.won_bid.present?
       advance!
     end
@@ -54,7 +54,7 @@ class Runner
 
   def pick_king!(king_slug)
     @game.pick_king!(king_slug)
-    @broadcaster.broadcast
+    @broadcaster.broadcast(@game)
 
     if @game.king
       advance!
@@ -65,7 +65,7 @@ class Runner
     @game.pick_talon!(talon_half_index&.to_i)
 
     if @game.talon_picked
-      @broadcaster.broadcast
+      @broadcaster.broadcast(@game)
       advance!
     end
   end
@@ -74,7 +74,7 @@ class Runner
     @game.resolve_talon!(discard_slugs)
 
     if @game.talon_resolved
-      @broadcaster.broadcast
+      @broadcaster.broadcast(@game)
       advance!
     end
   end
@@ -83,7 +83,7 @@ class Runner
     announcement = @game.make_announcement!(announcement_slug)
 
     while announcement
-      @broadcaster.broadcast
+      @broadcaster.broadcast(@game)
       announcement = @game.make_announcement!
     end
 
@@ -95,10 +95,10 @@ class Runner
   def advance_tricks!(card_slug)
     card = Card.find_by(game_id: @game.id, slug: card_slug)
     card = @game.play_card!(card)
-    @broadcaster.broadcast
+    @broadcaster.broadcast(@game)
     while card
       card = @game.play_card!
-      @broadcaster.broadcast
+      @broadcaster.broadcast(@game)
     end
   end
 end

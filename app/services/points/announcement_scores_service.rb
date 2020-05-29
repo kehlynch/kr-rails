@@ -89,7 +89,7 @@ class Points::AnnouncementScoresService
 
     return :not_attempted unless played_in_trick && team_played_card
 
-    team_won_trick = @team.map(&:tricks).flatten.find { |t| t.trick_index == trick_index }.present?
+    team_won_trick = @team.map(&:won_tricks).flatten.find { |t| t.trick_index == trick_index }.present?
 
     return :succeeded if team_won_trick
 
