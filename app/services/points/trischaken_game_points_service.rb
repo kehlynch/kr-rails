@@ -36,7 +36,7 @@ class Points::TrischakenGamePointsService
   def winners
     return zero_trick_winners if zero_trick_winners.any?
 
-    most_points = @game.game_players.max(:card_points)
+    most_points = @game.game_players.map(&:card_points).max
     @game.game_players.reject { |gp| gp.card_points == most_points }
   end
 
