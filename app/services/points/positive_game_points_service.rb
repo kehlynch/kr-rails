@@ -16,6 +16,9 @@ class Points::PositiveGamePointsService
 
   private
 
+  attr_reader :game
+  delegate(:declarers, :defenders, to: :game)
+
   def update_bid_result
     @game.won_bid.update(off: bid_off?)
   end
@@ -27,15 +30,15 @@ class Points::PositiveGamePointsService
   end
 
   def game_points_for(gp)
-    bid_points = @bid.points * @bid.kontra_multiplier # 3
-    bid_points = bid_points * 2 if off_double?
-    team_announcement_points = announcement_points_for(gp.team) # 0
+    bid_points = @bid.points * @bid.kontra_multiplier # 1 / 1
+    bid_points = bid_points * 2 if off_double? # 1 / 1
+    team_announcement_points = announcement_points_for(gp.team) # -3 / 3
 
-    team_count = gp.team_members.count # 1 -- 3
-    opposition_count = 4 - team_count # 3 -- 1
-    points_swing = gp.winner ?  team_announcement_points + bid_points : team_announcement_points - bid_points # 3 -- -3
+    points_swing = gp.winner ?  team_announcement_points + bid_points : team_announcement_points - bid_points # -4 / 4
 
-    points_swing * opposition_count # 9
+    defenders_count = defenders.size # 3 / 3
+    team_count = gp.team_members.size # 3 / 1
+    (points_swing * defenders_count) / team_count # -4 / 12
   end
 
   def announcement_points_for(team_name)
@@ -53,6 +56,10 @@ class Points::PositiveGamePointsService
     end
   end
 
+  def declarer_count
+    declarers.size
+  end
+
   def off_double?
     @bid.slug == Bid::SECHSERDREIER && bid_off?
   end
@@ -63,13 +70,5 @@ class Points::PositiveGamePointsService
     defenders_card_points = defenders.map(&:card_points).sum
 
     defenders_card_points >= declarers_card_points
-  end
-
-  def declarers
-    @game.game_players.declarers
-  end
-
-  def defenders
-    @game.game_players.defenders
   end
 end
