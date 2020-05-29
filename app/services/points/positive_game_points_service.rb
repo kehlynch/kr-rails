@@ -1,7 +1,7 @@
 class Points::PositiveGamePointsService
   def initialize(game)
     @game = game
-    @bid = game.bids.highest
+    @bid = game.winning_bid
   end
 
   def record_game_points

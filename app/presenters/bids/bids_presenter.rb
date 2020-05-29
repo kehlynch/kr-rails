@@ -18,7 +18,7 @@ class Bids::BidsPresenter < Bids::BidsBasePresenter
   def finished_message
     return nil unless finished?
 
-    "#{@game.declarer.name} wins bidding with #{Bids::BidPresenter.new(@game.bids.highest.slug).name(declared: true)}"
+    "#{@game.declarer.name} wins bidding with #{Bids::BidPresenter.new(@game.winning_bid.slug).name(declared: true)}"
   end
 
   def biddable_props

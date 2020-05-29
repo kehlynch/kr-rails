@@ -76,7 +76,7 @@ class PlayerPresenter
     {
       won_tricks_count: won_tricks_count,
       points: card_points,
-      team_points: @player.team_members.map(&:card_points).compact.sum,
+      team_points: team_points,
       game_points: game_points,
       winner: winner?
     }
@@ -101,7 +101,7 @@ class PlayerPresenter
   end
 
   def won_tricks_count
-    @player.won_tricks.count
+    @player.won_tricks.size
   end
 
   def known_partner
@@ -118,5 +118,16 @@ class PlayerPresenter
     return 'partner' if @game.partner&.id == @player.id
 
     return ''
+  end
+
+  def team_points
+    case @player.team
+    when GamePlayer::DECLARERS
+      @game.declarers.map(&:card_points).compact.sum
+    when GamePlayer::DEFENDERS
+      @game.defenders.map(&:card_points).compact.sum
+    else
+      game_player.card_points
+    end
   end
 end

@@ -40,8 +40,8 @@ class Bid < ApplicationRecord
 
   validates :slug, inclusion: { in: RANKED_SLUGS }
 
-  def self.second_round_finished?
-    first_round_finished? && (highest&.slug != RUFER)
+  def self.second_round_finished?(winning_bid)
+    first_round_finished? && (winning_bid.slug != RUFER)
   end
 
   def self.first_round_finished?
@@ -52,12 +52,6 @@ class Bid < ApplicationRecord
     select do |bid|
       bid.slug == PASS
     end.map(&:game_player_id).uniq.size
-  end
-
-  def self.highest
-    includes(:game_player).all.max_by do |b|
-      [b.rank, b.game_player.forehand? ? 1 : 0]
-    end
   end
 
   def rank

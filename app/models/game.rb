@@ -1,17 +1,11 @@
 class Game < ApplicationRecord
   belongs_to :match
 
-  has_many :game_players
-  has_many :declarers, -> { where(team: GamePlayer::DECLARERS) }, class_name: 'GamePlayer'
-  has_many :defenders, -> { where(team: GamePlayer::DEFENDERS) }, class_name: 'GamePlayer'
-  has_one :forehand, -> { where(forehand: true) }, class_name: 'GamePlayer'
-  has_one :declarer, -> { where(declarer: true) }, class_name: 'GamePlayer'
-  has_one :partner, -> { where(partner: true) }, class_name: 'GamePlayer'
-
-  has_many :cards, -> { includes(:game_player) }, dependent: :destroy
+  has_many :game_players, -> { includes(:won_tricks, :announcements) }
+  has_many :cards, dependent: :destroy
   has_many :talon_cards, -> { where.not(talon_half: nil) }, class_name: 'Card'
   has_many :announcements, -> { includes(:game_player) }, dependent: :destroy
-  has_many :bids, dependent: :destroy
+  has_many :bids, -> { includes(:game_player) }, dependent: :destroy
   has_one :won_bid, -> { where(won: true) }, class_name: 'Bid'
 
   has_many :tricks, dependent: :destroy
@@ -21,13 +15,10 @@ class Game < ApplicationRecord
   default_scope {
     includes(
       :game_players,
-      :declarers,
-      :defenders,
-      :forehand,
-      :declarer,
-      :partner,
       :bids,
-      :won_bid
+      :won_bid,
+      :announcements,
+      :cards
     )
   }
 
@@ -63,6 +54,26 @@ class Game < ApplicationRecord
     Runner.new(self).advance!
   end
 
+  def forehand
+    game_players.find(&:forehand)
+  end
+
+  def declarer
+    game_players.find(&:declarer)
+  end
+
+  def partner
+    game_players.find(&:partner)
+  end
+
+  def declarers
+    game_players.select { |gp| gp.team == GamePlayer::DECLARERS }
+  end
+
+  def defenders
+    game_players.select { |gp| gp.team == GamePlayer::DEFENDERS }
+  end
+
   def kings
     ['club_8', 'diamond_8', 'heart_8', 'spade_8'].map do |king_slug|
       # don't hit the db here
@@ -96,7 +107,7 @@ class Game < ApplicationRecord
       [Stage::KING, won_bid&.king?],
       [Stage::PICK_TALON, talon_cards_to_pick.present?],
       [Stage::RESOLVE_TALON, talon_cards_to_pick.present?],
-      [Stage::ANNOUNCEMENT, bids.highest&.announcements?],
+      [Stage::ANNOUNCEMENT, winning_bid&.announcements?],
       [Stage::TRICK, true],
       [Stage::FINISHED, true]
     ].select { |_s, valid| valid }.map(&:first)
@@ -124,10 +135,10 @@ class Game < ApplicationRecord
 
     bid = bids.create(slug: bid_slug, game_player: next_player)
 
-    if bids.second_round_finished?
-      bids.highest.update(won: true)
-      bids.highest.game_player.update(declarer: true, team: GamePlayer::DECLARERS)
-      if !bids.highest.king?
+    if bids.second_round_finished?(winning_bid)
+      winning_bid.update(won: true)
+      winning_bid.game_player.update(declarer: true, team: GamePlayer::DECLARERS)
+      if !winning_bid.king?
         set_defenders
       end
     end
@@ -211,13 +222,13 @@ class Game < ApplicationRecord
   def next_player
     case stage
     when Stage::BID
-      game_players.next_from(bids.last&.game_player) || forehand
+      next_player_by_position(bids.last&.game_player) || forehand
     when Stage::ANNOUNCEMENT
-      game_players.next_from(announcements.last_passed_player) || declarer
+      next_player_by_position(last_passed_announcer) || declarer
     when Stage::KING, Stage::PICK_TALON, Stage::RESOLVE_TALON
       declarer
     when Stage::TRICK
-      game_players.next_from(current_trick.last_player) ||
+      next_player_by_position(current_trick.last_player) ||
         tricks.last_finished_trick&.won_player ||
         bid_lead
     when Stage::FINISHED
@@ -229,14 +240,32 @@ class Game < ApplicationRecord
     tricks.current_trick
   end
 
+  def winning_bid
+    bids.max_by do |b|
+      [b.rank, b.game_player.forehand? ? 1 : 0]
+    end
+  end
+
   def finished?
     tricks.finished?
   end
 
   private
 
+  def next_player_by_position(game_player)
+    return nil unless game_player
+
+    game_players.find do |p|
+      p.position == (game_player.position + 1) % 4
+    end
+  end
+
+  def last_passed_announcer
+    announcements.sort_by(&:id).reverse.find { |a| a.slug == Announcement::PASS }&.game_player
+  end
+
   def bid_lead
-    bids.highest&.declarer_leads? ? declarer : forehand
+    winning_bid&.declarer_leads? ? declarer : forehand
   end
 
   def set_defenders

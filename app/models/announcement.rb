@@ -22,7 +22,7 @@ class Announcement < ApplicationRecord
   end
 
   def self.finished?
-    return false unless pluck(:game_player_id).uniq.count == 4
+    return false unless select(&:game_player_id).uniq.count == 4
 
     last(3).map(&:slug) == [PASS, PASS, PASS]
   end

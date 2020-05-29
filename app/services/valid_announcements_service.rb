@@ -52,8 +52,8 @@ class ValidAnnouncementsService
     declarer_announcements = game.declarers.map(&:announcements).flatten
     defence_announcements = game.defenders.map(&:announcements).flatten
 
-    bid_kontra = bids.highest&.kontra
-    bid_kontra_slug = bids.highest&.kontra_slug
+    bid_kontra = game.winning_bid&.kontra
+    bid_kontra_slug = game.winning_bid&.kontra_slug
 
     if next_player.team == GamePlayer::DEFENDERS
       slugs = declarer_announcements.map(&:kontra_slug) + defence_announcements.map(&:rekontra_slug)

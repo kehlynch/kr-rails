@@ -11,20 +11,13 @@ class GamePlayer <  ApplicationRecord
   has_many :hand_cards, -> { where(trick_id: nil, discard: false) }, class_name: 'Card'
   has_many :original_hand_cards, -> { where(talon_half: nil) }, class_name: 'Card'
   has_many :discards, -> { where(discard: true) }, class_name: 'Card'
+  has_many :won_tricks, class_name: 'Trick'
 
   has_many :announcements
   has_many :bids
   has_many :tricks
 
   has_many :co_players, through: :game, source: :game_players
-
-  def self.next_from(game_player)
-    return nil unless game_player
-
-    find do |p|
-      p.position == (game_player.position + 1) % 4
-    end
-  end
 
   def forehand?
     forehand
@@ -47,10 +40,6 @@ class GamePlayer <  ApplicationRecord
 
   def played_in_any_trick?
     cards.select(&:trick_id).any?
-  end
-
-  def won_tricks
-    tricks.select { |t| t.won_player&.id == id }
   end
 
   def scorable_cards
