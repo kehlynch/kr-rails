@@ -1,12 +1,14 @@
 function submitGame(checkbox) {
-  console.log('submitGame', checkbox);
+  console.log('submitGame');
   if (checkbox) { $(checkbox).prop('checked', true); }
   document.getElementById('gameForm').submit();
+  if (![stages.BID, stage.ANNOUNCEMENTS].includes(stage())) {
+    advanceStage();
+  }
 }
 
 function attachClickers() {
   if (stateExists()) {
-    console.log("attachClickers");
     document.onclick = advance;
     document.body.onkeyup = function(e){
       if(e.keyCode == 32){
@@ -17,8 +19,9 @@ function attachClickers() {
 }
 
 function advance() {
+  console.log("advance?")
   if (advanceAvailable()) {
-    console.log('advancing stage');
+    console.log("advancing!")
     advanceStage();
   }
 }

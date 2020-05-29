@@ -39,11 +39,10 @@ class Runner
 
   def advance_bidding!(bid_slug)
     bid = @game.make_bid!(bid_slug)
-    @broadcaster.broadcast
 
     while bid
-      bid = @game.make_bid!
       @broadcaster.broadcast
+      bid = @game.make_bid!
     end
 
     # maybe ned this cos won_bid hasn't been recorded - haven't checked - it's all too slow atm!
@@ -64,29 +63,28 @@ class Runner
 
   def pick_talon!(talon_half_index)
     @game.pick_talon!(talon_half_index&.to_i)
-    @broadcaster.broadcast
 
     if @game.talon_picked
+      @broadcaster.broadcast
       advance!
     end
   end
 
   def resolve_talon!(discard_slugs)
     @game.resolve_talon!(discard_slugs)
-    @broadcaster.broadcast
 
     if @game.talon_resolved
+      @broadcaster.broadcast
       advance!
     end
   end
 
   def advance_announcements!(announcement_slug)
     announcement = @game.make_announcement!(announcement_slug)
-    @broadcaster.broadcast
 
     while announcement
-      announcement = @game.make_announcement!
       @broadcaster.broadcast
+      announcement = @game.make_announcement!
     end
 
     if @game.announcements_finished?

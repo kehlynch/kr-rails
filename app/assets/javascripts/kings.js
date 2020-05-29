@@ -1,5 +1,4 @@
 function updateKings(newData, oldData) {
-  console.log("update kings");
   const updaters = {
     'instruction': setInstruction,
     'kings': updateKingCards,

@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
   belongs_to :match
 
-  has_many :game_players 
+  has_many :game_players, -> { order(:position) }
   has_many :cards, dependent: :destroy
   has_many :announcements, dependent: :destroy
   has_many :bids, dependent: :destroy
@@ -127,6 +127,8 @@ class Game < ApplicationRecord
 
   def stages_for(game_player)
     if game_player == declarer
+      stages
+    elsif declarer.nil?
       stages
     else
       stages.reject { |s| s == Stage::RESOLVE_TALON }

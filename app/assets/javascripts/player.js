@@ -17,7 +17,6 @@ function updatePlayer(newData, oldData) {
   }
 
   if (oldData.announcements !== newData.announcements) {
-    console.log('setting announcments');
     $(`#js-player-${newData.id}-announcements-indicators`).empty().append(newData.announcements);
   }
 }

@@ -66,5 +66,5 @@ Rails.application.configure do
   ActionCable.server.config.logger = Logger.new(nil)
 
 
-  ActiveRecordQueryTrace.enabled = true
+  # ActiveRecordQueryTrace.enabled = true
 end

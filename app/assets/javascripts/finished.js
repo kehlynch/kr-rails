@@ -1,5 +1,4 @@
 function updateFinished(newData, oldData) {
-  console.log("updateFinished");
   const updaters = {
     'instruction': setInstruction,
     'hand': updateHand,

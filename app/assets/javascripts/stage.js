@@ -26,6 +26,8 @@ function advanceStage() {
     const availableStages = getState(state.STAGES);
     const nextStage = availableStages[availableStages.indexOf(currentStage) + 1]
 
+    console.log('availableStages', availableStages);
+    console.log('setting stage to', nextStage);
     setState(state.VISIBLE_STAGE, nextStage);
     revealStageAndHideOthers(nextStage);
   }

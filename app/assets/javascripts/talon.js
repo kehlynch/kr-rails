@@ -1,5 +1,4 @@
 function toggleCard(checkboxId, requiredCount) {
-  console.log('toggleCard', checkboxId, requiredCount);
   const checkbox = $(`#${checkboxId}`)
   checkbox.prop('checked', !checkbox.prop('checked'));
   checkbox.next().toggleClass('picked');

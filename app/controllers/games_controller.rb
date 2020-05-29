@@ -50,7 +50,7 @@ class GamesController < ApplicationController
   private
 
   def find_game
-    Game.find(params[:id])
+    Game.with_associations.find(params[:id])
   end
 
   def find_player

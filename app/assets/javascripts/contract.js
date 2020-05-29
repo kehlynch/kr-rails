@@ -1,5 +1,4 @@
 function updateContract(newData, oldData) {
-  console.log('updateContract', newData);
   const updaters = {
     'won_bid': setWonBid,
     'called_king': setCalledKing
