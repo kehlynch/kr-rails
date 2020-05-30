@@ -7,7 +7,6 @@ class Runner
 
   def initialize(game, active_player_id=nil)
     @game = game
-    @broadcaster = Broadcaster.new(game)
   end
 
   def advance!(**params)
@@ -41,7 +40,7 @@ class Runner
     bid = @game.make_bid!(bid_slug)
 
     while bid
-      @broadcaster.broadcast(@game)
+      broadcast
       bid = @game.make_bid!
     end
 
@@ -54,7 +53,7 @@ class Runner
 
   def pick_king!(king_slug)
     @game.pick_king!(king_slug)
-    @broadcaster.broadcast(@game)
+    broadcast
 
     if @game.king
       advance!
@@ -65,7 +64,7 @@ class Runner
     @game.pick_talon!(talon_half_index&.to_i)
 
     if @game.talon_picked
-      @broadcaster.broadcast(@game)
+      broadcast
       advance!
     end
   end
@@ -74,7 +73,7 @@ class Runner
     @game.resolve_talon!(discard_slugs)
 
     if @game.talon_resolved
-      @broadcaster.broadcast(@game)
+      broadcast
       advance!
     end
   end
@@ -83,7 +82,7 @@ class Runner
     announcement = @game.make_announcement!(announcement_slug)
 
     while announcement
-      @broadcaster.broadcast(@game)
+      broadcast
       announcement = @game.make_announcement!
     end
 
@@ -95,10 +94,14 @@ class Runner
   def advance_tricks!(card_slug)
     card = Card.find_by(game_id: @game.id, slug: card_slug)
     card = @game.play_card!(card)
-    @broadcaster.broadcast(@game)
+    broadcast
     while card
       card = @game.play_card!
-      @broadcaster.broadcast(@game)
+      broadcast
     end
+  end
+
+  def broadcast
+    Broadcaster.broadcast(@game)
   end
 end

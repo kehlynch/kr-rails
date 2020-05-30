@@ -40,13 +40,6 @@ class ValidBidsService
     to: :bids
   )
 
-  def passed_player_count
-    bids.select do |bid|
-      bid.slug == Bid::PASS
-    end.map(&:game_player_id).uniq.size
-  end
-
-
   def highest_rank
     winning_bid&.rank || 0
   end

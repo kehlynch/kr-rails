@@ -67,4 +67,6 @@ Rails.application.configure do
 
 
   # ActiveRecordQueryTrace.enabled = true
+  ActiveRecordQueryTrace.ignore_cached_queries = true
+  ActiveRecordQueryTrace.lines = 0 # show all
 end

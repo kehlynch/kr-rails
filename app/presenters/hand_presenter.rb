@@ -18,10 +18,10 @@ class HandPresenter
     }
   end
 
-  def resolve_talon_props
+  def resolve_talon_props(talon_cards_to_pick)
     {
       id: id('resolve-talon'),
-      hand: sorted_hand_with(:hand_props_for_resolve_talon),
+      hand: sorted_hand_with(:hand_props_for_resolve_talon, talon_cards_to_pick),
     }
   end
 

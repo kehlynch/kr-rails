@@ -10,7 +10,7 @@ class ResolveTalonPresenter
       stage: Stage::RESOLVE_TALON,
       visible: @visible_stage == Stage::RESOLVE_TALON,
       resolvable: !@game.talon_resolved && @active_player.declarer?,
-      hand: HandPresenter.new(@game, @active_player).resolve_talon_props,
+      hand: HandPresenter.new(@game, @active_player).resolve_talon_props(@game.talon_cards_to_pick),
       instruction: InstructionPresenter.new(instruction, Stage::RESOLVE_TALON).props,
       finished: @game.talon_resolved
     }

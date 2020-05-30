@@ -6,10 +6,16 @@ class ScorePresenter
   end
 
   def props
+    won_tricks_count =
+      @player
+      .won_tricks
+      .map(&:trick_index)
+      .size
+
     {
       id: "js-score-#{@player.id}",
       name: @player.name,
-      won_tricks_count: @player.won_tricks.count,
+      won_tricks_count: won_tricks_count,
       points: @player.card_points,
       team_points: team_points,
       game_points: @player.game_points,

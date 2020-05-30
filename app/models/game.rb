@@ -13,7 +13,7 @@ class Game < ApplicationRecord
   scope :with_associations, -> {
     includes(
       :cards, 
-      tricks: :cards,
+      tricks: [:won_player, cards: :game_player],
       bids: :game_player,
       announcements: :game_player,
       game_players: [:won_tricks, :bids, :announcements]
@@ -23,7 +23,8 @@ class Game < ApplicationRecord
   scope :for_scores, -> {
     includes(
       :announcement_scores,
-      game_players: :won_tricks
+      :bids,
+      game_players: [won_tricks: :cards],
     )
   }
 
@@ -177,8 +178,6 @@ class Game < ApplicationRecord
       end
     end
 
-    game_players.reload
-
     return bid
   end
 
@@ -189,7 +188,6 @@ class Game < ApplicationRecord
     return unless valid_announcements.include?(slug)
 
     announcement = announcements.create(slug: slug, game_player: next_player)
-    game_players.reload
 
     return announcement
   end
@@ -242,8 +240,6 @@ class Game < ApplicationRecord
     if finished?
       PointsService.new(self).record_points
     end
-
-    game_players.reload
 
     return card
   end

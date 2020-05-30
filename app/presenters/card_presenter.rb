@@ -38,7 +38,7 @@ class CardPresenter
     }
   end
 
-  def hand_props_for_resolve_talon
+  def hand_props_for_resolve_talon(talon_cards_to_pick)
     id = id(Stage::RESOLVE_TALON);
     {
       slug: @card.slug,
@@ -46,7 +46,7 @@ class CardPresenter
       pickable: @active_player.declarer?,
       illegal: @active_player.declarer? && !@card.simple_legal_putdown?,
       input_id: id,
-      onclick: @active_player.declarer? && @card.simple_legal_putdown? && "toggleCard('#{id}', #{@card.game.talon_cards_to_pick})",
+      onclick: @active_player.declarer? && @card.simple_legal_putdown? && "toggleCard('#{id}', #{talon_cards_to_pick})",
     }
   end
 
