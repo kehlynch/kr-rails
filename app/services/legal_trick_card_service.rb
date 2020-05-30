@@ -86,7 +86,13 @@ class LegalTrickCardService
     elsif led_suit_cards.any?
       led_suit_cards.each { |c| set_legal(c) }
     elsif trumps.any?
-      set_trumps_legal(except_pagat: @bid.trischaken?)
+      winning_card_trump = winning_card.suit == :trump
+      legal_trump_cards =
+        winning_card_trump ? 
+        trumps.select { |c| c.value > winning_card.value } :
+          trumps
+
+      legal_trump_cards.each { |c| set_legal(c) unless c.slug == 'trump_1' }
     else
       set_all_cards_legal(except_pagat: @bid.trischaken?)
     end
@@ -99,12 +105,8 @@ class LegalTrickCardService
   end
 
   def update_negative_legal
-    p led_card
-    p @cards.map { |c| c.slug }
-    if lead? && @bid.trischaken?
+    if lead?
       set_all_cards_legal(except_pagat: @bid.trischaken?)
-    elsif lead?
-      set_all_cards_legal
     else
       update_negative_nonlead_legal
     end
