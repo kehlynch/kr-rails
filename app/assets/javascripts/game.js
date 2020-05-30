@@ -1,10 +1,6 @@
 function submitGame(checkbox) {
-  console.log('submitGame');
   if (checkbox) { $(checkbox).prop('checked', true); }
   document.getElementById('gameForm').submit();
-  if (![stages.BID, stage.ANNOUNCEMENTS].includes(stage())) {
-    advanceStage();
-  }
 }
 
 function attachClickers() {
@@ -19,9 +15,7 @@ function attachClickers() {
 }
 
 function advance() {
-  console.log("advance?")
   if (advanceAvailable()) {
-    console.log("advancing!")
     advanceStage();
   }
 }

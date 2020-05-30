@@ -69,8 +69,6 @@ function revealStageAndHideOthers(stageToReveal) {
   })
 }
 
-function stage() { return getState(state.ACTION); }
-
 function hideStage(stage) {
   $(stageSelector(stage)).addClass('d-none')
 }

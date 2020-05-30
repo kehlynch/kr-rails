@@ -1,13 +1,14 @@
 STATE_SELECTOR = '#js-state';
 
 const state = {
-  STAGES: 'stages',
-  PLAYERS: 'players', // TODO get rid
-  PATHS: 'paths', // TODO get rid - used for advance post
-
-
+  PATHS: 'paths',
   CHANNEL: 'channel',
+  PLAYERS: 'players',
   CONTRACT: 'contract',
+  STAGES: 'stages',
+  VISIBLE_STAGE: 'visible_stage',
+  VISIBLE_TRICK_INDEX: 'visible_trick_index',
+
   BIDS: 'bids',
   KINGS: 'kings',
   PICK_TALON: 'pick_talon',
@@ -15,23 +16,7 @@ const state = {
   ANNOUNCEMENTS: 'announcements',
   TRICKS: 'tricks',
   FINISHED: 'finished',
-  VISIBLE_STAGE: 'visible_stage',
-  VISIBLE_TRICK_INDEX: 'visible_trick_index',
 
-
-
-  INSTRUCTION: 'instruction',
-  ACTION: 'action',
-  PLAYABLE_TRICK_INDEX: 'playable_trick_index',
-  DECLARER_NAME: 'declarer_name',
-  IS_DECLARER: 'is_declarer',
-  KING_NEEDED: 'king_needed',
-  PICKED_KING_SLUG: 'picked_king_slug',
-  PLAYER_POSITION: 'player_position',
-  MY_MOVE: 'my_move',
-  TALON_PICKED: 'talon_picked',
-  TALON_CARDS_TO_PICK: 'talon_cards_to_pick',
-  WON_BID: 'won_bid',
   IN_PROGRESS: 'in_progress' // only set from JS
 }
 
