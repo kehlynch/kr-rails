@@ -313,9 +313,9 @@ class Game < ApplicationRecord
 
 
   def announcements_finished?
-    return false unless announcements.select(&:game_player_id).uniq.count == 4
+    return false unless announcements.map(&:game_player_id).uniq.count == 4
 
-    announcements.last(3).map(&:slug) == [Announcement::PASS] * 3
+    announcements.sort_by(&:id).last(3).map(&:slug) == [Announcement::PASS] * 3
   end
 
   def bid_first_round_finished?
