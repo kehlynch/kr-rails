@@ -21,7 +21,7 @@ class Bids::AnnouncementsPresenter < Bids::BidsBasePresenter
   end
 
   def hand_props
-    HandPresenter.new(@game, @active_player).props_for_bids
+    HandPresenter.new(@game, @active_player).props_for_bids(Stage::ANNOUNCEMENT)
   end
 
   private

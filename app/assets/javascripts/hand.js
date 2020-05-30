@@ -1,5 +1,5 @@
 function updateHand(newData, oldData) {
-  const { id, hand } = newData;
+  const { hand } = newData;
   const handSlugs = hand.map((c) => c.slug);
   const oldHandSlugs = oldData.hand.map((c) => c.slug);
 

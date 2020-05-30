@@ -4,9 +4,9 @@ class HandPresenter
     @active_player = active_player
   end
 
-  def props_for_bids
+  def props_for_bids(stage)
     {
-      id: id('pick-bids'),
+      id: id(stage),
       hand: sorted_hand_with(:hand_props_for_pick_talon),
     }
   end
