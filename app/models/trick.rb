@@ -9,10 +9,6 @@ class Trick < ApplicationRecord
     find_by(trick_index: 11, finished: true).present?
   end
 
-  def self.last_finished_trick
-    joins(:cards).group('tricks.id').having('count(trick_id) = 4').reorder(:trick_index).last
-  end
-
   def add_card!(card)
     card.update(played_index: next_played_index, trick_id: id)
 
@@ -58,7 +54,11 @@ class Trick < ApplicationRecord
   private
 
   def next_played_index
-    (cards.maximum(:played_index) || 0) + 1
+    max_played_index + 1
+  end
+
+  def max_played_index
+    cards.map(&:played_index).compact.max || 0
   end
 
   def record_won_player

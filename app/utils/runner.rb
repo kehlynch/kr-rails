@@ -92,7 +92,7 @@ class Runner
   end
 
   def advance_tricks!(card_slug)
-    card = Card.find_by(game_id: @game.id, slug: card_slug)
+    card = @game.cards.find { |c| c.slug == card_slug }
     card = @game.play_card!(card)
     broadcast
     while card

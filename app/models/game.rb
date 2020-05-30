@@ -271,7 +271,7 @@ class Game < ApplicationRecord
       declarer
     when Stage::TRICK
       next_player_by_position(current_trick.last_player) ||
-        tricks.last_finished_trick&.won_player ||
+        last_finished_trick&.won_player ||
         bid_lead
     when Stage::FINISHED
       nil
@@ -332,6 +332,10 @@ class Game < ApplicationRecord
     bids.select do |bid|
       bid.slug == Bid::PASS
     end.map(&:game_player_id).uniq.size
+  end
+
+  def last_finished_trick
+    tricks.select { |t| t.cards.size == 4 }.sort_by(&:trick_index).last
   end
 
   def next_player_by_position(game_player)
