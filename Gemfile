@@ -50,6 +50,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   gem 'active_record_query_trace'
+  gem 'pry', '~> 0.12.2'
 end
 
 group :test do

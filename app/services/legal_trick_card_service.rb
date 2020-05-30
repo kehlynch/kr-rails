@@ -96,12 +96,6 @@ class LegalTrickCardService
     else
       set_all_cards_legal(except_pagat: @bid.trischaken?)
     end
-
-    # Pagat the only trump left in Trischaken - this shouldn't happen otherwise
-    if no_cards_legal?
-      pagat = @cards.find { |c| c.slug == 'trump_1' }
-      @legal_mapping[pagat] = true
-    end
   end
 
   def update_negative_legal
@@ -109,6 +103,12 @@ class LegalTrickCardService
       set_all_cards_legal(except_pagat: @bid.trischaken?)
     else
       update_negative_nonlead_legal
+    end
+
+    # Pagat the only trump left in Trischaken - this shouldn't happen otherwise
+    if no_cards_legal?
+      pagat = @cards.find { |c| c.slug == 'trump_1' }
+      @legal_mapping[pagat] = true
     end
 
     fail 'found no legal cards for negative bid' if no_cards_legal?
