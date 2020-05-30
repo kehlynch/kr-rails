@@ -1,6 +1,11 @@
 function submitGame(checkbox) {
   if (checkbox) { $(checkbox).prop('checked', true); }
   document.getElementById('gameForm').submit();
+
+  const currentStage = getState(state.VISIBLE_STAGE);
+  if ([stages.KING, stages.PICK_TALON, stages.RESOLVE_TALON].includes(currentStage)) {
+    advanceStage();
+  }
 }
 
 function attachClickers() {
