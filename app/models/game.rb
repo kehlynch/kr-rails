@@ -240,6 +240,7 @@ class Game < ApplicationRecord
     card = current_trick.add_card!(card)
 
     if finished?
+      game_players.reload
       PointsService.new(self).record_points
     end
 
