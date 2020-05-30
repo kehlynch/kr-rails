@@ -52,7 +52,7 @@ class PlayerPresenter
   def static_props
     {
       id: @player.id,
-      play_as_path: edit_match_player_game_path(@game.match_id, @player.id, @game.id),
+      play_as_path: edit_match_player_game_path(@game.match_id, @player.player_id, @game.id),
       compass: compass,
       name: @player.name,
       human: @player.human?,

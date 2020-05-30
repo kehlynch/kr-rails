@@ -173,6 +173,8 @@ class Game < ApplicationRecord
     if bid_second_round_finished?(winning_bid)
       winning_bid.update(won: true)
       winning_bid.game_player.update(declarer: true, team: GamePlayer::DECLARERS)
+      game_players.reload
+
       if !winning_bid.king?
         set_defenders
       end
