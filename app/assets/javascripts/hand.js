@@ -1,10 +1,20 @@
 function updateHand(newData, oldData) {
-  const { hand } = newData;
+  const { id, hand } = newData;
   const handSlugs = hand.map((c) => c.slug);
   const oldHandSlugs = oldData.hand.map((c) => c.slug);
 
   if (JSON.stringify(handSlugs) != JSON.stringify(oldHandSlugs)) {
-    syncHandCards(newData, oldData);
+    newCards = handSlugs.filter(s => !oldHandSlugs.includes(s));
+    if (newCards.length > 0) {
+      // re-render so we put them in sorted order, for when talon is picked
+      $(`#${id}`).empty();
+      hand.forEach((cardData) => {
+        const card = handCard(cardData);
+        $(`#${id}`).append(card);
+      })
+    } else {
+      syncHandCards(newData, oldData);
+    }
   }
 
   hand.forEach((card, i) => {
