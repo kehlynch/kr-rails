@@ -148,7 +148,7 @@ class LegalTrickCardService
       end
 
       # if we have to play a promised card, reset everything as if nothing was promised.
-      update_simple_position_legal if no_cards_legal?
+      update_simple_positive_legal if no_cards_legal?
     end
   end
 
