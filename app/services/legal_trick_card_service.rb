@@ -156,13 +156,12 @@ class LegalTrickCardService
     promised_card_slugs = {
       Announcement::PAGAT => 'trump_1',
       Announcement::UHU => 'trump_2',
-      Announcement::PAGAT => 'trump_3',
+      Announcement::KAKADU => 'trump_3',
       Announcement::KING => @king
     }.select do |ann_slug, _card_slug|
       team_members.map(&:announcements).flatten.any? { |a| a.slug == ann_slug }
     end.values
-
-    game_player.hand_cards.select { |c| c.slug == promised_card_slugs }
+    @cards.select { |c| promised_card_slugs.include?(c.slug) }
   end
 
   def team_members
