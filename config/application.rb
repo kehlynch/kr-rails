@@ -20,5 +20,8 @@ module Kr
     config.sass.preferred_syntax = :sass
     config.sass.line_comments = false
     config.sass.cache = false
+
+    # turn off channel logging
+    ActionCable.server.config.logger = Logger.new(nil)
   end
 end

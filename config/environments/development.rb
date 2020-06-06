@@ -62,10 +62,6 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.action_cable.url = "ws://localhost:3002/cable"
 
-  # turn off channel logging
-  ActionCable.server.config.logger = Logger.new(nil)
-
-
   # ActiveRecordQueryTrace.enabled = true
   ActiveRecordQueryTrace.ignore_cached_queries = true
   ActiveRecordQueryTrace.lines = 0 # show all
