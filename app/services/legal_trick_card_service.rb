@@ -100,7 +100,7 @@ class LegalTrickCardService
 
   def update_negative_legal
     if lead?
-      set_all_cards_legal(except_pagat: @bid.trischaken?)
+      set_all_cards_legal(except_pagat: @bid.trischaken? && trumps.size > 1)
     else
       update_negative_nonlead_legal
     end
