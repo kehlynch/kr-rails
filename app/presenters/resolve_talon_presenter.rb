@@ -12,7 +12,8 @@ class ResolveTalonPresenter
       resolvable: !@game.talon_resolved && @active_player.declarer?,
       hand: HandPresenter.new(@game, @active_player).resolve_talon_props(@game.talon_cards_to_pick),
       instruction: InstructionPresenter.new(instruction, Stage::RESOLVE_TALON).props,
-      finished: @game.talon_resolved
+      finished: @game.talon_resolved,
+      button_text: "pick #{@game.talon_cards_to_pick} cards to put down"
     }
   end
 
