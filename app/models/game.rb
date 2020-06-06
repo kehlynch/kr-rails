@@ -267,7 +267,11 @@ class Game < ApplicationRecord
   def next_player
     case stage
     when Stage::BID
-      next_player_by_position(bids.sort_by(&:bid_index).last&.game_player) || forehand
+      if bid_first_round_finished?
+        forehand
+      else
+        next_player_by_position(bids.sort_by(&:bid_index).last&.game_player) || forehand
+      end
     when Stage::ANNOUNCEMENT
       next_player_by_position(last_passed_announcer) || declarer
     when Stage::KING, Stage::PICK_TALON, Stage::RESOLVE_TALON
