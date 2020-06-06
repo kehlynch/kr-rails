@@ -270,7 +270,7 @@ class Game < ApplicationRecord
       if bid_first_round_finished?
         forehand
       else
-        next_player_by_position(bids.sort_by(&:bid_index).last&.game_player) || forehand
+        next_player_by_position(bids.sort_by(&:id).last&.game_player) || forehand
       end
     when Stage::ANNOUNCEMENT
       next_player_by_position(last_passed_announcer) || declarer

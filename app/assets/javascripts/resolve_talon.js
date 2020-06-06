@@ -1,4 +1,5 @@
 function updateResolveTalon(newData, oldData) {
+  console.log("updateResolveTalon", newData);
   const updaters = {
     'instruction': setInstruction,
     'hand': updateHand,
@@ -17,5 +18,6 @@ function updateResolveTalon(newData, oldData) {
 }
 
 function updateResolvable(resolvable) {
+  console.log("updateResolvable", resolvable);
   $('#js-resolve-talon-button').toggleClass('d-none', !resolvable);
 }
