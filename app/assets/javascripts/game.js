@@ -3,6 +3,7 @@ function submitGame(checkbox) {
   document.getElementById('gameForm').submit();
 
   const currentStage = getState(state.VISIBLE_STAGE);
+  console.log('submitGame', currentStage);
   if ([stages.KING, stages.PICK_TALON, stages.RESOLVE_TALON].includes(currentStage)) {
     advanceStage();
   }
