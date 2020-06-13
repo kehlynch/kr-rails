@@ -47,8 +47,7 @@ function updateTrickCard(cardData) {
 
 function addTrickCard(cardData) {
   const { input_id, slug, landscape, trick_index, compass } = cardData;
-  const imageFile = landscape ? `landscape_${slug}` : slug;
-  const card = `<img alt="${slug}" class="kr-card trickcard" src="/assets/${imageFile}.jpg" id="${input_id}">`;
+  const card = cardHtml(slug, 'trickCard', null, input_id, landscape);
   const html = `<div class="card-container trick-card-container ${compass}">${card}</div>`
   $(trickSelector(trick_index)).find('.trick-container').append(html);
   updateTrickCard(cardData);

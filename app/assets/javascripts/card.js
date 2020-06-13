@@ -6,8 +6,8 @@ function playCard(checkboxId) {
   }
 }
 
-function cardHtml(slug, classes, onclick) {
-  // really ugly way to get image path from the exisitng html cos Heroku adds strings to them
-  const imageSrc = $(`img[alt=${slug}]`).attr('src');
-  return `<img alt="${slug}" class="kr-card ${classes}" src="${imageSrc}" onclick="${onclick}">`;
+function cardHtml(slug, classes, onclick, id, landscape) {
+  const imageFile = landscape ? `landscape_${slug}` : slug;
+  const imageSrc = `/assets/${imageFile}.jpg`;
+  return `<img alt="${slug}" class="kr-card ${classes}" src="${imageSrc}" onclick="${onclick}" id="${id}">`;
 }
