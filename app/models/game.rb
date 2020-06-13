@@ -56,6 +56,7 @@ class Game < ApplicationRecord
     game_players.update_all(declarer: false, partner: false, team: nil)
     cards.update_all(discard: false, trick_id: nil, played_index: nil)
     cards.where.not(talon_half: nil).update_all(game_player_id: nil)
+    tricks.update_all(game_player_id: nil, finished: false)
     update(king: nil, talon_picked: nil, talon_resolved: false)
     Runner.new(self).advance!
   end

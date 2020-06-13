@@ -65,7 +65,7 @@ class PlayerPresenter
       next_to_play: @game.next_player&.id == @player.id,
       forehand: @player.forehand?,
       declarer: @game.declarer&.id == @player.id,
-      known_partner: known_partner,
+      partner: known_partner,
     }
   end
 

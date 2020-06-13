@@ -22,7 +22,7 @@ function updatePlayer(newData, oldData) {
 }
 
 function updateRoleIndicators(newData, oldData) {
-  ['forehand', 'declarer', 'known_partner'].forEach((type) => {
+  ['forehand', 'declarer', 'partner'].forEach((type) => {
     if (oldData[type] !== newData[type]) {
       updateRoleIndicator(type, newData.id, newData[type])
     }
