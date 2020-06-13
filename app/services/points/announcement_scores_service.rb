@@ -74,24 +74,30 @@ class Points::AnnouncementScoresService
   def bird_status(number)
     slug = "trump_#{number}"
     trick_index = 12 - number
-    card_played_on_trick_status(slug, trick_index)
+    card_played_on_trick_status(slug, trick_index, true)
   end
 
   def king_status
     card_played_on_trick_status(@game.king, 11)
   end
 
-  def card_played_on_trick_status(slug, trick_index)
-    played_in_trick = @game.tricks
+  def card_played_on_trick_status(slug, trick_index, card_must_win=false)
+    trick = @game.tricks
       .find { |t| t.trick_index == trick_index }
-      .cards.find { |c|  c.slug == slug }.present?
+
+    played_in_trick = trick.cards.find { |c|  c.slug == slug }.present?
     team_played_card = @team.map(&:cards).flatten.find { |c| c.slug == slug }.present?
 
     return :not_attempted unless played_in_trick && team_played_card
 
-    team_won_trick = @team.map(&:won_tricks).flatten.find { |t| t.trick_index == trick_index }.present?
 
-    return :succeeded if team_won_trick
+    if card_must_win
+      card_won_trick = trick.won_card.slug == slug
+      return :succeeded if card_won_trick
+    else
+      team_won_trick = @team.map(&:won_tricks).flatten.find { |t| t.trick_index == trick_index }.present?
+      return :succeeded if team_won_trick
+    end
 
     return :failed
   end
