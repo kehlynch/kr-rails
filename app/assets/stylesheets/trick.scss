@@ -1,11 +1,12 @@
-@import 'board';
+@import 'grid';
 
 .trick-container {
-  @include board
+  display: contents;
 }
 
 .trick-card-container {
   align-self: center;
+  justify-self: center;
   &.south {
     @include board-south;
   }

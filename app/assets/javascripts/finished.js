@@ -94,4 +94,5 @@ function showTalonGameEnd() {
   hide(sections.SCORES);
   hide(sections.POINTS);
   revealStage(stages.PICK_TALON);
+  $('#js-instruction-pick_talon').addClass('d-none');
 }

@@ -1,6 +1,24 @@
 @import 'grid';
+@import 'colours';
 
 .contract {
   @include contract;
+  border-radius: 20px;
+  padding: 5px 10px;
+  background-color: white;
+  font-weight: bold;
+  color: $contract-colour;
+  border: 3px solid $contract-colour;
+
+  &.instruction-tricks {
+    @include instruction-tricks;
+  }
 }
 
+.won-bid {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 2px;
+    content: "\f0e3"; // gavel
+  }
+}

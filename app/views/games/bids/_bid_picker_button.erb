@@ -5,4 +5,12 @@
  type="checkbox" 
  value="<%= slug %>"
 />
-<%= bid_button(slug, name, type) %>
+<%= 
+  button_tag(
+    name,
+    alt: name,
+    type: 'button',
+    class: 'btn btn-primary',
+    onclick: "submitBid('#{slug}', '#{type}')"
+  )
+%>

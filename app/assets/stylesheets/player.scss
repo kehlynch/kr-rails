@@ -1,15 +1,15 @@
 $row-start: 2;
 
-.player-status {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
 .player-container {
-  background-color: transparent;
+  font-weight: bold;
+  align-self: center;
   justify-self: center;
-  border: none;
+
+  border-radius: 10px;
+  padding: 5px 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid white;
+
   &.south {
     grid-column: 4;
     grid-row: $row-start + 6;
@@ -28,36 +28,34 @@ $row-start: 2;
   }
 }
 
+.player-name-container {
+  display: flex;
+  align-items: center;
+  font-size: large;
+}
+
+.forehand-indicator, .declarer-indicator, .partner-indicator {
+  font-size: small;
+}
+
 .forehand-indicator {
-  display: inline-block;
-  background-color: green;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-size: 1rem;
   &:after {
-    content: 'F';
+    color: green;
+    content: 'Forehand';
   }
 }
 
 .declarer-indicator {
-  display: inline-block;
-  background-color: blue;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-size: 1rem;
+  color: blue;
   &:after {
-    content: 'D';
+    content: 'Declarer';
   }
 }
 
 .partner-indicator {
-  display: inline-block;
-  background-color: purple;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-size: 1rem;
+  color: purple;
   &:after {
-    content: 'P';
+    content: 'Partner';
   }
 }
 

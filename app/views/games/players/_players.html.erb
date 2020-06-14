@@ -1,6 +1,6 @@
 <div id="js-players" class='d-contents'>
   <% players.each do |player| %>
-    <div class="player-container <%= player[:compass] %> align-self-start">
+    <div class="player-container <%= player[:compass] %>">
       <%= render 'games/players/player', player %>
     </div>
   <% end %>

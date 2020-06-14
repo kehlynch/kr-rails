@@ -1,17 +1,17 @@
 <div class="finished-buttons" id="js-finished">
   <div>
-    <%= button_tag 'Show hand scores', type: 'button', class: 'btn btn-outline-dark', onClick: 'showScores()' %>
+    <%= button_tag 'Hand scores', type: 'button', class: 'btn btn-primary', onClick: 'showScores()' %>
   </div>
 
   <div>
-    <%= button_tag 'Show game points', type: 'button', class: 'btn btn-outline-dark', onClick: 'showPoints()' %>
+    <%= button_tag 'Game points', type: 'button', class: 'btn btn-primary', onClick: 'showPoints()' %>
   </div>
 
   <div>
-    <%= button_tag 'Show talon', type: 'button', class: 'btn btn-outline-dark', onClick: 'showTalonGameEnd()' %>
+    <%= button_tag 'Show talon', type: 'button', class: 'btn btn-primary', onClick: 'showTalonGameEnd()' %>
   </div>
 
   <div>
-    <%= link_to 'Next hand', next_hand_path, method: :post, class: 'btn btn-outline-dark' %>
+    <%= link_to 'Next hand', next_hand_path, method: :post, class: 'btn btn-success' %>
   </div>
 </div>

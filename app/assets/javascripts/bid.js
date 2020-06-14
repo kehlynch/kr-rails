@@ -48,7 +48,7 @@ function setBidPicker({ visible, type, valid_bids }) {
 
 function bidButtonHtml(slug, name, type) {
   const input = `<input hidden="true" id="valid-${type}-${slug}" name="game[${type}]" type="checkbox" value="${slug}">`;
-  const button = `<button name="button" type="button" alt="${name}" class="btn btn-outline-dark" onclick="submitBid('${slug}', '${type}')">${name}</button>`;
+  const button = `<button name="button" type="button" alt="${name}" class="btn btn-primary" onclick="submitBid('${slug}', '${type}')">${name}</button>`;
   return input + button;
 }
 

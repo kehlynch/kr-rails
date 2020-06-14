@@ -1,21 +1,19 @@
 @import 'grid';
+@import 'colours';
 
 .instruction {
   @include instruction;
-  // align-self: start;
-  text-align: center;
-  width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 
   border-radius: 20px;
   padding: 5px 10px;
   background-color: white;
   font-weight: bold;
-  color: blue;
-  border: 3px solid blue;
+  color: $instruction-colour;
+  border: 3px solid $instruction-colour;
 
   &.instruction-tricks {
     @include instruction-tricks;
