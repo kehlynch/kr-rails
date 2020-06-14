@@ -3,6 +3,7 @@
 
 .contract {
   @include contract;
+  align-self: center;
   border-radius: 20px;
   padding: 5px 10px;
   background-color: white;

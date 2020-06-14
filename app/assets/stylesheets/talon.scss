@@ -26,6 +26,10 @@
   border: 6px solid green;
 }
 
+.talon-putdowns-container {
+  @include talon-putdowns;
+}
+
 .picked-putdowns {
   height: 6.875rem;
   display: grid;
@@ -38,5 +42,4 @@
 
 .put-down-cards-button {
   content: 'bbb'
-
 }

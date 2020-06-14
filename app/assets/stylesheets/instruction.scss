@@ -20,6 +20,6 @@
   }
 
   &.instruction-pick_talon, &.instruction-resolve_talon, &.instruction-kings {
-    @include instruction-top-center;
+    @include instruction;
   }
 }

@@ -36,6 +36,6 @@ function updateRoleIndicator(type, playerId, visible) {
 
 function toggleSpinnerFor(playerId, visible) {
   const spinnerSelector = `#js-spinner-player-${playerId}`
-  $(spinnerSelector).toggleClass('d-none', !visible);
+  $(spinnerSelector).toggleClass('spinner-invisible', !visible);
 }
 

@@ -1,4 +1,4 @@
-$row-start: 2;
+$row-start: 1;
 
 .player-container {
   font-weight: bold;
@@ -67,4 +67,12 @@ $row-start: 2;
 .player-announcements {
   color: grey;
   font-size: small;
+}
+
+.player-spinner {
+  margin-left: 2px;
+  margin-top: 1px;
+  &.spinner-invisible {
+    visibility: hidden;
+  }
 }
