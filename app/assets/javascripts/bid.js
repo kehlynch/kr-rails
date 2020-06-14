@@ -6,9 +6,7 @@ function updateBids(newData, oldData) {
   }
 
   const updatersNeedingStage = {
-    'players': setPlayerBids,
-    'finished_message': setFinishedMessage,
-    'finished': toggleBidsFinishedMessage,
+    'players': setPlayerBids
   }
 
   const stage = newData.stage;
@@ -37,18 +35,6 @@ function setPlayerBids(type, players, oldPlayers) {
 
 function playerBidIndicator(bid, type) {
 	return `<div class="player-bid-made ${type}">${bid}</div>`
-}
-
-function toggleBidsFinishedMessage(type, visible) {
-  $(finishedMessageSelector(type)).toggleClass('d-none', !visible);
-}
-
-function setFinishedMessage(type, message) {
-  $(finishedMessageSelector(type)).empty().append(`<i class="fa fa-gavel"></i>${message}`);
-}
-
-function finishedMessageSelector(type) {
-  return `#js-${type}-finished-message`;
 }
 
 function setBidPicker({ visible, type, valid_bids }) {

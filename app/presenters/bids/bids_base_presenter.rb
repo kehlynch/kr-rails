@@ -10,7 +10,6 @@ class Bids::BidsBasePresenter
       stage: stage,
       visible: visible,
       finished: finished?,
-      finished_message: finished_message,
       bid_picker: bid_picker_props,
       instruction: instruction_props,
       players: players_props,
@@ -43,10 +42,6 @@ class Bids::BidsBasePresenter
   end
 
   def finished?
-    raise NotImplementedError
-  end
-
-  def finished_message
     raise NotImplementedError
   end
 

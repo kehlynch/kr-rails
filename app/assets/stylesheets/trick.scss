@@ -5,6 +5,7 @@
 }
 
 .trick-card-container {
+  align-self: center;
   &.south {
     @include board-south;
   }
@@ -12,7 +13,6 @@
     @include board-east;
     height: 3.75rem;
     width: 6.875rem;
-    align-self: center;
   }
   &.north {
     @include board-north
@@ -21,13 +21,5 @@
     @include board-west;
     height: 3.75rem;
     width: 6.875rem;
-    align-self: center;
   }
-}
-
-.trick-button {
-  justify-self: right;
-  align-self: end;
-  grid-column: 3 / span 1;
-  grid-row: 3 / span 1;
 }

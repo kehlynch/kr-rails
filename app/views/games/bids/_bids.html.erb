@@ -1,11 +1,6 @@
 <div class="d-contents <%= 'd-none' unless visible %> " id ="<%= stage %>">
   <%= render 'bids/bid_picker', bid_picker %>
 
-  <div class="center-container <%= 'd-none' unless finished %>" id="js-<%= stage %>-finished-message">
-    <%= fa_icon('gavel') %>
-    <%= finished_message %>
-  </div>
-
   <%= render 'instruction', instruction %>
 
   <% players.each do |player| %>

@@ -8,7 +8,8 @@ class InstructionPresenter
   def props
     {
       instruction: @message,
-      id: id
+      id: id,
+      type: @type
     }
   end
 

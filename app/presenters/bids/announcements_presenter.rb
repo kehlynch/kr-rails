@@ -3,10 +3,6 @@ class Bids::AnnouncementsPresenter < Bids::BidsBasePresenter
     Stage::ANNOUNCEMENT
   end
 
-  def finished_message
-    "announcments are done, ready to play?"
-  end
-
   def biddable_props
     @game.valid_announcements.map do |slug|
       {
@@ -26,8 +22,12 @@ class Bids::AnnouncementsPresenter < Bids::BidsBasePresenter
 
   private
 
+  def finished_message
+    "announcments are done, ready to play?"
+  end
+
   def instruction
-    return 'announcements finished, click to continue' if finished?
+    return finished_message if finished?
 
     return 'make an announcement or pass' if @game.next_player&.id == @active_player.id
 

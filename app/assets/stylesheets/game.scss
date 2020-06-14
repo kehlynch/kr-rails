@@ -25,9 +25,8 @@ $light-green: rgba(51, 102, 0, 0.2);
   }
 }
 
-.home-button-container {
-  grid-column: 5;
-  grid-row: 1;
+.navigation-buttons-container {
+  @include navigation-buttons;
   justify-self: flex-end;
   align-self: flex-start;
 }
@@ -37,7 +36,6 @@ $light-green: rgba(51, 102, 0, 0.2);
   background-color: $grey-blue;
   padding: 1rem;
   display: grid;
-  justify-items: center;
   height: 100vh;
   max-height: 100vh;
   width: 130vh;
@@ -58,4 +56,5 @@ $light-green: rgba(51, 102, 0, 0.2);
 
 .kings-container {
   display: flex;
+  justify-self: center;
 }

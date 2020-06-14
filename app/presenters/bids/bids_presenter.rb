@@ -16,8 +16,6 @@ class Bids::BidsPresenter < Bids::BidsBasePresenter
   end
 
   def finished_message
-    return nil unless finished?
-
     "#{@game.declarer.name} wins bidding with #{Bids::BidPresenter.new(@game.winning_bid.slug).name(declared: true)}"
   end
 
@@ -39,7 +37,7 @@ class Bids::BidsPresenter < Bids::BidsBasePresenter
   end
 
   def instruction
-    return 'bidding finished, click to continue' if finished?
+    return "#{finished_message}. Click to continue" if finished?
 
     return 'make a bid' if @game.next_player.id == @active_player.id
 

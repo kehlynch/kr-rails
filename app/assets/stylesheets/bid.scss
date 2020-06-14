@@ -1,8 +1,11 @@
-.bid-buttons-container, .talon-container {
+@import 'grid';
+
+.bid-picker {
+  @include bid-picker;
   display: grid;
+  grid-gap: 0.4rem;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: 1fr;
-  grid-gap: 0.4rem;
 }
 
 .player-bids {
