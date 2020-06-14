@@ -45,7 +45,7 @@
 }
 
 @mixin navigation-buttons {
-  grid-column: 7;
+  grid-column: 5 / span 3;
   grid-row: 1;
 }
 
@@ -95,6 +95,11 @@
 }
 
 @mixin talon-putdowns {
+  grid-row: 5 / span 2;
+  grid-column: 2 / span 5;
+}
+
+@mixin kings {
   grid-row: 5 / span 2;
   grid-column: 2 / span 5;
 }

@@ -52,6 +52,7 @@ $light-green: rgba(51, 102, 0, 0.2);
 }
 
 .kings-container {
+  @include kings;
   display: flex;
   justify-self: center;
 }
