@@ -20,6 +20,7 @@ $light-green: rgba(51, 102, 0, 0.2);
 .center-container {
   @include centre;
   align-self: center;
+  justify-self: center;
   table {
     display: contents;
   }

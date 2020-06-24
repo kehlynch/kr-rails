@@ -19,6 +19,7 @@ function updateHTML(stateName, oldValue, newValue) {
 }
 
 function applyChange(data) {
+  setInProgress(true);
   Object.entries(data).forEach ( ( [ name, newState ] ) => {
     const oldState = getState(name);
     if (JSON.stringify(oldState) != JSON.stringify(newState)) {

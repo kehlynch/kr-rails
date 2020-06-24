@@ -49,8 +49,6 @@ function kingNeeded() { return getState(state.KING_NEEDED) }
 
 function pickedKingSlug() { return getState(state.PICKED_KING_SLUG) }
 
-function myMove() { return getState(state.MY_MOVE) }
-
 function playerPosition() { return getState(state.PLAYER_POSITION); }
 
 function talonPicked() { return getState(state.TALON_PICKED); }
@@ -63,19 +61,7 @@ function wonBid() { return getState(state.WON_BID) }
 
 function inProgress() { return getState(state.IN_PROGRESS) }
 
-function meToPlayHandCard() {
-  if (!myMove()) { return false; }
-  if (stage() == 'play_card') { return (currentTrickIndex() == visibleTrickIndex()); }
-  if (['resolve_talon', 'resolve_whole_talon'].includes(stage())) { return true; };
-  return false;
-}
-
 function setInProgress(value=true) {
   setState(state.IN_PROGRESS, value);
-  // value ? makeHandUnpickable() : makeHandPickable;
   toggle(sections.PROGRESS_SPINNER, value);
-}
-
-function setContinueAvailable(value=true) {
-  setState(state.CONTINUE_AVAILABLE, value);
 }
