@@ -4,6 +4,7 @@ class Announcement < ApplicationRecord
 
   belongs_to :game
   belongs_to :game_player
+  before_save :record_kontra
 
   PASS = 'pass'
   PAGAT = 'pagat'
@@ -24,8 +25,10 @@ class Announcement < ApplicationRecord
     super(slug: slug, game_player: game_player)
   end
 
-  def self.add_kontra!(kontra_slug)
-    kontrable = Kontrable.find_kontrable(kontra_slug)
-    kontrable.update_kontra(kontra_slug)
+  def record_kontra
+    if slug.include?('kontra')
+      kontrable = Kontrable.find_kontrable(slug)
+      kontrable.update_kontra(slug)
+    end
   end
 end
