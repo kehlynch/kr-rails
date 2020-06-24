@@ -16,7 +16,8 @@
 			<div class="alert alert-info">
 				<%= msg %>
 			</div>
-		<% end %>
+    <% end %>
+    <%= render 'layouts/header', local_assigns %>
 		<%= yield %>
 	</body>
 </html>
