@@ -1,14 +1,4 @@
 class MatchesController < ApplicationController
-
-  def index
-    if @player.present?
-      @my_matches = @player.matches
-      @open_matches = Match.open_matches_for(@player)
-    else
-      redirect_to login_path unless @player.present?
-    end
-  end
-
   def new
     @match = Match.new
     @human_count_select = human_count_select
@@ -36,7 +26,7 @@ class MatchesController < ApplicationController
 
       redirect_to play_path
     else
-      redirect_to matches_path
+      redirect_to home_path
     end
   end
 
