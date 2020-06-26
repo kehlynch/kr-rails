@@ -25,8 +25,10 @@
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item <%= 'active' if current_page?(play_path) %>">
-        <% if @player %>
+        <% if @player&.id %>
           <%= link_to 'log out', logout_path, method: :post, class: "nav-link" %>
+        <% else %>
+          <%= link_to 'log in', login_path, class: "nav-link" %>
         <% end %>
       </li>
     </ul>
