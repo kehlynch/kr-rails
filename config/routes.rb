@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get 'play', to: 'games#play', as: :play
   get 'scores', to: 'matches#scores', as: :scores
 
+  resources :players, only: :index
+
   resources :matches, only: [:create, :new, :destroy, :update] do
     resources :games, only: [:create, :update] do
       post :next, on: :member

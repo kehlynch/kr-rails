@@ -115,3 +115,22 @@ $row-start: 1;
     content: "\f256"; // hands
   }
 }
+
+.player-name {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: blue;
+    content: "\f118"; // face
+  }
+}
+
+.players-table {
+  max-width: 30rem;
+  tr:first-child {
+    td {
+      border-top: none;
+    }
+  }
+}

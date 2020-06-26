@@ -1,0 +1,26 @@
+<div class="container mt-5 mw-70">
+  <h2 class="mb-2">Players</h2>
+  <table class="table players-table">
+    <% @players.each do |player| %>
+      <tr>
+        <td>
+          <span class="player-name">
+            <%= player.name %>
+          </span>
+        </td>
+
+        <td>
+          <span class="player-total-points">
+            <%= @player.game_players.map(&:game_points).sum %>
+          </span>
+        </td>
+
+        <td>
+          <span class="player-hands-played">
+            <%= @player.games.count %>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

@@ -27,4 +27,8 @@ class PlayersController < ApplicationController
       redirect_to login_path unless @player.present?
     end
   end
+
+  def index
+    @players = Player.where(human: true)
+  end
 end
