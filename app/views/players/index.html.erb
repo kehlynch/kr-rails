@@ -11,13 +11,13 @@
 
         <td>
           <span class="player-total-points">
-            <%= @player.game_players.map(&:game_points).sum %>
+            <%= player.game_players.map(&:game_points).sum %>
           </span>
         </td>
 
         <td>
           <span class="player-hands-played">
-            <%= @player.games.count %>
+            <%= player.games.count %>
           </span>
         </td>
       </tr>
