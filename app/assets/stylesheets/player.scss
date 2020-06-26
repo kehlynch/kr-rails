@@ -95,3 +95,23 @@ $row-start: 1;
     }
   }
 }
+
+.player-total-points {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: purple;
+    content: "\f005"; // star
+  }
+}
+
+.player-hands-played {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: green;
+    content: "\f256"; // hands
+  }
+}

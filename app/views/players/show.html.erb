@@ -1,9 +1,17 @@
 <div class="container mb-5 mt-3">
-  <h2 class="mb-4">New game</h2>
-  <%= link_to '', matches_path(match: { human_count: 1 }), method: :post, class: 'btn btn-primary new-game-button humans-1', title: 'new single player game' %>
-  <%= link_to '', matches_path(match: { human_count: 2 }), method: :post, class: 'btn btn-primary new-game-button humans-2', title: 'new game with 2 humans, 2 bots' %>
-  <%= link_to '', matches_path(match: { human_count: 3 }), method: :post, class: 'btn btn-primary new-game-button humans-3', title: 'new game with 3 humans, 1 bot' %>
-  <%= link_to '', matches_path(match: { human_count: 4 }), method: :post, class: 'btn btn-primary new-game-button humans-4', title: 'new game with 4 humans' %>
+  <div class="d-flex justify-content-between align-items-center">
+    <h2 class="mb-4"><%= @player.name %></h2>
+    <%= link_to 'logout', logout_path, method: :post, class: 'btn btn-secondary' %>
+  </div>
+
+  <div class="player-total-points">
+    Scored <%= @player.game_players.map(&:game_points).sum %> points in total
+  </div>
+
+  <div class="player-hands-played">
+    Played <%= @player.games.count %> hands
+  </div>
+
   <hr>
 
   <h2 class="mb-4">My games</h2>
@@ -31,4 +39,13 @@
       </div>
     <% end %>
   </div>
+
+  <hr>
+
+  <h2 class="mb-4">New game</h2>
+
+  <%= link_to '', matches_path(match: { human_count: 1 }), method: :post, class: 'btn btn-primary new-game-button humans-1', title: 'new single player game' %>
+  <%= link_to '', matches_path(match: { human_count: 2 }), method: :post, class: 'btn btn-primary new-game-button humans-2', title: 'new game with 2 humans, 2 bots' %>
+  <%= link_to '', matches_path(match: { human_count: 3 }), method: :post, class: 'btn btn-primary new-game-button humans-3', title: 'new game with 3 humans, 1 bot' %>
+  <%= link_to '', matches_path(match: { human_count: 4 }), method: :post, class: 'btn btn-primary new-game-button humans-4', title: 'new game with 4 humans' %>
 </div>

@@ -30,3 +30,12 @@
     content: "\f256"; // hands
   }
 }
+
+.player-points {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: gold;
+    content: "\f005"; // star
+  }
+}

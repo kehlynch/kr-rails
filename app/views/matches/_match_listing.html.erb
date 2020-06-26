@@ -1,10 +1,15 @@
 <div class="card match-card">
   <div class="card-body">
-    <p class="card-text hand-count">
-      <%= hand_count_text(match) %>
-    </p>
-    <p class="card-text match-days-ago">
-      <%= "Started #{match_days_ago_text(match)}" %>
+    <p class="card-text">
+      <div class="player-points">
+        <%= "#{match.points_for(@player)}" %>
+      </div>
+      <div class="hand-count">
+        <%= hand_count_text(match) %>
+      </div>
+      <div class="match-days-ago">
+        <%= "Started #{match_days_ago_text(match)}" %>
+      </div>
     </p>
     <p class="card-text">
       <%= render 'matches/match_listing/player_names', players: match.players %>

@@ -33,4 +33,10 @@ class Match < ApplicationRecord
 
     return 'in progress'
   end
+
+  def points_for(player)
+    games.map(&:game_players).flatten.filter do |gp|
+      gp.player_id == player.id
+    end.map(&:game_points).sum
+  end
 end
