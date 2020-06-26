@@ -76,3 +76,22 @@ $row-start: 1;
     visibility: hidden;
   }
 }
+
+.player-name-listing {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+  }
+  &.bot {
+    &:before {
+      color: grey;
+      content: "\f17b"; // robot
+    }
+  }
+  &.human {
+    &:before {
+      color: green;
+      content: "\f182"; // woman
+    }
+  }
+}

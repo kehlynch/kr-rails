@@ -1,7 +1,12 @@
 class MatchesController < ApplicationController
 
   def index
-    @matches = Match.order(created_at: :desc).limit(10)
+    if @player.present?
+      @my_matches = @player.matches
+      @open_matches = Match.open_matches_for(@player)
+    else
+      redirect_to login_path unless @player.present?
+    end
   end
 
   def new
@@ -16,22 +21,30 @@ class MatchesController < ApplicationController
 
   def create
     match = Match.create
-    positions = Player::POSITIONS.clone
-    human_position = positions.delete(positions.sample)
-    human_player = Player.create({'position' => human_position, name: match_params[:human_name], match: match, human: true})
+    match.match_players.create(match: match, player: @player)
     bot_count = 4 - match_params[:human_count].to_i
 
-    positions.sample(bot_count).each do |position|
-      Player.create({'position' => position, match: match})
+    bot_count.times do
+      bot = Player.create(human: false)
+      match.match_players.create(match: match, player: bot)
     end
 
-    if match_params[:human_count].to_i == 1
-      match.players.reload
-      game = match.deal_game
+    if match.match_players.count == 4
+      match.deal_game
 
-      redirect_to edit_match_player_game_path(match, human_player, game)
+      set_match_cookies(match)
+
+      redirect_to play_path
     else
-      redirect_to match_player_path(match, human_player)
+      redirect_to matches_path
+    end
+  end
+
+  def scores
+    if @match.present?
+      render locals: MatchPointsPresenter.new(@match).props
+    else
+      redirect_to home_path
     end
   end
 

@@ -1,14 +1,14 @@
-class Points::PointsPresenter
-  def initialize(game, active_player)
-    @game = game
-    @active_player = active_player
-    @match_games = game.match.games.for_scores
+class MatchPointsPresenter
+  def initialize(match)
+    @match = match
+    @games = match.games.for_scores.filter(&:finished?)
+
     @cumulative_points = cumulative_points
   end
 
   def props
     {
-      player_names: @game.game_players.map(&:name),
+      player_names: @match.players.map(&:name),
       games: games,
     }
   end
@@ -16,7 +16,7 @@ class Points::PointsPresenter
   private
 
   def games
-    @match_games.each_with_index.map do |game, index|
+    @games.each_with_index.map do |game, index|
       Points::GamePointsPresenter.new(game, @cumulative_points[index]).props
     end
   end
@@ -33,7 +33,7 @@ class Points::PointsPresenter
   end
 
   def raw_points
-    @match_games.map do |game|
+    @games.map do |game|
       game.game_players.map(&:game_points)
     end
   end

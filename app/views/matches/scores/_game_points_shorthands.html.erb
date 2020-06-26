@@ -1,0 +1,11 @@
+<div class="game-shorthands" id=<%= id %>>
+  <span class="bid-shorthand <%= bid[:classes] %>">
+    <%= bid[:shorthand] %>
+  </span>
+  <% announcements.each do |a| %>
+    <span class="announcement-shorthand <%= a[:classes] %>" id=<%= a[:id] %>>
+      <%= a[:shorthand] %>
+    </span>
+  <% end %>
+</div>
+

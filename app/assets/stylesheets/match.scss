@@ -1,0 +1,32 @@
+.match-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 12rem);
+  grid-auto-columns: 1fr;
+  grid-gap: 1rem;
+}
+
+.match-card-container {
+
+}
+
+.match-card {
+  height: 100%;
+}
+
+.match-days-ago {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: grey;
+    content: "\f017"; // clock
+  }
+}
+
+.hand-count {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: grey;
+    content: "\f256"; // hands
+  }
+}

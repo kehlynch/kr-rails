@@ -1,0 +1,11 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    New Game
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <%= link_to 'Single Player', matches_path(match: { human_count: 1 }), method: :post, class: 'dropdown-item' %>
+    <%= link_to '2 humans', matches_path(match: { human_count: 2 }), method: :post, class: 'dropdown-item' %>
+    <%= link_to '3 humans', matches_path(match: { human_count: 3 }), method: :post, class: 'dropdown-item' %>
+    <%= link_to '4 humans', matches_path(match: { human_count: 4 }), method: :post, class: 'dropdown-item' %>
+  </div>
+</li>

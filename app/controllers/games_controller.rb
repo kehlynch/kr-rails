@@ -10,56 +10,42 @@ class GamesController < ApplicationController
       game = match.games.last
     end
 
-    redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
+    set_game_cookie(game)
+
+    redirect_to play_path
   end
 
   def next
-    match = find_match
-    game = match.games.where('id > ?', params[:id]).reject(&:finished?).first
-    if game
-      redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
-    else
-      game = match.deal_game
-      redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
-    end
+    game = @match.games.where('id > ?', params[:id]).reject(&:finished?).first
+    game ||= @match.deal_game
+
+    set_game_cookie(game)
+
+    redirect_to play_path
   end
 
-  def edit
-    game = GamePresenter.new(find_game, params[:player_id].to_i)
+  def play
+    game = GamePresenter.new(@game, @player.id)
 
     render locals: game.props
   end
 
   def update
-    game = find_game
-    runner = Runner.new(game, params[:player_id].to_i)
+    runner = Runner.new(@game, @player.id)
 
-    if params[:player_id].to_i == game.next_player.player_id
-      game = runner.advance!(**game_params)
+    if @player.id == @game.next_player.player_id
+      @game = runner.advance!(**game_params)
     end
   end
 
   def reset
-    game = find_game
-    game.reset!
+    @game.reset!
 
-    redirect_to edit_match_player_game_path(params[:match_id], params[:player_id], game)
+    redirect_to play_path
   end
 
 
   private
-
-  def find_game
-    Game.with_associations.find(params[:id])
-  end
-
-  def find_player
-    Player.find(params[:player_id])
-  end
-
-  def find_match
-    Match.find(params[:match_id])
-  end
 
   def game_params
     params.require(:game)

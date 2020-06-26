@@ -44,9 +44,9 @@ class GamePresenter
 
   def paths_props
     {
-      update_path: match_player_game_path(@game.match_id, @active_player.player_id, @game.id),
+      update_path: match_game_path(@game.match_id, @game.id),
       new_single_player_path: matches_path(match: { human_count: 1 }),
-      reset_path: reset_match_player_game_path(@game.match_id, @active_player.player_id, @game.id)
+      reset_path: reset_match_game_path(@game.match_id, @game.id)
     }
   end
 

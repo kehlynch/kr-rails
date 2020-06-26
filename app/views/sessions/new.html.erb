@@ -1,0 +1,7 @@
+<div class="container mb-5 mt-3">
+  <h2>Welcome, Player! What's your name?</h2>
+  <%= form_for @player, url: login_path, method: :post  do |f|%>
+    <%= f.text_field :name, hide_label: true %>
+    <%= f.submit "login" %>
+  <%end%>
+</div>

@@ -1,0 +1,28 @@
+<div class="card match-card">
+  <div class="card-body">
+    <p class="card-text hand-count">
+      <%= hand_count_text(match) %>
+    </p>
+    <p class="card-text match-days-ago">
+      <%= "Started #{match_days_ago_text(match)}" %>
+    </p>
+    <p class="card-text">
+      <%= render 'matches/match_listing/player_names', players: match.players %>
+    </p>
+  </div>
+  <div class="card-footer">
+    <% if joined %>
+      <% if match.players.count < 4 %>
+        <p class="card-text">Waiting for players</p>
+      <% else %>
+        <%= link_to "Go to game", play_match_path(match), method: :post, class: 'stretched-link' %>
+      <% end %>
+    <% else %>
+      <% if match.players.count < 4 %>
+        <%= link_to "Join game", join_match_path(match), method: :post, class: 'stretched-link' %>
+      <% else %>
+        <div>full</div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

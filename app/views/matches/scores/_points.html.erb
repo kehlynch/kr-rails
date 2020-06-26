@@ -1,0 +1,15 @@
+<div class="points-container center-container d-none %>" id="js-points">
+  <div class="points-container-grid">
+    <% player_names.each do |name| %>
+      <div class="d-flex justify-content-center">
+        <%= name %>
+      </div>
+    <% end %>
+    <div class=""></div>
+    <div style="display: contents" id="js-points">
+      <% games.each do |game| %>
+        <%= render 'finished/points/game_points', game %>
+      <% end %>
+    </div>
+  </div>
+</div>

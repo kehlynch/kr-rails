@@ -37,8 +37,8 @@ $light-green: rgba(51, 102, 0, 0.2);
   background-color: $grey-blue;
   padding: 1rem;
   display: grid;
-  height: 100vh;
-  max-height: 100vh;
+  height: calc(100vh - 56px);
+  max-height: calc(100vh - 56px);
   width: 130vh;
   max-width: 130vh;
 }
@@ -56,4 +56,37 @@ $light-green: rgba(51, 102, 0, 0.2);
   @include kings;
   display: flex;
   justify-self: center;
+}
+
+.new-game-button {
+  &:before {
+    font-family: "FontAwesome";
+    font-size: large;
+    padding-right: 3px;
+    color: white;
+  }
+
+  &.humans-1 {
+    &:before {
+      content: "\f182    \f17b \f17b \f17b"; // woman robot robot robot
+    }
+  }
+
+  &.humans-2 {
+    &:before {
+      content: "\f182 \f182    \f17b \f17b"; // woman woman robot robot
+    }
+  }
+
+  &.humans-3 {
+    &:before {
+      content: "\f182 \f182 \f182    \f17b"; // woman woman woman robot
+    }
+  }
+
+  &.humans-4 {
+    &:before {
+      content: "\f182 \f182 \f182 \f182"; // woman woman woman woman
+    }
+  }
 }

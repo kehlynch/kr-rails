@@ -1,0 +1,20 @@
+<div class="container mt-5" id="js-points">
+  <div class="points-container-grid">
+    <% player_names.each do |name| %>
+      <div class="d-flex justify-content-center">
+        <%= name %>
+      </div>
+    <% end %>
+    <% if games.empty? %>
+      <div class="d-flex justify-content-center no-hands-played">
+        No hands played yet!
+      </div>
+    <% end %>
+    <div class=""></div>
+    <div style="display: contents" id="js-points">
+      <% games.each do |game| %>
+        <%= render 'matches/scores/game_points', game %>
+      <% end %>
+    </div>
+  </div>
+</div>

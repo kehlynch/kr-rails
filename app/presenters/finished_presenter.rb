@@ -12,7 +12,7 @@ class FinishedPresenter
       stage: Stage::FINISHED,
       visible: @visible_stage == Stage::FINISHED,
       hand: HandPresenter.new(@game, @active_player).props_for_finished,
-      next_hand_path: next_match_player_game_path(@game.match_id, @active_player.player_id, @game.id),
+      next_hand_path: next_match_game_path(@game.match_id, @game.id),
       points: Points::PointsPresenter.new(@game, @active_player).props,
       scores: ScoresPresenter.new(@game, @active_player).props
     }

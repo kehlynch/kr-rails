@@ -60,11 +60,11 @@ class GamePlayer <  ApplicationRecord
   end
 
   def pick_putdowns
-    putdowns = []
     putdown_count = hand_cards.length - 12
-    putdowns << hand_cards.filter do |c|
-      c.legal_putdown?(hand_cards, putdowns)
-    end.sample(putdown_count).flatten
+    putdowns =
+      hand_cards.filter do |c|
+        c.legal_putdown?(hand_cards, putdowns)
+      end.sample(putdown_count).flatten
 
     return putdowns
   end

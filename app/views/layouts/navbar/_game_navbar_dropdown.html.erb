@@ -1,0 +1,10 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Current Game
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <%= link_to 'scores', scores_path, class: 'dropdown-item' %>
+    <%= link_to 'reset hand', reset_path, method: :post, class: 'dropdown-item' %>
+  </div>
+</li>
+

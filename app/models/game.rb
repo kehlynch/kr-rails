@@ -2,6 +2,7 @@ class Game < ApplicationRecord
   belongs_to :match
 
   has_many :game_players, -> { order(:position) }
+  has_many :players, through: :game_players
   has_many :cards, dependent: :destroy
   has_many :announcements, dependent: :destroy
   has_many :bids, dependent: :destroy
@@ -40,9 +41,9 @@ class Game < ApplicationRecord
   end
 
   def self.create_players_for(game)
-    game.match.players.map do |p|
-      forehand = p.position == forehand_position_for(game)
-      game.game_players.create(player: p, position: p.position, forehand: forehand, human: p.human, name: p.name)
+    game.match.match_players.map do |mp|
+      forehand = mp.position == forehand_position_for(game)
+      game.game_players.create(player: mp.player, position: mp.position, forehand: forehand, human: mp.human, name: mp.name)
     end
   end
 

@@ -1,7 +1,6 @@
 <div class="container">
-  <h1>Create Players</h1>
+  <h1>Start a new game for <%= @player.name %></h1>
   <%= bootstrap_form_for(@match) do |f| %>
-    <%= f.text_field :human_name, label: "Name", class: "form-control", placeholder: "name" %>
     <%= f.select :human_count, @human_count_select, label: "Game setup" %>
     <%= f.submit "create game", class: "btn btn-primary" %>
   <% end %>
