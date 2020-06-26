@@ -1,8 +1,6 @@
 class PlayerPresenter
   attr_reader :player
 
-  include Rails.application.routes.url_helpers  
-
   delegate(
     :announcements,
     :card_points,
@@ -52,7 +50,6 @@ class PlayerPresenter
   def static_props
     {
       id: @player.id,
-      play_as_path: edit_match_game_path(@game.match_id, @game.id),
       compass: compass,
       name: @player.name,
       human: @player.human?,

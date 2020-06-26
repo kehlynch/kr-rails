@@ -5,9 +5,9 @@ Rails.application.routes.draw do
 
   get '/', to: 'players#show', as: :home
 
-  get 'login', to: 'sessions#new'
+  get 'login', to: 'sessions#new', as: :login
   post 'login', to: 'sessions#create'
-  post 'logout', to: 'sessions#destroy'
+  post 'logout', to: 'sessions#destroy', as: :logout
 
   post 'join/:match_id', to: 'players#join_match', as: :join_match
   post 'play/:match_id', to: 'players#play_match', as: :play_match
@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   get 'scores', to: 'matches#scores', as: :scores
 
   resources :matches, only: [:create, :new, :destroy, :update] do
-    resources :games, only: [:create, :edit, :update] do
+    resources :games, only: [:create, :update] do
       post :next, on: :member
       post :reset, on: :member
     end

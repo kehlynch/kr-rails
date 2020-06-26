@@ -7,23 +7,28 @@
     <ul class="navbar-nav mr-auto">
       <%= render 'layouts/navbar/main_dropdown' %>
       <li class="nav-item <%= 'active' if current_page?(home_path) %>">
-        <% if @player %>
+        <% if @player&.id %>
           <%= link_to @player.name, home_path, class: "nav-link" %>
         <% end %>
       </li>
       <li class="nav-item <%= 'active' if current_page?(scores_path) %>">
-        <% if @match %>
+        <% if @match.present? %>
           <%= link_to 'scores', scores_path, class: "nav-link" %>
         <% end %>
       </li>
       <li class="nav-item <%= 'active' if current_page?(play_path) %>">
-        <% if @game %>
+        <% if @game.present? %>
           <%= link_to 'play', play_path, class: "nav-link" %>
         <% end %>
       </li>
 
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-    </form>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item <%= 'active' if current_page?(play_path) %>">
+        <% if @player %>
+          <%= link_to 'log out', logout_path, method: :post, class: "nav-link" %>
+        <% end %>
+      </li>
+    </ul>
   </div>
 </nav>
