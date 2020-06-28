@@ -4,9 +4,9 @@ class PlayersController < ApplicationController
     MatchPlayer.create(match: match, player: @player)
 
     if match.match_players.count == 4
-      game = match.deal_game
+      match.deal_game
 
-      redirect_to edit_match_game_path(match, game)
+      redirect_to play_path
     else
       redirect_to matches_path
     end
