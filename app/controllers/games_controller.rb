@@ -1,6 +1,9 @@
 class GamesController < ApplicationController
   helper_method :game
   before_action :set_view_paths
+  before_action :check_login
+  before_action :check_game_set, only: [:play, :update, :reset]
+  before_action :check_match_set, only: [:next]
 
   def create
     match = Match.find(params[:match_id])
@@ -55,5 +58,23 @@ class GamesController < ApplicationController
 
   def set_view_paths
     prepend_view_path 'app/views/games/'
+  end
+
+  def check_login
+    unless @player
+      redirect_to login_path
+    end
+  end
+
+  def check_game_set
+    unless @game
+      redirect_to home_path
+    end
+  end
+
+  def check_match_set
+    unless @match
+      redirect_to home_path
+    end
   end
 end

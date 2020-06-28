@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   post 'logout', to: 'sessions#destroy', as: :logout
 
+  get 'about', to: 'about#about', as: :about
+
   post 'join/:match_id', to: 'players#join_match', as: :join_match
   post 'play/:match_id', to: 'players#play_match', as: :play_match
 
