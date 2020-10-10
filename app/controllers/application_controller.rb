@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def set_player_cookie(player)
+    cookies[:player_id] = player.id
+  end
+
   def set_game_cookie(game)
     cookies[:game_id] = game.id
   end

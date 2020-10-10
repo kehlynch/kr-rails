@@ -3,7 +3,15 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/channels'
 
-  # get '/', to: 'players#show', as: :home
+  namespace :api do
+    resources :sessions, only: [:create, :destroy] do
+      get :retrieve, on: :collection
+    end
+    # resources :games, only: [:show, :index, :create, :update, :destroy] do
+    # end
+    # get '/pickable', to: 'games#pickable'
+  end
+
 
   get 'login', to: 'sessions#new', as: :login
   post 'login', to: 'sessions#create'

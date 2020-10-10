@@ -1,13 +1,14 @@
-class SessionsController < ApplicationController
-  def new
-    @player ||= Player.new
-  end
-
+class Api::SessionsController < ApplicationController
   def create
     @player = Player.find_or_create_by(name: player_params[:name], human: true)
 
-    cookies[:player_id] = @player.id
-    redirect_to home_path
+    set_player_cookie(@player)
+
+    render json: @player
+  end
+
+  def retrieve
+    render json: @player
   end
 
   def destroy
@@ -22,6 +23,6 @@ class SessionsController < ApplicationController
   private
 
   def player_params
-    params.require(:player).permit(:name)
+    params.permit(:name, :id)
   end
 end
