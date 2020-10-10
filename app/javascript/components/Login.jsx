@@ -17,7 +17,7 @@ class Login extends React.Component {
     const { setPlayer } = this.props;
     const { playerName } = this.state;
 
-    createSession({ name: playerName }, setPlayer);
+    createSession(playerName, setPlayer);
     event.preventDefault();
   }
 

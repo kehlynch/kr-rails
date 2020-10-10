@@ -4,6 +4,9 @@ export const createSession = (name, callback) => {
   const url = `/api/sessions`;
   const token = document.querySelector('meta[name="csrf-token"]').content;
 
+  console.log("name", name);
+  console.log("JSON.stringify(name)", JSON.stringify({ name }));
+
   fetch(url, {
     method: "POST",
     headers: {
@@ -41,7 +44,7 @@ export const getPlayer = (callback) => {
     .then((data) => callback(data));
 };
 
-export const destroySession = (name, callback) => {
+export const destroySession = (callback) => {
   const url = `/api/sessions/`;
   const token = document.querySelector('meta[name="csrf-token"]').content;
 

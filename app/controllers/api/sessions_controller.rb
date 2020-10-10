@@ -16,8 +16,9 @@ class Api::SessionsController < ApplicationController
     cookies.delete :match_id
     cookies.delete :game_id
 
+    render json: nil
     # https://api.rubyonrails.org/classes/ActionController/Redirecting.html
-    redirect_to login_path, status: 303
+    # redirect_to login_path, status: 303
   end
 
   private

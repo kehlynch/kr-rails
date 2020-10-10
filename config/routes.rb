@@ -4,8 +4,9 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/channels'
 
   namespace :api do
-    resources :sessions, only: [:create, :destroy] do
+    resources :sessions, only: [:create] do
       get :retrieve, on: :collection
+      delete :destroy, on: :collection
     end
     # resources :games, only: [:show, :index, :create, :update, :destroy] do
     # end
