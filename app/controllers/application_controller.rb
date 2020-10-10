@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     cookies.delete :player_id
-    redirect_to login_path
+    # redirect_to login_path
   end
 
   def find_game

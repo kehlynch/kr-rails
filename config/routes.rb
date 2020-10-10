@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/channels'
 
-  get '/', to: 'players#show', as: :home
+  # get '/', to: 'players#show', as: :home
 
   get 'login', to: 'sessions#new', as: :login
   post 'login', to: 'sessions#create'
@@ -28,5 +28,6 @@ Rails.application.routes.draw do
 
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'matches#index'
+  root 'homepage#index'
+  get '/', to: 'homepage#index', as: :home
 end
