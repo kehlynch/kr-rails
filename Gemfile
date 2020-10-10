@@ -71,3 +71,4 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem "bootstrap_form", "~> 4.0"
 gem "non-stupid-digest-assets"
 gem "font-awesome-rails"
+gem 'webpacker', '~> 5.x'
