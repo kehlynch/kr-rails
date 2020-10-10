@@ -23,5 +23,11 @@ module Kr
 
     # turn off channel logging
     ActionCable.server.config.logger = Logger.new(nil)
+
+    excluded_routes = ->(env) { !env["PATH_INFO"].match(%r{^/api}) }
+    config.middleware.use OliveBranch::Middleware,
+      inflection:       "camel",
+      exclude_params:   excluded_routes,
+      exclude_response: excluded_routes
   end
 end
