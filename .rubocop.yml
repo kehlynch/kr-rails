@@ -3,7 +3,6 @@ require:
   - rubocop-rspec
 
 inherit_from:
-  - .rubocop_rspec_todo.yml
   - .rubocop_rails.yml
 
 AllCops:
@@ -22,17 +21,21 @@ AllCops:
     - vendor/cache/**/*
     - node_modules/**/*
     - db/schema.rb
+    - script/one_offs/data_sanitiser_config.rb
 
 Capybara/FeatureMethods:
-  Enabled: false
-
-FactoryBot/StaticAttributeDefinedDynamically:
   Enabled: false
 
 Layout/HashAlignment:
   Enabled: false
 
 Layout/EmptyComment:
+  Enabled: false
+
+Layout/EmptyLineAfterMagicComment:
+  Enabled: true
+
+Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: false
 
 Layout/ExtraSpacing:
@@ -47,11 +50,17 @@ Layout/FirstHashElementIndentation:
 Layout/HeredocIndentation:
   Enabled: true
 
+Layout/LineLength:
+  Enabled: false
+
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 
 Layout/MultilineMethodCallIndentation:
   Enabled: false
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
 
 Layout/SpaceBeforeFirstArg:
   Enabled: false
@@ -62,41 +71,50 @@ Layout/SpaceInsidePercentLiteralDelimiters:
 Lint/AmbiguousBlockAssociation:
   Enabled: false
 
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: false
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: false
+
+Lint/SuppressedException:
+  Exclude:
+    - config/unicorn.rb
+    - config/docker_unicorn.rb
+    - config/puma.rb
+    - config/docker_puma.rb
+
 Lint/UnusedBlockArgument:
   Enabled: false
+
+Lint/Void:
+  Exclude:
+    - lib/future_learn/image_quality.rb
 
 Lint/UnusedMethodArgument:
   Enabled: false
 
-Metrics/AbcSize:
+Lint/RedundantCopDisableDirective:
   Enabled: false
 
-Metrics/BlockLength:
-  Enabled: false
+Lint/UriRegexp:
+  Enabled: true
 
-Metrics/ClassLength:
-  Max: 200
-
-Metrics/CyclomaticComplexity:
-  Max: 9
-
-Metrics/LineLength:
-  Enabled: false
-
-Metrics/MethodLength:
-  Max: 62
-
-Metrics/ModuleLength:
-  Enabled: false
-
-Metrics/ParameterLists:
-  Max: 6
-
-Metrics/PerceivedComplexity:
+Metrics:
   Enabled: false
 
 Naming/AccessorMethodName:
   Enabled: false
+
+Naming/BinaryOperatorParameterName:
+  Exclude:
+    - spec/support/matchers/params_hash_matcher.rb
 
 Naming/FileName:
   Exclude:
@@ -124,6 +142,10 @@ Naming/VariableNumber:
 
 RSpec/AnyInstance:
   Enabled: true
+  Exclude:
+    - spec/features/authenticating_with_a_saml_identity_provider_spec.rb
+    - spec/features/authenticating_with_futurelearns_gsuite_as_the_identity_provider_spec.rb
+    - spec/features/saml_enrolment_spec.rb
 
 RSpec/ContextWording:
   Enabled: true
@@ -140,6 +162,29 @@ RSpec/ExpectActual:
 RSpec/ExpectChange:
   EnforcedStyle: block
 
+RSpec/FilePath:
+  Exclude:
+    - spec/api_helpers/partners/**/*
+    - spec/apis/partners/**/*
+    - spec/controllers/comment_routing_spec.rb
+    - spec/controllers/comment_saving_spec.rb
+    - spec/controllers/restrict_access_to_step_spec.rb
+    - spec/controllers/run_lookup_spec.rb
+    - spec/controllers/step_within_run_lookup_spec.rb
+    - spec/lib/future_learn/cops/**/*
+  CustomTransform:
+    MySQLVersionChecker: mysql_version_checker
+
+RSpec/VariableName:
+  Enabled: false
+
+RSpec/VariableDefinition:
+  Enabled: false
+
+Security/YAMLLoad:
+  Exclude:
+    - lib/future_learn/webpack.rb
+
 Style/AccessModifierDeclarations:
   Enabled: false
 
@@ -148,6 +193,10 @@ Style/Alias:
 
 Style/BlockDelimiters:
   Enabled: false
+
+Style/CaseEquality:
+  Exclude:
+    - spec/support/controller_support.rb
 
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -167,6 +216,9 @@ Style/EmptyMethod:
 Style/ExpandPathArguments:
   Enabled: false
 
+Style/ExponentialNotation:
+  Enabled: true
+
 Style/FormatStringToken:
   Enabled: false
 
@@ -174,6 +226,15 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/GuardClause:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
   Enabled: false
 
 Style/IfInsideElse:
@@ -186,7 +247,8 @@ Style/Lambda:
   Enabled: false
 
 Style/MutableConstant:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: strict
 
 Style/NumericLiterals:
   Enabled: false
@@ -209,6 +271,15 @@ Style/PreferredHashMethods:
 Style/RedundantBegin:
   Enabled: false
 
+Style/RedundantFreeze:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: false
+
+Style/RedundantRegexpEscape:
+  Enabled: false
+
 Style/RedundantReturn:
   Enabled: false
 
@@ -219,6 +290,9 @@ Style/SignalException:
   EnforcedStyle: semantic
 
 Style/SingleLineBlockParams:
+  Enabled: false
+
+Style/SlicingWithRange:
   Enabled: false
 
 Style/SpecialGlobalVars:
@@ -236,6 +310,10 @@ Style/SymbolProc:
 Style/YodaCondition:
   Enabled: false
 
+Style/TrailingCommaInArguments:
+  Exclude:
+    - 'spec/services/transcript/generator_spec.rb'
+
 Style/TrivialAccessors:
   AllowPredicates: True
 
@@ -247,3 +325,6 @@ Style/WordArray:
 
 Style/ZeroLengthPredicate:
   Enabled: false
+
+Migration/DepartmentName:
+  Enabled: true
