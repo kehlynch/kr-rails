@@ -18,6 +18,32 @@ class Match < ApplicationRecord
     end
   end
 
+  def as_json(options = {})
+    require 'pry'
+    binding.pry
+    json_to_return = super
+    if options.has_key? :player
+      json_to_return[:points] = points_for(options[:player])
+    end
+
+    return json_to_return
+  end
+
+  def serializable_hash(options = {})
+    require 'pry'
+    binding.pry
+    json_to_return = super
+    if options.has_key? :player
+      json_to_return[:points] = points_for(options[:player])
+    end
+
+    return json_to_return
+  end
+
+  def open
+    players.count < 4
+  end
+
   def deal_game
     game = Game.deal_game(id, players)
     Runner.new(game).advance!
@@ -33,6 +59,20 @@ class Match < ApplicationRecord
 
     return 'in progress'
   end
+
+  def hand_description
+    if games.count == 0
+      'not started'
+    else
+      "hand #{games.count}"
+    end
+  end
+
+  def days_old
+    (Time.zone.now - created_at).to_i / 1.day
+  end
+
+  private
 
   def points_for(player)
     games.map(&:game_players).flatten.filter do |gp|

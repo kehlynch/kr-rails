@@ -4,11 +4,11 @@ class Api::SessionsController < ApplicationController
 
     set_player_cookie(@player)
 
-    render json: @player
+    render_player
   end
 
   def retrieve
-    render json: @player
+    render_player
   end
 
   def destroy
@@ -25,5 +25,24 @@ class Api::SessionsController < ApplicationController
 
   def player_params
     params.permit(:name, :id)
+  end
+
+  def render_player
+    render(
+      json: @player,
+      methods: [:points, :game_count],
+      include: {
+        matches: {
+          only: [:id],
+          methods: [:hand_description, :days_old],
+          include: {
+            players: {
+              only: [:id, :name, :human]
+            }
+          },
+          player: @player
+        }
+      }
+    )
   end
 end

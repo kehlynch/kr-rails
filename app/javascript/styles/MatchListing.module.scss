@@ -1,0 +1,46 @@
+.matchCard {
+  height: 100%;
+}
+
+.matchDaysAgo {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: grey;
+    content: "\f017"; // clock
+  }
+}
+
+.handCount {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: grey;
+    content: "\f256"; // hands
+  }
+}
+
+.playerPoints {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: gold;
+    content: "\f005"; // star
+  }
+}
+
+.playerNameListing {
+  margin: 0;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: grey;
+    content: "\f17b"; // robot
+  }
+  &.human {
+    &:before {
+      color: green;
+      content: "\f182"; // woman
+    }
+  }
+}

@@ -8,11 +8,14 @@ Rails.application.routes.draw do
       get :retrieve, on: :collection
       delete :destroy, on: :collection
     end
+    resources :matches do
+      get :list_open, on: :collection
+      get :last_game, on: :member
+    end
     # resources :games, only: [:show, :index, :create, :update, :destroy] do
     # end
     # get '/pickable', to: 'games#pickable'
   end
-
 
   get 'login', to: 'sessions#new', as: :login
   post 'login', to: 'sessions#create'
@@ -34,7 +37,6 @@ Rails.application.routes.draw do
       post :reset, on: :member
     end
   end
-
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'homepage#index'

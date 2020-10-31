@@ -14,4 +14,12 @@ class Player < ApplicationRecord
   def human?
     human
   end
+
+  def points
+    game_players.map(&:game_points).sum
+  end
+
+  def game_count
+    games.count
+  end
 end

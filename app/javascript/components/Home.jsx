@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
+import Container from "react-bootstrap/Container";
+
 import { getPlayer } from "../api";
 
 import Login from "./Login";
-import GameList from "./GameList";
+import PlayerHome from "./PlayerHome";
+import NavBar from "./NavBar";
 
 export default () => {
   const [[player, playerChecked], setPlayerStatus] = useState([null, false]);
@@ -14,10 +17,13 @@ export default () => {
   useEffect(() => getPlayer(setPlayer), [setPlayer]);
 
   return (
-    <div>
-      {!playerChecked && <div>loading...</div>}
-      {player && <GameList player={player} setPlayer={setPlayer} />}
-      {!player && playerChecked && <Login setPlayer={setPlayer} />}
-    </div>
+    <>
+      <NavBar player={player} />
+      <Container className={["mb-5", "mt-3"]}>
+        {!playerChecked && <div>loading...</div>}
+        {player && <PlayerHome player={player} setPlayer={setPlayer} />}
+        {!player && playerChecked && <Login setPlayer={setPlayer} />}
+      </Container>
+    </>
   );
 };

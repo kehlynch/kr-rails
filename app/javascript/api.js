@@ -1,19 +1,16 @@
 // import Cookies from "js-cookie";
-
-export const createSession = (name, callback) => {
-  const url = `/api/sessions`;
+//
+const apiCall = (path, method, body, callback) => {
   const token = document.querySelector('meta[name="csrf-token"]').content;
-
-  console.log("name", name);
-  console.log("JSON.stringify(name)", JSON.stringify({ name }));
+  const url = `/api/${path}`;
 
   fetch(url, {
-    method: "POST",
+    method,
     headers: {
       "X-CSRF-Token": token,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name }),
+    body,
   })
     .then((response) => {
       if (response.ok) {
@@ -22,44 +19,24 @@ export const createSession = (name, callback) => {
       throw new Error("Network response was not ok.");
     })
     .then((data) => callback(data));
+};
+
+export const createSession = (name, callback) => {
+  apiCall("sessions", "POST", JSON.stringify({ name }), callback);
 };
 
 export const getPlayer = (callback) => {
-  const url = `/api/sessions/retrieve`;
-  const token = document.querySelector('meta[name="csrf-token"]').content;
-
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "X-CSRF-Token": token,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
-    })
-    .then((data) => callback(data));
+  apiCall("sessions/retrieve", "GET", null, callback);
 };
 
 export const destroySession = (callback) => {
-  const url = `/api/sessions/`;
-  const token = document.querySelector('meta[name="csrf-token"]').content;
+  apiCall("sessions", "DELETE", null, callback);
+};
 
-  fetch(url, {
-    method: "DELETE",
-    headers: {
-      "X-CSRF-Token": token,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
-    })
-    .then((data) => callback(data));
+export const getOpenMatches = (callback) => {
+  apiCall("matches/list_open", "GET", null, callback);
+};
+
+export const getMatchLastGame = (matchId, callback) => {
+  apiCall(`matches/${matchId}/last_game`, "GET", null, callback);
 };

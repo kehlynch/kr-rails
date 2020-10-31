@@ -1,0 +1,36 @@
+.logoutButtonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.playerName {
+  margin-bottom: 4rem;
+}
+
+.playerTotalPoints {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: purple;
+    content: "\f005"; // star
+  }
+}
+
+.playerHandsPlayed {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: green;
+    content: "\f256"; // hands
+  }
+}
+
+.matchCardsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 12rem);
+  grid-auto-columns: 1fr;
+  grid-gap: 1rem;
+}
