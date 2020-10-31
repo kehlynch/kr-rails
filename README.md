@@ -1,24 +1,14 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## To run
 
-Things you may want to cover:
+### Development
 
-* Ruby version
+`bundle exec rails server`
+`./bin/webpack-dev-server --watch`
 
-* System dependencies
+### Brew postgres debugging
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+If `brew services list` shows Postgresql running but the app can't connect to it, try:
+`rm -f /usr/local/var/postgres/postmaster.pid`
+`brew services restart postgresql`
