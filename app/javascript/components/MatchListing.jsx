@@ -9,7 +9,6 @@ import { MatchListingType } from "../types";
 import styles from "../styles/MatchListing.module.scss";
 
 const MatchListing = ({ matchListing, joined, setGame }) => {
-  console.log("setGame", setGame);
   const { id, points, handDescription, daysOld, players } = matchListing;
   const daysOldDescription =
     daysOld === 0 ? "Started today" : `Started ${daysOld} days ago`;

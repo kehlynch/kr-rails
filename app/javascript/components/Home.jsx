@@ -25,7 +25,7 @@ export default () => {
         {player && !game && (
           <PlayerHome player={player} setPlayer={setPlayer} setGame={setGame} />
         )}
-        {player && game && <Game game={game} />}
+        {player && game && <Game player={player} game={game} setGame={setGame} />}
       </Container>
     </>
   );
