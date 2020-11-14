@@ -12,6 +12,10 @@ Rails.application.routes.draw do
       get :list_open, on: :collection
       put :goto_last_game, on: :member
     end
+
+    resources :games do
+      get :current, on: :collection
+    end
     # resources :games, only: [:show, :index, :create, :update, :destroy] do
     # end
     # get '/pickable', to: 'games#pickable'

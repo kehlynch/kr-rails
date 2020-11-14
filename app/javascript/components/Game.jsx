@@ -1,32 +1,39 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 // import Button from "react-bootstrap/Button";
 
 // import MatchListing from "./MatchListing";
-// import { destroySession, getOpenMatches } from "../api";
+import { getGame, getPlayer } from "../api";
 
 // import styles from "../styles/Game.module.scss";
 import Players from "./play/Players";
-import { GameType, PlayerType } from "../types";
 import connect from "../channel";
 
-const Game = ({ player, game, setGame }) => {
-  const { id, players } = game;
+const Game = () => {
+  const [game, setGame] = useState();
+  const [player, setPlayer] = useState();
 
-  useEffect(() => connect(player.id, game.id, setGame));
+  useEffect(() => {
+    if (!game) {
+      getGame(setGame);
+    }
+    if (!player) {
+      getPlayer(setPlayer);
+    }
+    if (!!game && !!player) {
+      connect(player.id, game.id, setGame);
+    }
+  }, [game, player, setGame, setPlayer]);
 
   return (
     <div>
-      Welcome to game {id}
-      <Players players={players} />
+      {game && (
+        <div>
+          <div>Welcome to game {game.id}</div>
+          <Players players={game.players} />
+        </div>
+      )}
     </div>
   );
-};
-
-Game.propTypes = {
-  player: PlayerType,
-  game: GameType,
-  setGame: PropTypes.func,
 };
 
 export default Game;

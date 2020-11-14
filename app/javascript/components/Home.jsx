@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Container from "react-bootstrap/Container";
+import { Redirect } from "react-router-dom";
 
 import { getPlayer } from "../api";
 
 import NavBar from "./NavBar";
 import Login from "./Login";
 import PlayerHome from "./PlayerHome";
-import Game from "./Game";
 
 export default () => {
   const [[player, playerChecked], setPlayerStatus] = useState([null, false]);
@@ -18,6 +18,7 @@ export default () => {
 
   return (
     <>
+      {!!game && <Redirect to="/play" />}
       <NavBar player={player} />
       <Container className={["mb-5", "mt-3"]}>
         {!playerChecked && <div>loading...</div>}
@@ -25,7 +26,6 @@ export default () => {
         {player && !game && (
           <PlayerHome player={player} setPlayer={setPlayer} setGame={setGame} />
         )}
-        {player && game && <Game player={player} game={game} setGame={setGame} />}
       </Container>
     </>
   );
