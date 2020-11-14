@@ -37,6 +37,6 @@ export const getOpenMatches = (callback) => {
   apiCall("matches/list_open", "GET", null, callback);
 };
 
-export const getMatchLastGame = (matchId, callback) => {
-  apiCall(`matches/${matchId}/last_game`, "GET", null, callback);
+export const gotoMatch = (matchId, callback) => {
+  apiCall(`matches/${matchId}/goto_last_game`, "PUT", null, callback);
 };

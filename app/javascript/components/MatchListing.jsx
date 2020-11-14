@@ -4,12 +4,12 @@ import classNames from "classnames";
 
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { getMatchLastGame } from "../api";
+import { gotoMatch } from "../api";
 import { MatchListingType } from "../types";
 import styles from "../styles/MatchListing.module.scss";
 
 const MatchListing = ({ matchListing, joined, setGame }) => {
-  console.log("matchListing", matchListing);
+  console.log("setGame", setGame);
   const { id, points, handDescription, daysOld, players } = matchListing;
   const daysOldDescription =
     daysOld === 0 ? "Started today" : `Started ${daysOld} days ago`;
@@ -38,7 +38,7 @@ const MatchListing = ({ matchListing, joined, setGame }) => {
         )}
         {joined && players.length === 4 && (
           <Button
-            onClick={() => getMatchLastGame(id, setGame)}
+            onClick={() => gotoMatch(id, setGame)}
             className="stretched-link"
           >
             Go To Game
@@ -46,7 +46,7 @@ const MatchListing = ({ matchListing, joined, setGame }) => {
         )}
         {!joined && players.length < 4 && (
           <Button
-            onClick={() => getMatchLastGame(id, setGame)}
+            onClick={() => gotoMatch(id, setGame)}
             className="stretched-link"
           >
             Join Game

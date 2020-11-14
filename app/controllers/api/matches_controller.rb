@@ -13,7 +13,12 @@ class Api::MatchesController < ApplicationController
     )
   end
 
-  def last_game
+  def goto_last_game
+    match = Match.find(match_params[:id])
+    set_match_cookies(match)
+    game = match.games.reject(&:finished?).last || match.deal_game
+    set_game_cookie(game)
+    render(json: @game)
   end
 
   private

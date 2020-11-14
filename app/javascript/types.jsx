@@ -24,5 +24,4 @@ export const PlayerType = PropTypes.shape({
 
 export const GameType = PropTypes.shape({
   id: PropTypes.number,
-  name: PropTypes.string,
 });

@@ -19,8 +19,6 @@ class Match < ApplicationRecord
   end
 
   def as_json(options = {})
-    require 'pry'
-    binding.pry
     json_to_return = super
     if options.has_key? :player
       json_to_return[:points] = points_for(options[:player])
@@ -30,8 +28,6 @@ class Match < ApplicationRecord
   end
 
   def serializable_hash(options = {})
-    require 'pry'
-    binding.pry
     json_to_return = super
     if options.has_key? :player
       json_to_return[:points] = points_for(options[:player])

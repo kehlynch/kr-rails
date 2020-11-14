@@ -3,17 +3,17 @@ import Container from "react-bootstrap/Container";
 
 import { getPlayer } from "../api";
 
+import NavBar from "./NavBar";
 import Login from "./Login";
 import PlayerHome from "./PlayerHome";
-import NavBar from "./NavBar";
+import Game from "./Game";
 
 export default () => {
   const [[player, playerChecked], setPlayerStatus] = useState([null, false]);
-  // const [game, setGame] = useState(nil);
-  //
   const setPlayer = useCallback((p) => setPlayerStatus([p, true]), [
     setPlayerStatus,
   ]);
+  const [game, setGame] = useState();
   useEffect(() => getPlayer(setPlayer), [setPlayer]);
 
   return (
@@ -21,8 +21,11 @@ export default () => {
       <NavBar player={player} />
       <Container className={["mb-5", "mt-3"]}>
         {!playerChecked && <div>loading...</div>}
-        {player && <PlayerHome player={player} setPlayer={setPlayer} />}
         {!player && playerChecked && <Login setPlayer={setPlayer} />}
+        {player && !game && (
+          <PlayerHome player={player} setPlayer={setPlayer} setGame={setGame} />
+        )}
+        {player && game && <Game game={game} />}
       </Container>
     </>
   );

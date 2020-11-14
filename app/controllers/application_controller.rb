@@ -40,7 +40,5 @@ class ApplicationController < ActionController::Base
 
   def set_match_cookies(match)
     cookies[:match_id] = match.id
-    game = match.games.reject(&:finished?).last || match.deal_game
-    set_game_cookie(game)
   end
 end

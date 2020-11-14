@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     end
     resources :matches do
       get :list_open, on: :collection
-      get :last_game, on: :member
+      put :goto_last_game, on: :member
     end
     # resources :games, only: [:show, :index, :create, :update, :destroy] do
     # end

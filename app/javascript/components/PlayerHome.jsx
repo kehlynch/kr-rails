@@ -8,7 +8,7 @@ import { destroySession, getOpenMatches } from "../api";
 
 import styles from "../styles/PlayerHome.module.scss";
 
-const PlayerHome = ({ player, setPlayer }) => {
+const PlayerHome = ({ player, setPlayer, setGame }) => {
   const { name, points, gameCount, matches } = player;
   const [openMatches, setOpenMatches] = useState([]);
 
@@ -38,13 +38,18 @@ const PlayerHome = ({ player, setPlayer }) => {
       )}
       <div className={styles.matchCardsContainer}>
         {matches.map((m) => (
-          <MatchListing key={`mymatch-${m.id}`} matchListing={m} joined />
+          <MatchListing
+            key={`mymatch-${m.id}`}
+            matchListing={m}
+            setGame={setGame}
+            joined
+          />
         ))}
       </div>
 
       <div>Welcome {player.name}</div>
       {openMatches.map((m) => (
-        <MatchListing key={m.id} matchListing={m} />
+        <MatchListing key={m.id} setGame={setGame} matchListing={m} />
       ))}
     </div>
   );
@@ -53,6 +58,7 @@ const PlayerHome = ({ player, setPlayer }) => {
 PlayerHome.propTypes = {
   player: PlayerType,
   setPlayer: PropTypes.func,
+  setGame: PropTypes.func,
 };
 
 export default PlayerHome;
