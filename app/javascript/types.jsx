@@ -24,4 +24,5 @@ export const PlayerType = PropTypes.shape({
 
 export const GameType = PropTypes.shape({
   id: PropTypes.number,
+  players: PropTypes.arrayOf(PlayerListingType),
 });

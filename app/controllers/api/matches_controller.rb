@@ -18,7 +18,14 @@ class Api::MatchesController < ApplicationController
     set_match_cookies(match)
     game = match.games.reject(&:finished?).last || match.deal_game
     set_game_cookie(game)
-    render(json: @game)
+    render(
+      json: @game,
+      include: {
+        players: {
+          only: [:id, :name, :human]
+        }
+      }
+    )
   end
 
   private
