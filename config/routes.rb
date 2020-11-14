@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   post 'join/:match_id', to: 'players#join_match', as: :join_match
   post 'play/:match_id', to: 'players#play_match', as: :play_match
 
-  get 'play', to: 'games#play', as: :play
+  # get 'play', to: 'games#play', as: :play
   get 'scores', to: 'matches#scores', as: :scores
 
   resources :players, only: :index
@@ -44,5 +44,5 @@ Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'homepage#index'
-  get '/', to: 'homepage#index', as: :home
+  get '/*path' => 'homepage#index'
 end
