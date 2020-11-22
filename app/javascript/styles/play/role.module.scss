@@ -1,0 +1,24 @@
+.forehand, .declarer, .partner {
+  font-size: small;
+}
+
+.forehand {
+  &:after {
+    color: green;
+    content: 'Forehand';
+  }
+}
+
+.declarer {
+  color: blue;
+  &:after {
+    content: 'Declarer';
+  }
+}
+
+.partner {
+  color: purple;
+  &:after {
+    content: 'Partner';
+  }
+}

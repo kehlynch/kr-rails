@@ -14,7 +14,6 @@ const PlayerHome = ({ player, setPlayer, setGame }) => {
 
   useEffect(() => getOpenMatches(setOpenMatches), [setOpenMatches]);
 
-  console.log("matches", matches);
   return (
     <div>
       <div className="d-flex justify-content-between align-items-start">
