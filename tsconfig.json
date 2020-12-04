@@ -1,21 +1,40 @@
 {
-  "compilerOptions": {
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": ["es6", "dom"],
-    "module": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "target": "es5",
-    "jsx": "react",
-    "noEmit": true
-  },
-  "exclude": [
-    "**/*.spec.ts",
-    "node_modules",
-    "vendor",
-    "public"
+  "include": [
+    "app/javascript/**/*.ts",
+    "app/javascript/**/*.tsx",
+    "config/webpack/**/*.ts",
+    "config/webpack/**/*.tsx"
   ],
+  "compilerOptions": {
+    "isolatedModules": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "jsx": "react",
+    "skipLibCheck": true,
+    "target": "ES6",
+    "lib": ["es6", "dom"],
+    "paths": {
+      "*": [
+        "*",
+        "node_modules/*",
+        "app/javascript/components/*",
+        "app/javascript/*"
+      ]
+    }
+  },
   "compileOnSave": false
 }

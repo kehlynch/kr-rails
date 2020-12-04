@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "../../styles/play/role.module.scss";
+import styles from "../../styles/play/Role.module.scss";
 
 export enum RoleType {
   PARTNER = "partner",

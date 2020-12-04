@@ -1,15 +1,17 @@
 import React from "react";
 // import PropTypes from "prop-types";
 import Waiting from "./Waiting";
+// @ts-ignore
 import Role from "./Role.tsx";
+// @ts-ignore
 import { PlayerType } from "../../types";
-import styles from "../../styles/play/player.module.scss";
+import styles from "../../styles/play/Player.module.scss";
 
 type PlayerProps = {
   player: PlayerType;
 };
 
-const Player = ({ player }: PlayerProps): React.node => {
+const Player = ({ player }: PlayerProps) => {
   const {
     name,
     forehand,
@@ -21,7 +23,7 @@ const Player = ({ player }: PlayerProps): React.node => {
   return (
     <div>
       <div className={styles.playerNameContainer}>
-        <span>{name}</span>
+        <span>hello{name}</span>
         {nextToPlay && <Waiting />}
       </div>
       <div>
