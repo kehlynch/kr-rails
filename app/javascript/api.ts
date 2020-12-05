@@ -1,7 +1,23 @@
 // import Cookies from "js-cookie";
 //
-const apiCall = (path, method, body, callback) => {
-  const token = document.querySelector('meta[name="csrf-token"]').content;
+const apiCall = (
+  path: string,
+  method: string,
+  body: any,
+  callback: Function
+) => {
+  const tokenElement = document.querySelector('meta[name="csrf-token"]');
+
+  let token;
+
+  if (tokenElement instanceof HTMLMetaElement) {
+    token = tokenElement.content;
+  }
+
+  if (token == null) {
+    return;
+  }
+
   const url = `/api/${path}`;
 
   fetch(url, {
@@ -21,26 +37,26 @@ const apiCall = (path, method, body, callback) => {
     .then((data) => callback(data));
 };
 
-export const createSession = (name, callback) => {
+export const createSession = (name: string, callback: Function): void => {
   apiCall("sessions", "POST", JSON.stringify({ name }), callback);
 };
 
-export const getPlayer = (callback) => {
+export const getPlayer = (callback: Function): void => {
   apiCall("sessions/retrieve", "GET", null, callback);
 };
 
-export const destroySession = (callback) => {
+export const destroySession = (callback: Function): void => {
   apiCall("sessions", "DELETE", null, callback);
 };
 
-export const getOpenMatches = (callback) => {
+export const getOpenMatches = (callback: Function): void => {
   apiCall("matches/list_open", "GET", null, callback);
 };
 
-export const gotoMatch = (matchId, callback) => {
+export const gotoMatch = (matchId: number, callback: Function): void => {
   apiCall(`matches/${matchId}/goto_last_game`, "PUT", null, callback);
 };
 
-export const getGame = (callback) => {
+export const getGame = (callback: Function): void => {
   apiCall("games/current", "GET", null, callback);
 };

@@ -32,6 +32,7 @@
         "*",
         "node_modules/*",
         "app/javascript/components/*",
+        "app/javascript/components/play/*",
         "app/javascript/*"
       ]
     }

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import Button from "react-bootstrap/Button";
@@ -8,7 +7,14 @@ import { gotoMatch } from "../api";
 import { MatchListingType } from "../types";
 import styles from "../styles/MatchListing.module.scss";
 
-const MatchListing = ({ matchListing, joined, setGame }) => {
+
+type MatchListingProps = {
+  matchListing: MatchListingType,
+  joined?: boolean,
+  setGame: Function
+};
+
+const MatchListing = ({ matchListing, joined = false, setGame }: MatchListingProps): React.ReactElement => {
   const { id, points, handDescription, daysOld, players } = matchListing;
   const daysOldDescription =
     daysOld === 0 ? "Started today" : `Started ${daysOld} days ago`;
@@ -56,15 +62,4 @@ const MatchListing = ({ matchListing, joined, setGame }) => {
     </Card>
   );
 };
-
-MatchListing.defaultProps = {
-  joined: false,
-};
-
-MatchListing.propTypes = {
-  matchListing: MatchListingType,
-  joined: PropTypes.bool,
-  setGame: PropTypes.func,
-};
-
 export default MatchListing;

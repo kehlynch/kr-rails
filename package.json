@@ -8,10 +8,13 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
     "@rails/webpacker": "5.1.1",
+    "@types/actioncable": "^5.2.3",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.7",
+    "@types/node-sass": "^4.11.1",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.1.6",
     "actioncable": "^5.2.4-4",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap": "^4.5.2",
@@ -47,8 +50,14 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^2.4.1",
     "prettier": "^2.0.5",
+    "typed-scss-modules": "^3.4.0",
     "typescript-eslint": "^0.0.1-alpha.0",
     "webpack-dev-server": "^3.11.0",
     "xo": "^0.24.0"
+  },
+  "scripts": {
+    "start": "yarn scss-types; yarn webpack-dev-server",
+    "scss-types": "yarn tsm app/javascript/styles/ --watch",
+    "webpack-dev-server": "./bin/webpack-dev-server"
   }
 }

@@ -4,7 +4,12 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { PlayerType } from "../types";
 
-const NavBar = ({ player }) => {
+type NavBarProps = {
+  player: PlayerType,
+};
+
+
+const NavBar = ({ player }: NavBarProps): React.ReactElement => {
   return (
     <Navbar expand="lg" variant="light" bg="light">
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -23,9 +28,4 @@ const NavBar = ({ player }) => {
     </Navbar>
   );
 };
-
-NavBar.propTypes = {
-  player: PlayerType,
-};
-
 export default NavBar;

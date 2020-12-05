@@ -1,4 +1,6 @@
 {
+  "plugins": ["import"],
+
   "parser": "babel-eslint",
   "extends": ["airbnb", "airbnb/hooks", "prettier", "prettier/react"],
   "env": {
@@ -7,6 +9,8 @@
   },
   "ignorePatterns": ["componentsPackHelper.js"],
   "rules": {
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
     "no-underscore-dangle": ["error", { "allow": ["__html"] }],
     "camelcase": ["error", { "properties": "never", "allow": ["^UNSAFE_"] }],
     "func-style": ["error", "expression"],
@@ -39,6 +43,9 @@
     "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }]
   },
   "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
     "import/resolver": {
       "webpack"
     }

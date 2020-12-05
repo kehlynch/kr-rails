@@ -1,9 +1,6 @@
 import React from "react";
-// import PropTypes from "prop-types";
 import Waiting from "./Waiting";
-// @ts-ignore
-import Role from "./Role.tsx";
-// @ts-ignore
+import Role, { RoleType } from "./Role"
 import { PlayerType } from "../../types";
 import styles from "../../styles/play/Player.module.scss";
 
@@ -11,7 +8,7 @@ type PlayerProps = {
   player: PlayerType;
 };
 
-const Player = ({ player }: PlayerProps) => {
+const Player = ({ player }: PlayerProps): React.ReactElement => {
   const {
     name,
     forehand,
@@ -21,18 +18,18 @@ const Player = ({ player }: PlayerProps) => {
     nextToPlay,
   } = player;
   return (
-    <div>
+    <>
       <div className={styles.playerNameContainer}>
         <span>hello{name}</span>
         {nextToPlay && <Waiting />}
       </div>
       <div>
-        {forehand && <Role name="forehand" />}
-        {declarer && <Role name="declarer" />}
-        {partner && <Role name="partner" />}
+        {forehand && <Role name={RoleType.FOREHAND} />}
+        {declarer && <Role name={RoleType.DECLARER} />}
+        {partner && <Role name={RoleType.PARTNER} />}
       </div>
       <div className={styles.playerAnnouncements}>{announcements}</div>
-    </div>
+    </>
   );
 };
 

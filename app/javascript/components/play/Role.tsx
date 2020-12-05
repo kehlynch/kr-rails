@@ -5,13 +5,13 @@ import styles from "../../styles/play/Role.module.scss";
 export enum RoleType {
   PARTNER = "partner",
   DECLARER = "declarer",
-  FOREHAN = "forehand",
+  FOREHAND = "forehand",
 }
 type RoleProps = {
   name: RoleType;
 };
 
-const Role = ({ name }: RoleProps) => {
+const Role = ({ name }: RoleProps): React.ReactElement => {
   return (
     <div className={styles.container}>
       <div className={styles[name]}>

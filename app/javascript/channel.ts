@@ -1,7 +1,6 @@
 import ActionCable from "actioncable";
 
-export default (playerId, gameId, setGame) => {
-  console.log("creating consumer");
+export default (playerId: number, gameId: number, setGame: Function): void => {
   const cable = ActionCable.createConsumer("/channels");
 
   const channelParams = {

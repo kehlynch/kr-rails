@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 
 import MatchListing from "./MatchListing";
-import { PlayerType } from "../types";
+import { PlayerType, MatchListingType } from "../types";
 import { destroySession, getOpenMatches } from "../api";
 
 import styles from "../styles/PlayerHome.module.scss";
 
-const PlayerHome = ({ player, setPlayer, setGame }) => {
+
+type PlayerProps = {
+  player: PlayerType,
+  setPlayer: Function,
+  setGame: Function
+};
+
+const PlayerHome = ({ player, setPlayer, setGame }: PlayerProps): React.ReactElement => {
   const { name, points, gameCount, matches } = player;
-  const [openMatches, setOpenMatches] = useState([]);
+  const [openMatches, setOpenMatches] = useState<Array<MatchListingType>>([]);
 
   useEffect(() => getOpenMatches(setOpenMatches), [setOpenMatches]);
 
@@ -52,12 +58,6 @@ const PlayerHome = ({ player, setPlayer, setGame }) => {
       ))}
     </div>
   );
-};
-
-PlayerHome.propTypes = {
-  player: PlayerType,
-  setPlayer: PropTypes.func,
-  setGame: PropTypes.func,
 };
 
 export default PlayerHome;
