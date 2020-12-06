@@ -4,7 +4,7 @@ const apiCall = (
   path: string,
   method: string,
   body: any,
-  callback: Function
+  callback?: Function
 ) => {
   const tokenElement = document.querySelector('meta[name="csrf-token"]');
 
@@ -34,7 +34,7 @@ const apiCall = (
       }
       throw new Error("Network response was not ok.");
     })
-    .then((data) => callback(data));
+    .then((data) => callback && callback(data));
 };
 
 export const createSession = (name: string, callback: Function): void => {
@@ -53,10 +53,22 @@ export const getOpenMatches = (callback: Function): void => {
   apiCall("matches/list_open", "GET", null, callback);
 };
 
-export const gotoMatch = (matchId: number, callback: Function): void => {
+export const gotoLastGame = (matchId: number, callback: Function): void => {
   apiCall(`matches/${matchId}/goto_last_game`, "PUT", null, callback);
+};
+
+export const gotoMatch = (matchId: number, callback: Function): void => {
+  apiCall(`matches/${matchId}/set`, "PUT", null, callback);
 };
 
 export const getGame = (callback: Function): void => {
   apiCall("games/current", "GET", null, callback);
+};
+
+export const getMatch = (callback: Function): void => {
+  apiCall("matches/current", "GET", null, callback);
+};
+
+export const createMatch = (humanCount: number, callback: Function): void => {
+  apiCall("matches", "POST", JSON.stringify({ humanCount }), callback);
 };

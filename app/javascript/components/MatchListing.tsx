@@ -11,10 +11,10 @@ import styles from "../styles/MatchListing.module.scss";
 type MatchListingProps = {
   matchListing: MatchListingType,
   joined?: boolean,
-  setGame: Function
+  setMatch: Function
 };
 
-const MatchListing = ({ matchListing, joined = false, setGame }: MatchListingProps): React.ReactElement => {
+const MatchListing = ({ matchListing, joined = false, setMatch }: MatchListingProps): React.ReactElement => {
   const { id, points, handDescription, daysOld, players } = matchListing;
   const daysOldDescription =
     daysOld === 0 ? "Started today" : `Started ${daysOld} days ago`;
@@ -43,7 +43,7 @@ const MatchListing = ({ matchListing, joined = false, setGame }: MatchListingPro
         )}
         {joined && players.length === 4 && (
           <Button
-            onClick={() => gotoMatch(id, setGame)}
+            onClick={() => gotoMatch(id, setMatch)}
             className="stretched-link"
           >
             Go To Game
@@ -51,7 +51,7 @@ const MatchListing = ({ matchListing, joined = false, setGame }: MatchListingPro
         )}
         {!joined && players.length < 4 && (
           <Button
-            onClick={() => gotoMatch(id, setGame)}
+            onClick={() => gotoMatch(id, setMatch)}
             className="stretched-link"
           >
             Join Game

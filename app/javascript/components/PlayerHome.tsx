@@ -1,37 +1,41 @@
 import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
+import { Redirect } from "react-router-dom";
 
 import MatchListing from "./MatchListing";
+import NewMatchSection from "./player_home/NewMatchSection";
 import { PlayerType, MatchListingType } from "../types";
-import { destroySession, getOpenMatches } from "../api";
+import { getOpenMatches } from "../api";
 
 import styles from "../styles/PlayerHome.module.scss";
 
 
 type PlayerProps = {
-  player: PlayerType,
-  setPlayer: Function,
-  setGame: Function
+  player: PlayerType | undefined,
 };
 
-const PlayerHome = ({ player, setPlayer, setGame }: PlayerProps): React.ReactElement => {
-  const { name, points, gameCount, matches } = player;
+const PlayerHome = ({ player }: PlayerProps): React.ReactElement => {
   const [openMatches, setOpenMatches] = useState<Array<MatchListingType>>([]);
+  const [match, setMatch] = useState();
+
+  console.log("playerHome match", match);
 
   useEffect(() => getOpenMatches(setOpenMatches), [setOpenMatches]);
+
+  if (!player) {
+    return <div>loading...</div>
+  }
+
+  if (match) {
+    return <Redirect to="/match" />
+  }
+
+
+  const { name, points, gameCount, matches } = player;
 
   return (
     <div>
       <div className="d-flex justify-content-between align-items-start">
         <h2 className={styles.playerName}>{name}</h2>
-        <Button
-          variant="secondary"
-          onClick={() => {
-            destroySession(() => setPlayer(null));
-          }}
-        >
-          Log out{" "}
-        </Button>
       </div>
       <div className={styles.playerTotalPoints}>Scored {points} in total</div>
 
@@ -46,7 +50,7 @@ const PlayerHome = ({ player, setPlayer, setGame }: PlayerProps): React.ReactEle
           <MatchListing
             key={`mymatch-${m.id}`}
             matchListing={m}
-            setGame={setGame}
+            setMatch={setMatch}
             joined
           />
         ))}
@@ -54,8 +58,9 @@ const PlayerHome = ({ player, setPlayer, setGame }: PlayerProps): React.ReactEle
 
       <div>Welcome {player.name}</div>
       {openMatches.map((m) => (
-        <MatchListing key={m.id} setGame={setGame} matchListing={m} />
+        <MatchListing key={m.id} setMatch={setMatch} matchListing={m} />
       ))}
+      <NewMatchSection setMatch={setMatch} />
     </div>
   );
 };

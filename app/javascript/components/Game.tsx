@@ -1,40 +1,44 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { Redirect } from "react-router-dom";
 
 import { getGame, getPlayer } from "../api";
 
-import { GameType, PlayerType } from "../types";
+import LoggedIn from "./LoggedIn";
 import Players from "./play/Players";
-import connect from "../channel";
+import { connectToPlayersChannel } from "../channel";
+import { GameType, PlayerType } from "../types";
+
 
 const Game = (): React.ReactElement => {
+  const [player, setPlayer] = useState<PlayerType | null>(null);
   const [[game, gameLoaded], loadGame] = useState<[GameType | null, boolean]>([null, false]);
   const setGame = useCallback((g) => loadGame([g, true]), [loadGame]);
-  const [[player, playerLoaded], loadPlayer] = useState<[PlayerType | null, boolean]>([null, false]);
-  const setPlayer = useCallback((p) => loadPlayer([p, true]), [loadPlayer]);
 
   useEffect(() => {
     if (!gameLoaded) {
       getGame(setGame);
     }
-    if (!playerLoaded) {
-      getPlayer(setPlayer);
+
+    getPlayer(setPlayer)
+
+    if (player !== null && game !== null) {
+      connectToPlayersChannel(player.id, game.id, setGame);
     }
-    if (gameLoaded && playerLoaded) {
-      if (player !== null && game !== null) {
-        connect(player.id, game.id, setGame);
-      }
-    }
-  }, [game, player, gameLoaded, playerLoaded, setGame, setPlayer]);
+  }, [game, player, gameLoaded, setGame, setPlayer]);
+
+  if (!gameLoaded) {
+    return <div>loading...</div>
+  }
+
+  if (!game) {
+    return <Redirect to="/" />
+  }
 
   return (
-    <div>
-      {gameLoaded && playerLoaded && game !== null && player !== null && (
-        <div>
-          <div>Welcome to game {game.id}</div>
-          <Players players={game.players} />
-        </div>
-      )}
-    </div>
+    <LoggedIn>
+      <div>Welcome to game {game.id}</div>
+      <Players players={game.players} />
+    </LoggedIn>
   );
 };
 

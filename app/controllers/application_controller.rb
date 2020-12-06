@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
     cookies[:game_id] = game.id
   end
 
-  def set_match_cookies(match)
+  def set_match_cookie(match)
     cookies[:match_id] = match.id
   end
 end

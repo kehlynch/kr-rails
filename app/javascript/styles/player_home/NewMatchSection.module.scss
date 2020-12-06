@@ -1,0 +1,39 @@
+.container {
+  color: yellow;
+  .h2 {
+    margin-bottom: 4rem
+  }
+}
+
+.newGameButton {
+  &:before {
+    font-family: "FontAwesome";
+    font-size: large;
+    padding-right: 3px;
+    color: white;
+  }
+
+  &.oneHuman {
+    &:before {
+      content: "\f182    \f17b \f17b \f17b"; // woman robot robot robot
+    }
+  }
+
+  &.twoHuman {
+    &:before {
+      content: "\f182 \f182    \f17b \f17b"; // woman woman robot robot
+    }
+  }
+
+  &.threeHuman {
+    &:before {
+      content: "\f182 \f182 \f182    \f17b"; // woman woman woman robot
+    }
+  }
+
+  &.fourHuman {
+    &:before {
+      content: "\f182 \f182 \f182 \f182"; // woman woman woman woman
+    }
+  }
+}

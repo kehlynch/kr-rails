@@ -1,14 +1,11 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 
 import { createSession } from "../api";
 import styles from "../styles/Login.module.scss";
 
-type LoginProps = {
-  setPlayer: Function
-};
-
-const Login = (props: LoginProps): React.ReactElement => {
-  const { setPlayer } = props;
+const Login = (): React.ReactElement => {
+  const [ player, setPlayer ] = useState();
   const [ playerName, setPlayerName ] = useState("");
 
   const handleSubmit = (event: any): void => {
@@ -18,6 +15,10 @@ const Login = (props: LoginProps): React.ReactElement => {
 
   const handleNameChange = (event: any): void => {
     setPlayerName(event.target.value);
+  }
+
+  if (player) {
+    return <Redirect to="/" />
   }
 
   return (

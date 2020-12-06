@@ -33,3 +33,14 @@ export interface GameType {
   id: number,
   players: Array<PlayerListingType>
 }
+
+export interface GameListingType {
+  id: number,
+  players: Array<PlayerListingType>
+}
+
+export interface MatchType {
+  id: number,
+  games: Array<GameListingType>,
+  players: Array<PlayerListingType>
+}
