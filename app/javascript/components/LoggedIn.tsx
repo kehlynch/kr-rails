@@ -15,7 +15,9 @@ export default ( { children } : LoggedInProps): React.ReactElement => {
   const setPlayer = useCallback((p) => setPlayerStatus([p, true]), [
     setPlayerStatus,
   ]);
-  useEffect(() => getPlayer(setPlayer), [setPlayer]);
+  useEffect(() => {
+    if (!playerChecked) { getPlayer(setPlayer) }
+  }, [setPlayer, playerChecked]);
 
   console.log("playerChecked", playerChecked);
   console.log("player", player);

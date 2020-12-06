@@ -1,0 +1,136 @@
+$row-start: 1;
+
+.player-container {
+  font-weight: bold;
+  align-self: center;
+  justify-self: center;
+
+  border-radius: 10px;
+  padding: 5px 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid white;
+
+  &.south {
+    grid-column: 4;
+    grid-row: $row-start + 6;
+  }
+  &.east {
+    grid-column: 7;
+    grid-row: $row-start + 3;
+  }
+  &.north {
+    grid-column: 4;
+    grid-row: $row-start;
+  }
+  &.west {
+    grid-column: 1;
+    grid-row: $row-start + 3;
+  }
+}
+
+.player-name-container {
+  display: flex;
+  align-items: center;
+  font-size: large;
+}
+
+.forehand-indicator, .declarer-indicator, .partner-indicator {
+  font-size: small;
+}
+
+.forehand-indicator {
+  &:after {
+    color: green;
+    content: 'Forehand';
+  }
+}
+
+.declarer-indicator {
+  color: blue;
+  &:after {
+    content: 'Declarer';
+  }
+}
+
+.partner-indicator {
+  color: purple;
+  &:after {
+    content: 'Partner';
+  }
+}
+
+.human-link {
+  color: grey;
+  font-size: small;
+}
+
+.player-announcements {
+  color: grey;
+  font-size: small;
+}
+
+.player-spinner {
+  margin-left: 2px;
+  margin-top: 1px;
+  &.spinner-invisible {
+    visibility: hidden;
+  }
+}
+
+.player-name-listing {
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+  }
+  &.bot {
+    &:before {
+      color: grey;
+      content: "\f17b"; // robot
+    }
+  }
+  &.human {
+    &:before {
+      color: green;
+      content: "\f182"; // woman
+    }
+  }
+}
+
+.player-total-points {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: purple;
+    content: "\f005"; // star
+  }
+}
+
+.player-hands-played {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: green;
+    content: "\f256"; // hands
+  }
+}
+
+.player-name {
+  font-size: x-large;
+  &:before {
+    font-family: "FontAwesome";
+    padding-right: 1px;
+    color: blue;
+    content: "\f118"; // face
+  }
+}
+
+.players-table {
+  max-width: 30rem;
+  tr:first-child {
+    td {
+      border-top: none;
+    }
+  }
+}

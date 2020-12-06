@@ -1,16 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 
-import { getGame, getPlayer } from "../api";
-
-import LoggedIn from "./LoggedIn";
-import Players from "./play/Players";
 import { connectToPlayersChannel } from "../channel";
+
+import { getGame } from "../api";
+
+import Board from "./play/Board";
+import NavBar from "./NavBar";
 import { GameType, PlayerType } from "../types";
 
+type GameProps = {
+  player: PlayerType
+}
 
-const Game = (): React.ReactElement => {
-  const [player, setPlayer] = useState<PlayerType | null>(null);
+const Game = ({ player }: GameProps): React.ReactElement => {
   const [[game, gameLoaded], loadGame] = useState<[GameType | null, boolean]>([null, false]);
   const setGame = useCallback((g) => loadGame([g, true]), [loadGame]);
 
@@ -19,14 +22,12 @@ const Game = (): React.ReactElement => {
       getGame(setGame);
     }
 
-    getPlayer(setPlayer)
-
     if (player !== null && game !== null) {
       connectToPlayersChannel(player.id, game.id, setGame);
     }
-  }, [game, player, gameLoaded, setGame, setPlayer]);
+  }, [game, player, gameLoaded, setGame]);
 
-  if (!gameLoaded) {
+  if (!gameLoaded || !player) {
     return <div>loading...</div>
   }
 
@@ -35,10 +36,10 @@ const Game = (): React.ReactElement => {
   }
 
   return (
-    <LoggedIn>
-      <div>Welcome to game {game.id}</div>
-      <Players players={game.players} />
-    </LoggedIn>
+    <>
+      <NavBar player={player} />
+      <Board game={game} player={player} />
+    </>
   );
 };
 

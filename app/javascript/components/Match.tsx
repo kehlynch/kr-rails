@@ -35,7 +35,7 @@ export default (): React.ReactElement => {
   }
 
   if (game) {
-    return <Redirect to="/game" />
+    return <Redirect to="/play" />
   }
 
   return (

@@ -31,7 +31,7 @@ export interface PlayerType {
 
 export interface GameType {
   id: number,
-  players: Array<PlayerListingType>
+  players: Array<PlayerType>
 }
 
 export interface GameListingType {

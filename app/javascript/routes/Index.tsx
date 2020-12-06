@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+import PrivateRoute from "./PrivateRoute"
 import Home from "../components/Home";
 import Game from "../components/Game";
 import Match from "../components/Match";
@@ -9,9 +11,9 @@ export default (
   <Router>
     <Switch>
       <Route path="/login" exact component={Login} />
-      <Route path="/" exact component={Home} />
-      <Route path="/match" exact component={Match} />
-      <Route path="/play" exact component={Game} />
+      <PrivateRoute path="/" exact Component={Home} />
+      <PrivateRoute path="/match" exact Component={Match} />
+      <PrivateRoute path="/play" exact Component={Game} />
     </Switch>
   </Router>
 );
