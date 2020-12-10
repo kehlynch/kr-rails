@@ -6,6 +6,7 @@ export const human: string;
 export const humanLink: string;
 export const north: string;
 export const partnerIndicator: string;
+export const partnerIndicator: string;
 export const playerAnnouncements: string;
 export const playerContainer: string;
 export const playerHandsPlayed: string;

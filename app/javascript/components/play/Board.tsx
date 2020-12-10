@@ -1,7 +1,7 @@
 import React from "react";
 
 import Players from "./Players";
-import { GameType, PlayerType } from "../../types";
+import styles from "../../styles/play/Board.module.scss";
 
 export type BoardProps = {
   game: GameType | undefined,
@@ -14,7 +14,7 @@ const Board = ({ player, game }: BoardProps): React.ReactElement => {
     return <div>loading...</div>
   }
   return (
-    <div>
+    <div className={styles.container}>
       <div>Welcome to game {game.id}</div>
       <Players players={game.players} player={player} />
     </div>

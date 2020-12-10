@@ -24,13 +24,13 @@ const sortPlayers = (players: Array<PlayerType>, myPlayerId: number): Array<Play
 const Players = ({ players, player }: PlayersProps): React.ReactElement => {
   console.log(sortPlayers(players, player.id));
   return (
-    <div>
+    <>
       {sortPlayers(players, player.id).map((p, i) => (
         <div className={classNames(styles.playerContainer, COMPASS_CLASSES[i])} key={p.id}>
           <Player player={p} />
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

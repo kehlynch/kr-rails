@@ -8,6 +8,7 @@ import { getGame } from "../api";
 import Board from "./play/Board";
 import NavBar from "./NavBar";
 import { GameType, PlayerType } from "../types";
+import styles from "../styles/Game.module.scss";
 
 type GameProps = {
   player: PlayerType
@@ -38,7 +39,9 @@ const Game = ({ player }: GameProps): React.ReactElement => {
   return (
     <>
       <NavBar player={player} />
-      <Board game={game} player={player} />
+      <div className={styles.gameContainer}>
+        <Board game={game} player={player} />
+      </div>
     </>
   );
 };
