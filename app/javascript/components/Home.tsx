@@ -13,8 +13,6 @@ type HomeProps = {
 
 export default (props: HomeProps): React.ReactElement => {
   const { player } = props;
-  console.log("home props", props);
-  console.log("home", player);
   return (
     <>
       <NavBar player={player} />

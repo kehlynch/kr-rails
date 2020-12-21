@@ -37,6 +37,7 @@ class Runner
   private
 
   def advance_bidding!(bid_slug)
+    p "advance_bidding!", bid_slug
     bid = @game.make_bid!(bid_slug)
 
     while bid
@@ -102,6 +103,7 @@ class Runner
   end
 
   def broadcast
+    p '**broadcast**'
     Broadcaster.broadcast(@game)
   end
 end

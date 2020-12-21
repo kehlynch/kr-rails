@@ -1,3 +1,11 @@
 .container {
-  color: blue
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
 }

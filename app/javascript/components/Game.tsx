@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 
-import { connectToPlayersChannel } from "../channel";
+/* eslint-disable */
+// @ts-ignore
+import { ActionCableConsumer } from '@thrash-industries/react-actioncable-provider';
+/* eslint-enable */
 
 import { getGame } from "../api";
 
@@ -23,9 +26,9 @@ const Game = ({ player }: GameProps): React.ReactElement => {
       getGame(setGame);
     }
 
-    if (player !== null && game !== null) {
-      connectToPlayersChannel(player.id, game.id, setGame);
-    }
+    // if (player !== null && game !== null) {
+    //   connectToGamesChannel(game.id, setGame);
+    // }
   }, [game, player, gameLoaded, setGame]);
 
   if (!gameLoaded || !player) {
@@ -37,12 +40,15 @@ const Game = ({ player }: GameProps): React.ReactElement => {
   }
 
   return (
-    <>
+    <ActionCableConsumer
+      channel={{channel: "GameChannel", id: game.id}}
+      onReceived={(data: any) => {console.log('received from channel', data); setGame(data.game)}}
+      >
       <NavBar player={player} />
       <div className={styles.gameContainer}>
-        <Board game={game} player={player} />
+        <Board game={game} player={game.gamePlayers.find((p) => p.playerId === player.id)} />
       </div>
-    </>
+    </ActionCableConsumer>
   );
 };
 

@@ -1,12 +1,14 @@
 class Broadcaster
   class << self
-    def broadcast(unrefreshed_game)
-      p '***broadcasting'
-      # reload the game with associations
-      game = Game.with_associations.find(unrefreshed_game.id)
-      game.game_players.select(&:human?).each do |game_player|
-        broadcast_to_player(game, game_player.player_id)
-      end
+    def broadcast(game)
+      # p '***broadcasting'
+      # # reload the game with associations
+      # game = Game.with_associations.find(unrefreshed_game.id)
+      # game.game_players.select(&:human?).each do |game_player|
+      #   broadcast_to_player(game, game_player.player_id)
+      # end
+      # GameChannel.broadcast_to(game, game)
+      GameChannel.broadcast_to(game, ActiveModelSerializers::SerializableResource.new(game, serializer: GameSerializer, key_transform: :camel_lower))
     end
 
     private

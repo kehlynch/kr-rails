@@ -11,7 +11,6 @@ export const playerAnnouncements: string;
 export const playerContainer: string;
 export const playerHandsPlayed: string;
 export const playerName: string;
-export const playerNameContainer: string;
 export const playerNameListing: string;
 export const playerSpinner: string;
 export const playersTable: string;

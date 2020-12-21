@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
+import NavBar from "./NavBar";
 import { createSession } from "../api";
 import styles from "../styles/Login.module.scss";
 
@@ -22,7 +23,10 @@ const Login = (): React.ReactElement => {
   }
 
   return (
+    <>
+      <NavBar/>
     <div className={styles.container}>
+      <div className={styles.innerContainer}>
       <h1 className="display-4">Welcome Player!</h1>
       <p className="lead">What’s your name?</p>
       <hr className="my-4" />
@@ -39,6 +43,8 @@ const Login = (): React.ReactElement => {
         <input type="submit" value="Play some Königsrufen" />
       </form>
     </div>
+    </div>
+    </>
   );
 }
 

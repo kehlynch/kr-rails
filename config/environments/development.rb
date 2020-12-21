@@ -60,7 +60,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-  config.action_cable.url = "ws://localhost:3002/cable"
+  config.action_cable.url = "ws://localhost:3000/cable"
 
   # ActiveRecordQueryTrace.enabled = true
   ActiveRecordQueryTrace.ignore_cached_queries = true

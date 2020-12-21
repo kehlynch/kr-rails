@@ -18,18 +18,11 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({ Component, ...rest}:
     if (!playerChecked) { getPlayer(setPlayer) }
   }, [setPlayer, playerChecked]);
 
-  console.log("private route", playerChecked, player);
-  // if (!playerChecked) {
-  //   return <div>...loading</div>
-  // }
-
 
   if (playerChecked && !player) {
     const renderComponent = () => <Redirect to={{ pathname: '/login' }} />;
     return <Route {...rest} component={renderComponent} render={undefined} />;
   }
-
-  // const renderFunc = (innerProps) => React.renderComponent(props.component, {...innerProps, player})
 
   return <Route {...rest} render={(props) => <Component {...props} player={player} />} />
 };

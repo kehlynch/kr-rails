@@ -29,6 +29,16 @@ class Game < ApplicationRecord
     )
   }
 
+  # def as_json(*args)
+  #   super.tap { |hash| hash[:players] = hash.delete :game_players }
+  # end
+
+
+  # def serializable_hash(options = {})
+  #   super.tap { |hash| hash[:players] = hash.delete :game_players }
+  # end
+
+
   def self.deal_game(match_id, _players)
     game = Game.create(match_id: match_id)
     create_players_for(game)
@@ -54,7 +64,7 @@ class Game < ApplicationRecord
   def reset!
     bids.destroy_all
     announcements.destroy_all
-    game_players.update_all(declarer: false, partner: false, team: nil)
+    game_players.update_all(declarer: false, partner: false, team: nil, viewed_bids: false, viewed_kings: false, viewed_talon: false, viewed_announcements: false, viewed_trick_index: nil)
     cards.update_all(discard: false, trick_id: nil, played_index: nil)
     cards.where.not(talon_half: nil).update_all(game_player_id: nil)
     tricks.update_all(game_player_id: nil, finished: false)
@@ -205,6 +215,14 @@ class Game < ApplicationRecord
     partner = cards.find { |c| c.slug == king }.game_player
     partner&.update(partner: true, team: GamePlayer::DECLARERS)
     set_defenders
+  end
+
+  def partner_id
+    cards.find { |c| c.slug == king }&.game_player_id
+  end
+
+  def partner_known
+    cards.find { |c| c.slug == king }&.trick_id.present?
   end
 
   def pick_talon!(talon_half_index=nil)

@@ -1,0 +1,10 @@
+@import '../grid';
+
+.container {
+  @include bid-picker;
+  display: grid;
+  grid-gap: 0.4rem;
+  grid-template-columns: repeat(auto-fit, 8rem);
+  grid-auto-rows: 4rem;
+  justify-content: center;
+}

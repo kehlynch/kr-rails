@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &.south {
+    grid-column: 4;
+    grid-row: 6;
+  }
+  &.east {
+    grid-column: 6;
+    grid-row: 4;
+  }
+  &.north {
+    grid-column: 4;
+    grid-row: 2;
+  }
+  &.west {
+    grid-column: 2;
+    grid-row: 4;
+  }
+}
+
+.indicator {
+  border: 3px solid grey;
+  border-radius: 6px;
+  color: grey;
+  padding: 0.2rem 1rem;
+}

@@ -1,4 +1,5 @@
 class Trick < ApplicationRecord
+  attr_accessor :trick_id
   belongs_to :game
   has_many :cards, -> { order(:played_index) }
   belongs_to :won_player, class_name: 'GamePlayer', foreign_key: 'game_player_id', optional: true

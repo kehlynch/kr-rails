@@ -1,3 +1,36 @@
+$row-start: 1;
+
+.container {
+  display: contents;
+  &.south > .playerDetailsContainer {
+    grid-column: 4;
+    grid-row: $row-start + 6;
+  }
+  &.east > .playerDetailsContainer {
+    grid-column: 7;
+    grid-row: $row-start + 3;
+  }
+  &.north > .playerDetailsContainer {
+    grid-column: 4;
+    grid-row: $row-start;
+  }
+  &.west > .playerDetailsContainer {
+    grid-column: 1;
+    grid-row: $row-start + 3;
+  }
+}
+
+.playerDetailsContainer {
+  font-weight: bold;
+  align-self: center;
+  justify-self: center;
+
+  border-radius: 10px;
+  padding: 5px 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid white;
+}
+
 .playerNameContainer {
   display: flex;
   align-items: center;

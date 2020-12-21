@@ -73,3 +73,4 @@ gem "non-stupid-digest-assets"
 gem "font-awesome-rails"
 gem 'webpacker', '~> 5.x'
 gem "olive_branch"
+gem 'active_model_serializers', '~> 0.10.0'

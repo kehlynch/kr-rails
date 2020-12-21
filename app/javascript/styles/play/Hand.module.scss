@@ -1,0 +1,10 @@
+@import '../grid';
+
+.container {
+  @include hand;
+  justify-content: center;
+  margin-right: -3rem;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -15px;
+}

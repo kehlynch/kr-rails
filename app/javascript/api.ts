@@ -1,5 +1,7 @@
 // import Cookies from "js-cookie";
 //
+import { Stage, BidSlug } from "./types";
+
 const apiCall = (
   path: string,
   method: string,
@@ -34,7 +36,10 @@ const apiCall = (
       }
       throw new Error("Network response was not ok.");
     })
-    .then((data) => callback && callback(data));
+    .then((response) => {
+      console.log("response", path, response);
+      callback && callback(response.data);
+    });
 };
 
 export const createSession = (name: string, callback: Function): void => {
@@ -71,4 +76,24 @@ export const getMatch = (callback: Function): void => {
 
 export const createMatch = (humanCount: number, callback: Function): void => {
   apiCall("matches", "POST", JSON.stringify({ humanCount }), callback);
+};
+
+export const makeBid = (bidSlug: BidSlug): void => {
+  apiCall(
+    "games/update_current",
+    "PATCH",
+    JSON.stringify({ [Stage.Bid]: bidSlug })
+  );
+};
+
+export const sendMessage = (): void => {
+  apiCall("games/test", "GET", null);
+};
+
+export const setViewedBids = (gamePlayerId: number): void => {
+  apiCall(
+    `game_players/${gamePlayerId}`,
+    "PUT",
+    JSON.stringify({ viewedBids: true })
+  );
 };

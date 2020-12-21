@@ -16,9 +16,12 @@ Rails.application.routes.draw do
       put :set, on: :member
     end
 
-    resources :games do
+    resources :games, except: [:update] do
       get :current, on: :collection
+      patch :update_current, on: :collection
+      get :test, on: :collection
     end
+    resources :game_players, only: [:update]
     # resources :games, only: [:show, :index, :create, :update, :destroy] do
     # end
     # get '/pickable', to: 'games#pickable'

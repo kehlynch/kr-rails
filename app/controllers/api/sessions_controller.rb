@@ -30,19 +30,21 @@ class Api::SessionsController < ApplicationController
   def render_player
     render(
       json: @player,
-      methods: [:points, :game_count],
-      include: {
-        matches: {
-          only: [:id],
-          methods: [:hand_description, :days_old],
-          include: {
-            players: {
-              only: [:id, :name, :human]
-            }
-          },
-          player: @player
-        }
-      }
+      serializer: PlayerSerializer,
+      root: 'data'
+      # methods: [:points, :game_count],
+      # include: {
+      #   matches: {
+      #     only: [:id],
+      #     methods: [:hand_description, :days_old],
+      #     include: {
+      #       players: {
+      #         only: [:id, :name, :human]
+      #       }
+      #     },
+      #     player: @player
+      #   }
+      # }
     )
   end
 end

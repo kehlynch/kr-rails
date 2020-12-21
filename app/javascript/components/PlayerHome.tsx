@@ -3,21 +3,20 @@ import { Redirect } from "react-router-dom";
 
 import MatchListing from "./MatchListing";
 import NewMatchSection from "./player_home/NewMatchSection";
-import { PlayerType, MatchListingType } from "../types";
+import { PlayerListingType, MatchListingType } from "../types";
 import { getOpenMatches } from "../api";
 
 import styles from "../styles/PlayerHome.module.scss";
 
 
 type PlayerProps = {
-  player: PlayerType | undefined,
+  player: PlayerListingType | undefined,
 };
 
 const PlayerHome = ({ player }: PlayerProps): React.ReactElement => {
+  console.log("rendering playerhome player", player);
   const [openMatches, setOpenMatches] = useState<Array<MatchListingType>>([]);
   const [match, setMatch] = useState();
-
-  console.log("playerHome match", match);
 
   useEffect(() => getOpenMatches(setOpenMatches), [setOpenMatches]);
 
