@@ -18,7 +18,16 @@ const PlayerHome = ({ player }: PlayerProps): React.ReactElement => {
   const [openMatches, setOpenMatches] = useState<Array<MatchListingType>>([]);
   const [match, setMatch] = useState();
 
-  useEffect(() => getOpenMatches(setOpenMatches), [setOpenMatches]);
+  const cancellableOpenMatches = () => {
+    let isSubscribed = true
+    getOpenMatches((data: any) => {
+      if (isSubscribed) {
+        setOpenMatches(data)
+      }
+    })
+    return () => { isSubscribed = false }
+  }
+  useEffect( cancellableOpenMatches , []);
 
   if (!player) {
     return <div>loading...</div>

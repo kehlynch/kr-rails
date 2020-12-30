@@ -16,7 +16,7 @@ class Api::MatchesController < ApplicationController
     end
     set_match_cookie(match)
 
-    render_match
+    render_match(match)
   end
 
   def current
@@ -24,19 +24,28 @@ class Api::MatchesController < ApplicationController
   end
 
   def list_open
-    render(
-      json: Match.open_matches_for(@player),
-      each_serializer: MatchSerializer,
-      root: 'data'
-      # only: [:id],
-      # methods: [:hand_description, :days_old],
-      # include: {
-      #   players: {
-      #     only: [:id, :name, :human]
-      #   }
-      # },
-      # player: @player
-    )
+
+    if !@player
+      render(
+        json: [],
+        each_serializer: MatchSerializer,
+        root: 'data'
+      )
+    else
+      render(
+        json: Match.open_matches_for(@player),
+        each_serializer: MatchSerializer,
+        root: 'data'
+        # only: [:id],
+        # methods: [:hand_description, :days_old],
+        # include: {
+        #   players: {
+        #     only: [:id, :name, :human]
+        #   }
+        # },
+        # player: @player
+      )
+    end
   end
 
   def set
@@ -72,9 +81,9 @@ class Api::MatchesController < ApplicationController
     params.permit(:id, :human_count)
   end
 
-  def render_match
+  def render_match(match = @match)
     render(
-      json: @match,
+      json: match,
       serializer: MatchSerializer,
       root: 'data'
     )

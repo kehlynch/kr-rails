@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     cookies.delete :player_id
-    # redirect_to login_path
+    redirect_to login_path
   end
 
   def find_game
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     cookies.delete :game_id
-    redirect_to home_path
+    redirect_to login_path
   end
 
   def find_match
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     cookies.delete :match_id
-    redirect_to home_path
+    redirect_to login_path
   end
 
   private

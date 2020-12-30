@@ -1,10 +1,14 @@
 class Api::GamesController < ApplicationController
   def current
-    render(
-      json: @game,
-      serializer: GameSerializer,
-      root: 'data'
-    )
+    if !@game
+      render(json: :not_found)
+    else
+      render(
+        json: @game,
+        serializer: GameSerializer,
+        root: 'data'
+      )
+    end
   end
 
   def update_current

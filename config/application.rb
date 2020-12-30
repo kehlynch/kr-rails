@@ -26,7 +26,7 @@ module Kr
 
     # excluded_routes = ->(env) { !env["PATH_INFO"].match(%r{^/api}) }
     config.middleware.use OliveBranch::Middleware,
-      inflection:       "camel",
+      inflection:       "camel"
       # exclude_params:   excluded_routes,
       # exclude_response: excluded_routes
 
