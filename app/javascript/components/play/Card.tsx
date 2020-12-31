@@ -1,27 +1,27 @@
 import React from "react";
+
+import Button from "react-bootstrap/Button"
 import classNames from "classnames";
-import { CardType } from "../../types";
 import styles from "../../styles/play/Card.module.scss";
 
 type CardProps = {
-  card: CardType,
-  hand: boolean,
-  pickable: boolean,
-  legal: boolean,
+  slug: string,
+  hand?: boolean,
+  pickable?: boolean,
+  legal?: boolean,
+  onclick?: Function
 };
 
-const Card = ({ card, hand, pickable, legal }: CardProps): React.ReactElement => {
-  const { slug } = card;
+const Card = ({ slug, hand, pickable, legal, onclick}: CardProps): React.ReactElement => {
   const imagePath = `../../images/${slug}.jpg`;
-  const onclick = () => console.log("clicked");
   return (
-    <button type="button" onClick={onclick} className={classNames(styles.container, {[styles.hand]: hand})} >
+    <Button type="button" onClick={() => onclick && onclick()} className={classNames(styles.container, {[styles.hand]: hand})} >
     <img
       src={imagePath}
       alt={slug}
       className={classNames(styles.cardImage, {[styles.pickable]: pickable, [styles.illegal]: pickable && !legal})}
     />
-    </button>
+    </Button>
   );
 };
 

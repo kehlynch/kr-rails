@@ -8,6 +8,16 @@ export enum Stage {
   Finished = 'finished'
 }
 
+export enum StageNumber {
+  Bid,
+  King,
+  PickTalon,
+  ResolveTalon,
+  Announcement,
+  Trick,
+  Finished,
+}
+
 export enum BidSlug {
   Pass = 'pass',
   Rufer = 'rufer',
@@ -20,6 +30,16 @@ export enum BidSlug {
   CallKing = 'call_king',
   Trischaken = 'trischaken',
   Sechserdreier = 'sechserdreier'
+}
+
+export enum AnnouncementSlug {
+  Pass = 'pass',
+  Pagat = 'pagat',
+  Uhu = 'uhu',
+  Kakadu = 'kakadu',
+  King = 'king',
+  FortyFive = 'forty_five',
+  Valat = 'valat',
 }
 
 export enum Position {
@@ -54,10 +74,6 @@ export interface PlayerListingType {
   matches: Array<MatchListingType>,
 }
 
-export interface AnnouncementType {
-
-}
-
 export interface CardType {
   slug: string,
 }
@@ -65,6 +81,18 @@ export interface CardType {
 export interface PlayerType {
   id: number,
   name: string,
+}
+
+export interface AnnouncementType {
+  id: number,
+  slug: AnnouncementSlug,
+  playerPosition: Position
+}
+
+export interface BidType {
+  id: number,
+  slug: BidSlug,
+  playerPosition: Position
 }
 
 export interface GamePlayerType {
@@ -85,12 +113,6 @@ export interface GamePlayerType {
   viewedAnnouncements: boolean,
 }
 
-export interface BidType {
-  id: number,
-  slug: BidSlug,
-  playerPosition: Position
-}
-
 export interface GameType {
   id: number,
   gamePlayers: Array<GamePlayerType>,
@@ -99,7 +121,9 @@ export interface GameType {
   nextGamePlayerId: number,
   stage: Stage,
   validBids: Array<BidSlug>,
-  bids: Array<BidType>
+  bids: Array<BidType>,
+  validAnnouncements: Array<AnnouncementSlug>,
+  announcements: Array<AnnouncementType>
 }
 
 export interface GameListingType {

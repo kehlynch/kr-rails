@@ -1,6 +1,6 @@
 // import Cookies from "js-cookie";
 //
-import { Stage, BidSlug } from "./types";
+import { AnnouncementSlug, Stage, BidSlug } from "./types";
 
 const apiCall = (
   path: string,
@@ -86,6 +86,22 @@ export const makeBid = (bidSlug: BidSlug): void => {
   );
 };
 
+export const makeAnnouncement = (announcementSlug: AnnouncementSlug): void => {
+  apiCall(
+    "games/update_current",
+    "PATCH",
+    JSON.stringify({ [Stage.Announcement]: announcementSlug })
+  );
+};
+
+export const pickKing = (cardSlug: string): void => {
+  apiCall(
+    "games/update_current",
+    "PATCH",
+    JSON.stringify({ [Stage.King]: cardSlug })
+  );
+};
+
 export const sendMessage = (): void => {
   apiCall("games/test", "GET", null);
 };
@@ -95,5 +111,21 @@ export const setViewedBids = (gamePlayerId: number): void => {
     `game_players/${gamePlayerId}`,
     "PUT",
     JSON.stringify({ viewedBids: true })
+  );
+};
+
+export const setViewedKings = (gamePlayerId: number): void => {
+  apiCall(
+    `game_players/${gamePlayerId}`,
+    "PUT",
+    JSON.stringify({ viewedKings: true })
+  );
+};
+
+export const setViewedAnnouncements = (gamePlayerId: number): void => {
+  apiCall(
+    `game_players/${gamePlayerId}`,
+    "PUT",
+    JSON.stringify({ viewedAnnouncements: true })
   );
 };

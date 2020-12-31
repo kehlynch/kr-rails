@@ -1,0 +1,13 @@
+@import '../grid';
+
+.container {
+  @include kings;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardsContainer {
+  display: flex;
+  justify-content: center;
+  color: blue;
+}

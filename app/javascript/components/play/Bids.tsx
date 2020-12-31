@@ -1,24 +1,25 @@
 import React from "react";
 
-import Button from "react-bootstrap/Button";
+import ContinueButton from "./ContinueButton";
 
 import BidPicker from "./BidPicker";
 import BidIndicators from "./BidIndicators";
 import styles from "../../styles/play/Bids.module.scss";
-import { BidSlug, BidType, Position } from "../../types";
+import { AnnouncementSlug, BidSlug, AnnouncementType, BidType, Position } from "../../types";
 
 export type BidsProps = {
-  validBids: Array<BidSlug>,
-  bids: Array<BidType>,
+  validBids: Array<BidSlug | AnnouncementSlug>,
+  bids: Array<BidType | AnnouncementType>,
   myTurn: boolean,
   myPosition: Position,
-  cont: Function | null
+  cont: null | (() => void),
+  makeBid: ((arg: BidSlug & AnnouncementSlug) => void)
 }
 
 // type groupedBidsType = { [key in Position]: Array<BidSlug> };
-type groupedBidsType = Array<Array<BidSlug>>;
+type groupedBidsType = Array<Array<BidSlug | AnnouncementSlug>>;
 
-const bidsByPosition = (bids: Array<BidType>): groupedBidsType => (
+const bidsByPosition = (bids: Array<BidType | AnnouncementType>): groupedBidsType => (
   bids.reduce((acc: groupedBidsType, bid) => {
     if(!acc[bid.playerPosition]) acc[bid.playerPosition] = [];
     acc[bid.playerPosition].push(bid.slug); // TODO ? should not be needed?
@@ -26,7 +27,7 @@ const bidsByPosition = (bids: Array<BidType>): groupedBidsType => (
   }, [])
 );
 
-const Bids = ({ validBids, bids, myTurn, myPosition, cont }: BidsProps): React.ReactElement => {
+const Bids = ({ validBids, bids, myTurn, myPosition, cont, makeBid }: BidsProps): React.ReactElement => {
   console.log("bids", bids);
   return (
     <div className={styles.container}>
@@ -37,8 +38,8 @@ const Bids = ({ validBids, bids, myTurn, myPosition, cont }: BidsProps): React.R
         return (<BidIndicators slugs={slugs} key={`bids-${position}-${slugs.join(',')}`} position={(myPosition + position) % 4}/>)
         /* eslint-ebable react/no-array-index-key */
       })}
-      <BidPicker validBids={validBids} canBid={myTurn} />
-      { cont && (<Button className={styles.continueButton} variant="primary" onClick={() => cont()}>Continue</Button>) }
+      <BidPicker validBids={validBids} canBid={myTurn} makeBid={makeBid} />
+      { cont && (<ContinueButton  onclick={cont}/>) }
     </div>
   );
 };

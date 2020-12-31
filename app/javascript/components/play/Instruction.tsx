@@ -7,7 +7,8 @@ export type InstructionProps = {
   stage: Stage,
   myTurn: boolean,
   nextPlayerName: string | undefined,
-  viewedBids: boolean
+  viewedBids: boolean,
+  viewedKings: boolean
 }
 
 const getActiveInstructionText = (stage: Stage): string => {
@@ -52,14 +53,15 @@ const getPassiveInstructionText = (stage: Stage, nextPlayerName: string | undefi
   }
 }
 
-const getInstructionText = (stage: Stage, nextPlayerName: string | undefined, myTurn: boolean, viewedBids: boolean): string => {
+const getInstructionText = (stage: Stage, nextPlayerName: string | undefined, myTurn: boolean, viewedBids: boolean, viewedKings: boolean): string => {
   if (stage !== Stage.Bid && !viewedBids) { return "bidding finished" }
+  if (stage !== Stage.King && !viewedKings) { return "king picked" }
   if (myTurn) { return getActiveInstructionText(stage) }
   return getPassiveInstructionText(stage, nextPlayerName)
 }
 
-const Instruction = ({ stage, myTurn, nextPlayerName, viewedBids }: InstructionProps): React.ReactElement => {
-  const instructionText = getInstructionText(stage, nextPlayerName, myTurn, viewedBids);
+const Instruction = ({ stage, myTurn, nextPlayerName, viewedBids, viewedKings }: InstructionProps): React.ReactElement => {
+  const instructionText = getInstructionText(stage, nextPlayerName, myTurn, viewedBids, viewedKings);
   return (
     <div className={styles.container}>
       { instructionText }

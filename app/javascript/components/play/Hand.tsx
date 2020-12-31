@@ -10,7 +10,7 @@ type HandProps = {
 const Hand = ({ cards }: HandProps): React.ReactElement => {
   return (
     <div className={styles.container}>
-      { cards.map((c) => <Card hand card={c} key={c.slug} /> ) }
+      { cards.map((c) => <Card hand slug={c.slug} key={c.slug} /> ) }
     </div>
   );
 };

@@ -1,5 +1,5 @@
 class GameSerializer < ActiveModel::Serializer
-  attributes :id, :partner_id, :partner_known, :stage, :valid_bids
+  attributes :id, :partner_id, :partner_known, :stage, :valid_announcements, :valid_bids
 
   attribute :next_game_player_id do
     object.next_player.id
@@ -8,6 +8,12 @@ class GameSerializer < ActiveModel::Serializer
   attribute :bids do
     object.bids.map do |bid|
       ActiveModelSerializers::SerializableResource.new(bid, serializer: BidSerializer, key_transform: :camel_lower).as_json[:bid]
+    end
+  end
+
+  attribute :announcements do
+    object.announcements.map do |announcement|
+      ActiveModelSerializers::SerializableResource.new(announcement, serializer: AnnouncementSerializer, key_transform: :camel_lower).as_json[:announcement]
     end
   end
 

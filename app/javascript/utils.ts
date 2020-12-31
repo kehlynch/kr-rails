@@ -1,6 +1,12 @@
-import { WinningBidSlug, BidSlug } from "./types";
+import {
+  AnnouncementSlug,
+  WinningBidSlug,
+  BidSlug,
+  Stage,
+  StageNumber,
+} from "./types";
 
-export const bidName = (bidSlug: BidSlug): string => {
+export const bidName = (slug: BidSlug | AnnouncementSlug): string => {
   return {
     [BidSlug.Pass]: "Pass",
     [BidSlug.Rufer]: "Rufer",
@@ -13,7 +19,13 @@ export const bidName = (bidSlug: BidSlug): string => {
     [BidSlug.CallKing]: "Call King",
     [BidSlug.Trischaken]: "Trischaken",
     [BidSlug.Sechserdreier]: "Sechserdreier",
-  }[bidSlug];
+    [AnnouncementSlug.Pagat]: "Pagat",
+    [AnnouncementSlug.Uhu]: "Uhu",
+    [AnnouncementSlug.Kakadu]: "Kakadu",
+    [AnnouncementSlug.King]: "King",
+    [AnnouncementSlug.FortyFive]: "45",
+    [AnnouncementSlug.Valat]: "Valat",
+  }[slug];
 };
 
 export const bidShortName = (bidSlug: WinningBidSlug): string => {
@@ -28,4 +40,16 @@ export const bidShortName = (bidSlug: WinningBidSlug): string => {
     [BidSlug.Trischaken]: "T",
     [BidSlug.Sechserdreier]: "XI",
   }[bidSlug];
+};
+
+export const getStageNumber = (stage: Stage): StageNumber => {
+  return {
+    [Stage.Bid]: StageNumber.Bid,
+    [Stage.King]: StageNumber.King,
+    [Stage.PickTalon]: StageNumber.PickTalon,
+    [Stage.ResolveTalon]: StageNumber.ResolveTalon,
+    [Stage.Announcement]: StageNumber.Announcement,
+    [Stage.Trick]: StageNumber.Trick,
+    [Stage.Finished]: StageNumber.Finished,
+  }[stage];
 };

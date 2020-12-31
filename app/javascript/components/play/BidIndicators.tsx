@@ -1,12 +1,12 @@
 import React from "react";
 import classNames from "classnames";
-import { Position, BidSlug } from "../../types";
+import { Position, BidSlug, AnnouncementSlug } from "../../types";
 import { bidName } from "../../utils";
 import styles from "../../styles/play/BidIndicators.module.scss";
 
 type BidIndicatorsProps = {
   position: Position;
-  slugs: Array<BidSlug>;
+  slugs: Array<BidSlug | AnnouncementSlug>;
 };
 
 
