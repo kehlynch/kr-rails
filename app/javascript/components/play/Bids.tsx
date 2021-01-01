@@ -2,24 +2,28 @@ import React from "react";
 
 import ContinueButton from "./ContinueButton";
 
+import Instruction from "./Instruction";
 import BidPicker from "./BidPicker";
 import BidIndicators from "./BidIndicators";
 import styles from "../../styles/play/Bids.module.scss";
-import { AnnouncementSlug, BidSlug, AnnouncementType, BidType, Position } from "../../types";
+import { DeclarableSlug, DeclarableType, Position } from "../../types";
 
 export type BidsProps = {
-  validBids: Array<BidSlug | AnnouncementSlug>,
-  bids: Array<BidType | AnnouncementType>,
+  declarableType: 'bid' | 'announcement',
+  validBids: Array<DeclarableSlug>,
+  bids: Array<DeclarableType>,
   myTurn: boolean,
   myPosition: Position,
-  cont: null | (() => void),
-  makeBid: ((arg: BidSlug & AnnouncementSlug) => void)
+  cont: false | (() => void),
+  makeBid: ((arg: any) => void),
+  nextPlayerName: string | undefined
 }
 
 // type groupedBidsType = { [key in Position]: Array<BidSlug> };
-type groupedBidsType = Array<Array<BidSlug | AnnouncementSlug>>;
+type groupedBidsType = Array<Array<DeclarableSlug>>;
 
-const bidsByPosition = (bids: Array<BidType | AnnouncementType>): groupedBidsType => (
+
+const bidsByPosition = (bids: Array<DeclarableType>): groupedBidsType => (
   bids.reduce((acc: groupedBidsType, bid) => {
     if(!acc[bid.playerPosition]) acc[bid.playerPosition] = [];
     acc[bid.playerPosition].push(bid.slug); // TODO ? should not be needed?
@@ -27,18 +31,19 @@ const bidsByPosition = (bids: Array<BidType | AnnouncementType>): groupedBidsTyp
   }, [])
 );
 
-const Bids = ({ validBids, bids, myTurn, myPosition, cont, makeBid }: BidsProps): React.ReactElement => {
-  console.log("bids", bids);
+const Bids = ({ declarableType, validBids, bids, myTurn, myPosition, cont, makeBid, nextPlayerName }: BidsProps): React.ReactElement => {
+  const finishedText = declarableType === 'bid' ? 'bidding finished' : 'announcements finished';
+  const actionText = declarableType === 'bid' ? 'make a bid' : 'make an announcement';
   return (
     <div className={styles.container}>
+      <Instruction text={cont ? finishedText : actionText}
+      staticText={!!cont} myTurn={myTurn} nextPlayerName={nextPlayerName} />
       { bidsByPosition(bids).map((slugs, position) => {
-        console.log("position", position);
-        console.log("myposition", myPosition);
         /* eslint-disable react/no-array-index-key */
         return (<BidIndicators slugs={slugs} key={`bids-${position}-${slugs.join(',')}`} position={(myPosition + position) % 4}/>)
         /* eslint-ebable react/no-array-index-key */
       })}
-      <BidPicker validBids={validBids} canBid={myTurn} makeBid={makeBid} />
+      { !cont && <BidPicker validBids={validBids} canBid={myTurn} makeBid={makeBid} /> }
       { cont && (<ContinueButton  onclick={cont}/>) }
     </div>
   );

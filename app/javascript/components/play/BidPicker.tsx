@@ -3,12 +3,12 @@ import React from "react";
 import BidButton from "./BidButton";
 import styles from "../../styles/play/BidPicker.module.scss";
 import { bidName } from "../../utils";
-import { AnnouncementSlug, BidSlug } from "../../types";
+import { DeclarableSlug } from "../../types";
 
 export type BidPickerProps = {
-  validBids: Array<BidSlug | AnnouncementSlug>,
+  validBids: Array<DeclarableSlug>,
   canBid: boolean,
-  makeBid: ((arg: BidSlug | AnnouncementSlug) => void)
+  makeBid: ((arg: DeclarableSlug) => void)
 }
 
 

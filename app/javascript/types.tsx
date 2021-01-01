@@ -8,16 +8,6 @@ export enum Stage {
   Finished = 'finished'
 }
 
-export enum StageNumber {
-  Bid,
-  King,
-  PickTalon,
-  ResolveTalon,
-  Announcement,
-  Trick,
-  Finished,
-}
-
 export enum BidSlug {
   Pass = 'pass',
   Rufer = 'rufer',
@@ -41,6 +31,8 @@ export enum AnnouncementSlug {
   FortyFive = 'forty_five',
   Valat = 'valat',
 }
+
+export type DeclarableSlug = BidSlug | AnnouncementSlug;
 
 export enum Position {
   South = 0,
@@ -95,6 +87,8 @@ export interface BidType {
   playerPosition: Position
 }
 
+export type DeclarableType = AnnouncementType | BidType;
+
 export interface GamePlayerType {
   id: number,
   playerId: number,
@@ -111,6 +105,7 @@ export interface GamePlayerType {
   viewedKings: boolean,
   viewedTalon: boolean,
   viewedAnnouncements: boolean,
+    viewedTrick: number | false,
 }
 
 export interface GameType {
@@ -123,7 +118,10 @@ export interface GameType {
   validBids: Array<BidSlug>,
   bids: Array<BidType>,
   validAnnouncements: Array<AnnouncementSlug>,
-  announcements: Array<AnnouncementType>
+  announcements: Array<AnnouncementType>,
+  kingRequired: boolean,
+    announcementsRequired: boolean,
+    talonRequired: 3 | 6 | false
 }
 
 export interface GameListingType {

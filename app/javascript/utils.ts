@@ -1,10 +1,4 @@
-import {
-  AnnouncementSlug,
-  WinningBidSlug,
-  BidSlug,
-  Stage,
-  StageNumber,
-} from "./types";
+import { AnnouncementSlug, WinningBidSlug, BidSlug } from "./types";
 
 export const bidName = (slug: BidSlug | AnnouncementSlug): string => {
   return {
@@ -40,16 +34,4 @@ export const bidShortName = (bidSlug: WinningBidSlug): string => {
     [BidSlug.Trischaken]: "T",
     [BidSlug.Sechserdreier]: "XI",
   }[bidSlug];
-};
-
-export const getStageNumber = (stage: Stage): StageNumber => {
-  return {
-    [Stage.Bid]: StageNumber.Bid,
-    [Stage.King]: StageNumber.King,
-    [Stage.PickTalon]: StageNumber.PickTalon,
-    [Stage.ResolveTalon]: StageNumber.ResolveTalon,
-    [Stage.Announcement]: StageNumber.Announcement,
-    [Stage.Trick]: StageNumber.Trick,
-    [Stage.Finished]: StageNumber.Finished,
-  }[stage];
 };

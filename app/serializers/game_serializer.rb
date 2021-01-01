@@ -23,5 +23,9 @@ class GameSerializer < ActiveModel::Serializer
     end
   end
 
+  attribute :king_required do
+    object.winning_bid.king?
+  end
+
   # has_many :game_players
 end

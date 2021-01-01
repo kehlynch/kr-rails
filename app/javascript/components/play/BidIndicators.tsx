@@ -19,8 +19,6 @@ const COMPASS_CLASSES = [
 
 const BidIndicators = ({ position, slugs }: BidIndicatorsProps): React.ReactElement => {
   const compassClass = COMPASS_CLASSES[position];
-  console.log(position);
-  console.log("compassclass", compassClass);
 
   return (
     <div className={classNames(styles.container, compassClass)} >

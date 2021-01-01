@@ -1,70 +1,20 @@
 import React from "react";
 
 import styles from "../../styles/play/Instruction.module.scss";
-import { Stage } from "../../types";
 
 export type InstructionProps = {
-  stage: Stage,
+  text: string,
   myTurn: boolean,
+  staticText: boolean,
   nextPlayerName: string | undefined,
-  viewedBids: boolean,
-  viewedKings: boolean
 }
 
-const getActiveInstructionText = (stage: Stage): string => {
-  switch(stage) {
-    case Stage.Bid:
-      return 'Make a bid'
-    case Stage.King:
-      return 'Pick a king'
-    case Stage.PickTalon:
-      return 'Pick half of the talon' // TODO: sort out full talon
-    case Stage.ResolveTalon:
-      return 'resolve the talon'
-    case Stage.Announcement:
-      return 'Make an announcement'
-    case Stage.Trick:
-      return 'play a card'
-    case Stage.Finished:
-      return 'Finished!'
-    default:
-      return 'something went wrong!'
-  }
-}
-
-const getPassiveInstructionText = (stage: Stage, nextPlayerName: string | undefined): string => {
-  switch(stage) {
-    case Stage.Bid:
-      return `Waiting for ${nextPlayerName} to make a bid`
-    case Stage.Announcement:
-      return `Waiting for ${nextPlayerName} to make an announcement`
-    case Stage.King:
-      return `Waiting for ${nextPlayerName} to pick a king`
-    case Stage.PickTalon:
-      return `Waiting for ${nextPlayerName} to pick talon`
-    case Stage.ResolveTalon:
-      return `Waiting for ${nextPlayerName} to resolve talon`
-    case Stage.Trick:
-      return `Waiting for ${nextPlayerName} to play a card`
-    case Stage.Finished:
-      return 'Finished!'
-    default:
-      return 'something went wrong!'
-  }
-}
-
-const getInstructionText = (stage: Stage, nextPlayerName: string | undefined, myTurn: boolean, viewedBids: boolean, viewedKings: boolean): string => {
-  if (stage !== Stage.Bid && !viewedBids) { return "bidding finished" }
-  if (stage !== Stage.King && !viewedKings) { return "king picked" }
-  if (myTurn) { return getActiveInstructionText(stage) }
-  return getPassiveInstructionText(stage, nextPlayerName)
-}
-
-const Instruction = ({ stage, myTurn, nextPlayerName, viewedBids, viewedKings }: InstructionProps): React.ReactElement => {
-  const instructionText = getInstructionText(stage, nextPlayerName, myTurn, viewedBids, viewedKings);
+const Instruction = ({ text, myTurn, nextPlayerName, staticText = false }: InstructionProps): React.ReactElement => {
+  const displayText =
+    staticText || myTurn ? text : `Waiting for ${nextPlayerName} to ${text}`;
   return (
     <div className={styles.container}>
-      { instructionText }
+      { displayText }
     </div>
   );
 };
