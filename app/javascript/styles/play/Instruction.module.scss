@@ -3,23 +3,37 @@
 
 .container {
   @include instruction;
+  position: relative;
+  display: flex;
+}
+.textbox {
+  z-index: 1;
+  height: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
 
   border-radius: 20px;
   padding: 5px 10px;
-  background-color: white;
+  background-color: transparent;
   font-weight: bold;
   color: $instruction-colour;
   border: 3px solid $instruction-colour;
-
-  &.instruction-tricks {
-    @include instruction-tricks;
+  p {
+    margin: 0;
   }
+}
 
-  &.instruction-pick_talon, &.instruction-resolve_talon, &.instruction-kings {
-    @include instruction;
+.progressBarContainer {
+  position: absolute;
+  width: 100%;
+}
+
+.progressBar {
+  z-index: -1;
+  height: 4rem;
+  border-radius: 20px;
+  div {
+    background-color: $dull-light-green;
   }
 }

@@ -113,7 +113,7 @@ export interface GamePlayerType {
   viewedKings: boolean,
   viewedTalon: boolean,
   viewedAnnouncements: boolean,
-    viewedTrick: number | false,
+    viewedTrickIndex: number | false,
 }
 
 export interface TrickType {

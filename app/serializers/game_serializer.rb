@@ -6,7 +6,7 @@ class GameSerializer < ActiveModel::Serializer
   end
 
   attribute :next_game_player_id do
-    object.next_player.id
+    object.next_player&.id
   end
 
   attribute :bids do

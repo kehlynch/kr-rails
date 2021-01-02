@@ -18,7 +18,9 @@ export type BoardProps = {
 const renderStage = (game: GameType, player: GamePlayerType) => {
   const { kingRequired, announcementsRequired, talonRequired,announcements, gamePlayers, nextGamePlayerId, stage, validAnnouncements, validBids, bids, tricks } = game
 
-  const { viewedBids, viewedKings, viewedTalon, viewedAnnouncements, viewedTrick} = player;
+  const { viewedBids, viewedKings, viewedTalon, viewedAnnouncements, viewedTrickIndex } = player;
+
+  console.log('viewedTrickIndex', viewedTrickIndex);
 
   const myTurn = player.id === nextGamePlayerId;
   const nextPlayerName = gamePlayers.find((p) => p.id === nextGamePlayerId)?.name;
@@ -54,7 +56,7 @@ const renderStage = (game: GameType, player: GamePlayerType) => {
         nextPlayerName={nextPlayerName}
         validBids={validAnnouncements}
       /> )
-  } if (stage === Stage.Trick || viewedTrick < 11) {
+  } if (stage === Stage.Trick || viewedTrickIndex < 11) {
     return (
       <Tricks
         tricks={tricks}
@@ -62,7 +64,7 @@ const renderStage = (game: GameType, player: GamePlayerType) => {
         myTurn={myTurn}
         myPlayerId={player.id}
         nextPlayerName={nextPlayerName}
-        lastViewedTrick={viewedTrick || -1 }
+        lastViewedTrick={viewedTrickIndex === false ? -1 : viewedTrickIndex }
       /> )
   } if (stage === Stage.Finished) {
     return ( <div >score</div> )

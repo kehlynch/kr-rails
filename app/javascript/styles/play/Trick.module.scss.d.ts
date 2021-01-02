@@ -1,7 +1,6 @@
 export const card: string;
 export const cardsContainer: string;
 export const container: string;
-export const continueButton: string;
 export const east: string;
 export const instruction: string;
 export const north: string;
