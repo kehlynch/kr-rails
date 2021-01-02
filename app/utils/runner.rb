@@ -24,8 +24,7 @@ class Runner
     when Stage::ANNOUNCEMENT
       advance_announcements!(params[Stage::ANNOUNCEMENT])
     when Stage::TRICK
-      card_slug = params[Stage::TRICK][0] if params[Stage::TRICK]
-      advance_tricks!(card_slug)
+      advance_tricks!(params[Stage::TRICK])
     when Stage::FINISHED
     else
       fail RunnerError.new("unknown action #{action}")

@@ -1,5 +1,9 @@
 class GameSerializer < ActiveModel::Serializer
-  attributes :id, :partner_id, :partner_known, :stage, :valid_announcements, :valid_bids
+  attributes :id, :partner_id, :partner_known, :stage, :valid_announcements, :valid_bids, :king, :won_bid
+
+  attribute :won_bid do
+    object.won_bid&.slug
+  end
 
   attribute :next_game_player_id do
     object.next_player.id
@@ -20,6 +24,12 @@ class GameSerializer < ActiveModel::Serializer
   attribute :game_players do
     object.game_players.map do |p|
       ActiveModelSerializers::SerializableResource.new(p, serializer: GamePlayerSerializer, key_transform: :camel_lower).as_json[:gamePlayer]
+    end
+  end
+
+  attribute :tricks do
+    object.tricks.map do |t|
+      ActiveModelSerializers::SerializableResource.new(t, serializer: TrickSerializer, key_transform: :camel_lower).as_json[:trick]
     end
   end
 

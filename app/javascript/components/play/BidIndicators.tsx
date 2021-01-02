@@ -1,24 +1,16 @@
 import React from "react";
 import classNames from "classnames";
-import { Position, BidSlug, AnnouncementSlug } from "../../types";
+import { CompassName, BidSlug, AnnouncementSlug } from "../../types";
 import { bidName } from "../../utils";
 import styles from "../../styles/play/BidIndicators.module.scss";
 
 type BidIndicatorsProps = {
-  position: Position;
+  compassName: CompassName;
   slugs: Array<BidSlug | AnnouncementSlug>;
 };
 
-
-const COMPASS_CLASSES = [
- styles.south,
- styles.east,
- styles.north,
- styles.west,
-]
-
-const BidIndicators = ({ position, slugs }: BidIndicatorsProps): React.ReactElement => {
-  const compassClass = COMPASS_CLASSES[position];
+const BidIndicators = ({ compassName, slugs }: BidIndicatorsProps): React.ReactElement => {
+  const compassClass = styles[compassName];
 
   return (
     <div className={classNames(styles.container, compassClass)} >

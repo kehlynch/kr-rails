@@ -9,7 +9,7 @@ export type ContinueButtonProps = {
 
 const ContinueButton = ({ onclick }: ContinueButtonProps): React.ReactElement => {
   return (
-    <Button className={styles.continueButton} variant="primary" onClick={onclick}>Continue</Button>
+    <Button className={styles.container} variant="primary" onClick={onclick}>Continue</Button>
   );
 };
 

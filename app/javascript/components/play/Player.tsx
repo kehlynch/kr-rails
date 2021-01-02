@@ -19,6 +19,7 @@ type PlayerProps = {
   displayPartner: boolean;
   nextToPlay: boolean;
   position: Position;
+  playCard: null | ((arg: string) => void)
 };
 
 
@@ -29,7 +30,7 @@ const COMPASS_CLASSES = {
   [Position.West]: styles.west,
 }
 
-const Player = ({ player, me, displayPartner, nextToPlay, position }: PlayerProps): React.ReactElement => {
+const Player = ({ player, me, displayPartner, nextToPlay, position, playCard }: PlayerProps): React.ReactElement => {
   const {
     name,
     forehand,
@@ -53,7 +54,7 @@ const Player = ({ player, me, displayPartner, nextToPlay, position }: PlayerProp
         </div>
       </div>
       <div className={styles.playerAnnouncements}>{announcements}</div>
-      { me && <Hand cards={ cards } />}
+      { me && <Hand cards={ cards } playCard={playCard} />}
     </div>
   );
 };

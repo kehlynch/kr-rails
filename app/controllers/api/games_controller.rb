@@ -30,7 +30,13 @@ class Api::GamesController < ApplicationController
   private
 
   def game_params
-    params.permit(Stage::BID, Stage::KING, Stage::PICK_TALON, Stage::ANNOUNCEMENT, Stage::RESOLVE_TALON => [], Stage::TRICK => [])
-          .to_h.symbolize_keys
+    params.permit(
+      Stage::BID,
+      Stage::KING,
+      Stage::PICK_TALON,
+      Stage::ANNOUNCEMENT,
+      Stage::TRICK,
+      Stage::RESOLVE_TALON => [],
+    ).to_h.symbolize_keys
   end
 end

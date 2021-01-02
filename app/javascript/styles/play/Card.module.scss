@@ -4,6 +4,10 @@
   padding: 0;
   border: 0;
   background-color: transparent;
+  &.landscape {
+    width: 6.875rem;
+    height: 3.75rem;
+  }
   &.king-indicator {
     height: 60px;
     width: auto;
@@ -35,6 +39,8 @@
   &:focus {
     outline: none;
   }
+
+
 }
 
 .cardButton {

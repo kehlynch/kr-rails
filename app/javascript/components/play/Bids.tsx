@@ -1,7 +1,8 @@
 import React from "react";
 
-import ContinueButton from "./ContinueButton";
+import { compassName } from "../../utils";
 
+import ContinueButton from "./ContinueButton";
 import Instruction from "./Instruction";
 import BidPicker from "./BidPicker";
 import BidIndicators from "./BidIndicators";
@@ -36,15 +37,29 @@ const Bids = ({ declarableType, validBids, bids, myTurn, myPosition, cont, makeB
   const actionText = declarableType === 'bid' ? 'make a bid' : 'make an announcement';
   return (
     <div className={styles.container}>
-      <Instruction text={cont ? finishedText : actionText}
-      staticText={!!cont} myTurn={myTurn} nextPlayerName={nextPlayerName} />
+      <div className={styles.instruction}>
+        <Instruction
+          text={cont ? finishedText : actionText}
+          staticText={!!cont}
+          myTurn={myTurn}
+          nextPlayerName={nextPlayerName}
+        />
+      </div>
       { bidsByPosition(bids).map((slugs, position) => {
         /* eslint-disable react/no-array-index-key */
-        return (<BidIndicators slugs={slugs} key={`bids-${position}-${slugs.join(',')}`} position={(myPosition + position) % 4}/>)
+        return (<BidIndicators slugs={slugs} key={`bids-${position}-${slugs.join(',')}`} compassName={compassName(position, myPosition)}/>)
         /* eslint-ebable react/no-array-index-key */
       })}
-      { !cont && <BidPicker validBids={validBids} canBid={myTurn} makeBid={makeBid} /> }
-      { cont && (<ContinueButton  onclick={cont}/>) }
+      { !cont && (
+        <div className={styles.bidPicker}>
+        <BidPicker validBids={validBids} canBid={myTurn} makeBid={makeBid} />
+        </div>
+      )}
+      { cont && (
+        <div className={styles.continueButton}>
+          <ContinueButton  onclick={cont}/>
+        </div>
+      ) }
     </div>
   );
 };

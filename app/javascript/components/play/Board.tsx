@@ -2,10 +2,12 @@ import React from "react";
 
 import Players from "./Players";
 import Bids from "./Bids";
+import Card from "./Card";
 import Kings from "./Kings";
+import Tricks from "./Tricks";
 import styles from "../../styles/play/Board.module.scss";
 
-import { setViewedBids, setViewedKings, setViewedAnnouncements, makeBid, makeAnnouncement } from "../../api";
+import { setViewedBids, setViewedKings, setViewedAnnouncements, makeBid, makeAnnouncement, playCard, putdownCard } from "../../api";
 import { GameType, GamePlayerType, Stage } from "../../types";
 
 export type BoardProps = {
@@ -14,7 +16,7 @@ export type BoardProps = {
 }
 
 const renderStage = (game: GameType, player: GamePlayerType) => {
-  const { kingRequired, announcementsRequired, talonRequired,announcements, gamePlayers, nextGamePlayerId, stage, validAnnouncements, validBids, bids } = game;
+  const { kingRequired, announcementsRequired, talonRequired,announcements, gamePlayers, nextGamePlayerId, stage, validAnnouncements, validBids, bids, tricks } = game
 
   const { viewedBids, viewedKings, viewedTalon, viewedAnnouncements, viewedTrick} = player;
 
@@ -53,11 +55,31 @@ const renderStage = (game: GameType, player: GamePlayerType) => {
         validBids={validAnnouncements}
       /> )
   } if (stage === Stage.Trick || viewedTrick < 11) {
-    return ( <div >tricks</div> )
+    return (
+      <Tricks
+        tricks={tricks}
+        myPosition={player.position}
+        myTurn={myTurn}
+        myPlayerId={player.id}
+        nextPlayerName={nextPlayerName}
+        lastViewedTrick={viewedTrick || -1 }
+      /> )
   } if (stage === Stage.Finished) {
     return ( <div >score</div> )
   }
     return ( <div >why foes ts think I need this</div> )
+}
+
+const playCardCallback = (stage: Stage): null | ((arg: string) => void) => {
+  switch (stage) {
+    case Stage.ResolveTalon:
+      return (slug) => putdownCard(slug)
+    case Stage.Trick:
+      return (slug) => playCard(slug)
+    default:
+      return null
+  }
+
 }
 
 
@@ -68,13 +90,22 @@ const Board = ({ player, game }: BoardProps): React.ReactElement => {
 
   console.log("game", game);
 
-  const { gamePlayers, partnerId, partnerKnown, nextGamePlayerId } = game;
+  const { stage, gamePlayers, partnerId, partnerKnown, nextGamePlayerId, king
+, wonBid} = game;
 
   return (
     <div className={styles.container}>
+      { king && <div className={styles.kingIndicator} >
+        <Card slug={king} />
+      </div> }
+      { wonBid && <div className={styles.wonBidIndicator} >
+        <p>{wonBid}</p>
+      </div> }
+
       <div>Welcome to game {game.id}</div>
       { renderStage(game, player) }
-      <Players players={gamePlayers} player={player} partnerId={partnerId} partnerKnown={partnerKnown} nextPlayerId={nextGamePlayerId} />
+      <Players players={gamePlayers} player={player} partnerId={partnerId} partnerKnown={partnerKnown} nextPlayerId={nextGamePlayerId} playCard={playCardCallback(stage)} />
+
     </div>
   );
 };

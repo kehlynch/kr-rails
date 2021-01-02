@@ -1,0 +1,43 @@
+.container {
+  display: contents;
+}
+
+.cardsContainer {
+  display: contents;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &.south {
+    grid-column: 4;
+    grid-row: 6;
+  }
+  &.east {
+    grid-column: 6;
+    grid-row: 4;
+  }
+  &.north {
+    grid-column: 4;
+    grid-row: 2;
+  }
+  &.west {
+    grid-column: 2;
+    grid-row: 4;
+  }
+}
+
+.instruction {
+  grid-row: 3;
+  grid-column: 4;
+}
+
+.continueButton {
+  grid-row: 4;
+  grid-column: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

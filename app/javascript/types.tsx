@@ -41,6 +41,13 @@ export enum Position {
   West = 3
 }
 
+export enum CompassName {
+  South = 'south',
+  East = 'east',
+  North = 'north',
+  West = 'west'
+}
+
 export type WinningBidSlug = BidSlug.Solo | BidSlug.Piccolo | BidSlug.Dreier | BidSlug.BesserRufer | BidSlug.SoloDreier | BidSlug.Bettel | BidSlug.CallKing | BidSlug.Trischaken | BidSlug.Sechserdreier
 
 export interface MatchPlayerType {
@@ -68,6 +75,7 @@ export interface PlayerListingType {
 
 export interface CardType {
   slug: string,
+  playerPosition: Position
 }
 
 export interface PlayerType {
@@ -108,6 +116,13 @@ export interface GamePlayerType {
     viewedTrick: number | false,
 }
 
+export interface TrickType {
+  finished: boolean,
+    index: number,
+    cards: Array<CardType>,
+}
+
+
 export interface GameType {
   id: number,
   gamePlayers: Array<GamePlayerType>,
@@ -117,11 +132,14 @@ export interface GameType {
   stage: Stage,
   validBids: Array<BidSlug>,
   bids: Array<BidType>,
+  tricks: Array<TrickType>,
   validAnnouncements: Array<AnnouncementSlug>,
   announcements: Array<AnnouncementType>,
   kingRequired: boolean,
-    announcementsRequired: boolean,
-    talonRequired: 3 | 6 | false
+  announcementsRequired: boolean,
+  talonRequired: 3 | 6 | false,
+  king: 'heart_8' | 'spade_8' | 'diamond_8' | 'club_8' | null,
+  wonBid: WinningBidSlug
 }
 
 export interface GameListingType {

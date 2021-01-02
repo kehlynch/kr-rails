@@ -5,12 +5,13 @@ import styles from "../../styles/play/Hand.module.scss";
 
 type HandProps = {
   cards: Array<CardType>;
+  playCard: null | ((arg: string) => void);
 };
 
-const Hand = ({ cards }: HandProps): React.ReactElement => {
+const Hand = ({ cards, playCard }: HandProps): React.ReactElement => {
   return (
     <div className={styles.container}>
-      { cards.map((c) => <Card hand slug={c.slug} key={c.slug} /> ) }
+      { cards.map((c) => <Card hand slug={c.slug} key={c.slug} onclick={() => playCard && playCard(c.slug) } /> ) }
     </div>
   );
 };

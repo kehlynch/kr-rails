@@ -102,6 +102,22 @@ export const pickKing = (cardSlug: string): void => {
   );
 };
 
+export const playCard = (cardSlug: string): void => {
+  apiCall(
+    "games/update_current",
+    "PATCH",
+    JSON.stringify({ [Stage.Trick]: cardSlug })
+  );
+};
+
+export const putdownCard = (cardSlug: string): void => {
+  apiCall(
+    "games/update_current",
+    "PATCH",
+    JSON.stringify({ [Stage.ResolveTalon]: cardSlug })
+  );
+};
+
 export const sendMessage = (): void => {
   apiCall("games/test", "GET", null);
 };
@@ -127,5 +143,16 @@ export const setViewedAnnouncements = (gamePlayerId: number): void => {
     `game_players/${gamePlayerId}`,
     "PUT",
     JSON.stringify({ viewedAnnouncements: true })
+  );
+};
+
+export const setViewedTrick = (
+  gamePlayerId: number,
+  trickIndex: number
+): void => {
+  apiCall(
+    `game_players/${gamePlayerId}`,
+    "PUT",
+    JSON.stringify({ viewedTrickIndex: trickIndex })
   );
 };

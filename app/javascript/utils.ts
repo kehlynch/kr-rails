@@ -1,4 +1,10 @@
-import { AnnouncementSlug, WinningBidSlug, BidSlug } from "./types";
+import {
+  AnnouncementSlug,
+  CompassName,
+  WinningBidSlug,
+  BidSlug,
+  Position,
+} from "./types";
 
 export const bidName = (slug: BidSlug | AnnouncementSlug): string => {
   return {
@@ -34,4 +40,20 @@ export const bidShortName = (bidSlug: WinningBidSlug): string => {
     [BidSlug.Trischaken]: "T",
     [BidSlug.Sechserdreier]: "XI",
   }[bidSlug];
+};
+
+const mod = (n: number, m: number): number => {
+  return ((n % m) + m) % m;
+};
+
+export const compassName = (
+  position: Position,
+  myPosition: Position
+): CompassName => {
+  return [
+    CompassName.South,
+    CompassName.East,
+    CompassName.North,
+    CompassName.West,
+  ][mod(position - myPosition, 4)];
 };

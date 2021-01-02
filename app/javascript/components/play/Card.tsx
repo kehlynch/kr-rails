@@ -9,13 +9,15 @@ type CardProps = {
   hand?: boolean,
   pickable?: boolean,
   legal?: boolean,
-  onclick?: Function
+  onclick?: Function,
+  landscape?: boolean
 };
 
-const Card = ({ slug, hand, pickable, legal, onclick}: CardProps): React.ReactElement => {
-  const imagePath = `../../images/${slug}.jpg`;
+const Card = ({ slug, hand, pickable, legal, onclick, landscape = false }: CardProps): React.ReactElement => {
+  const imagePath = landscape ?  `../../images/${slug}_landscape.jpg` : `../../images/${slug}.jpg`;
+
   return (
-    <Button type="button" onClick={() => onclick && onclick()} className={classNames(styles.container, {[styles.hand]: hand})} >
+    <Button type="button" onClick={() => onclick && onclick()} className={classNames(styles.container, {[styles.hand]: hand, [styles.landscape]: landscape})} >
     <img
       src={imagePath}
       alt={slug}
