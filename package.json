@@ -42,6 +42,7 @@
     "node": "12"
   },
   "devDependencies": {
+    "husky": "^4.2.5",
     "commander": "^6.1.0",
     "concurrently": "^5.2.0",
     "execa": "^4.0.2",

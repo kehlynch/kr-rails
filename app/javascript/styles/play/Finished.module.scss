@@ -1,0 +1,22 @@
+.container {
+  display: contents;
+  color: red;
+}
+
+.instruction {
+  grid-row: 3;
+  grid-column: 4;
+}
+
+.continueButton {
+  grid-row: 4;
+  grid-column: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bidPicker {
+  grid-row: 4 / span 2;
+  grid-column: 3 / span 3;
+}
