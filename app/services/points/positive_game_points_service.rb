@@ -9,6 +9,8 @@ class Points::PositiveGamePointsService
     @game.game_players.each do |gp|
       game_points = game_points_for(gp)
       gp.update(game_points: game_points)
+      announcement_points = announcement_points_for(gp)
+      gp.update(announcement_points: announcement_points)
     end
 
     update_bid_result
@@ -32,7 +34,7 @@ class Points::PositiveGamePointsService
   def game_points_for(gp)
     bid_points = @bid.points * @bid.kontra_multiplier # 1 / 1
     bid_points = bid_points * 2 if off_double? # 1 / 1
-    team_announcement_points = announcement_points_for(gp.team) # -3 / 3
+    team_announcement_points = team_announcement_points_for(gp.team) # -3 / 3
 
     points_swing = gp.winner ?  team_announcement_points + bid_points : team_announcement_points - bid_points # -4 / 4
 
@@ -41,7 +43,15 @@ class Points::PositiveGamePointsService
     (points_swing * defenders_count) / team_count # -4 / 12
   end
 
-  def announcement_points_for(team_name)
+  def announcement_points_for(gp)
+    team_announcement_points = team_announcement_points_for(gp.team) # -3 / 3
+
+    defenders_count = defenders.size # 3 / 3
+    team_count = gp.team_members.size # 3 / 1
+    (team_announcement_points * defenders_count) / team_count # -4 / 12
+  end
+
+  def team_announcement_points_for(team_name)
     team_points = @game.announcement_scores.select { |as| as.team == team_name }.map(&:points).sum
     opposition_points = @game.announcement_scores.select { |as| as.team != team_name }.map(&:points).sum
 

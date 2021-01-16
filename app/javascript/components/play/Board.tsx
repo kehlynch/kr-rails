@@ -5,6 +5,7 @@ import Bids from "./Bids";
 import Card from "./Card";
 import Kings from "./Kings";
 import Tricks from "./Tricks";
+import Finished from "./Finished";
 import styles from "../../styles/play/Board.module.scss";
 
 import { setViewedBids, setViewedKings, setViewedAnnouncements, makeBid, makeAnnouncement, playCard, putdownCard } from "../../api";
@@ -67,7 +68,7 @@ const renderStage = (game: GameType, player: GamePlayerType) => {
         lastViewedTrick={viewedTrickIndex === false ? -1 : viewedTrickIndex }
       /> )
   } if (stage === Stage.Finished) {
-    return ( <div >score</div> )
+    return ( <Finished players={gamePlayers} game={game} /> )
   }
     return ( <div >why foes ts think I need this</div> )
 }

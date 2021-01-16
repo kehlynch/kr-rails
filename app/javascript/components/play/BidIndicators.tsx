@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { CompassName, BidSlug, AnnouncementSlug } from "../../types";
-import { bidName } from "../../utils";
+import { declarableName } from "../../utils";
 import styles from "../../styles/play/BidIndicators.module.scss";
 
 type BidIndicatorsProps = {
@@ -14,7 +14,7 @@ const BidIndicators = ({ compassName, slugs }: BidIndicatorsProps): React.ReactE
 
   return (
     <div className={classNames(styles.container, compassClass)} >
-      { slugs.map((s) => <div className={styles.indicator} key={s}>{ bidName(s)} </div>) }
+      { slugs.map((s) => <div className={styles.indicator} key={s}>{ declarableName(s)} </div>) }
     </div>
   );
 };

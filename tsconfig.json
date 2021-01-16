@@ -1,41 +1,31 @@
 {
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true
+  },
   "include": [
     "app/javascript/**/*.ts",
     "app/javascript/**/*.tsx",
     "config/webpack/**/*.ts",
     "config/webpack/**/*.tsx"
-  ],
-  "compilerOptions": {
-    "isolatedModules": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "noEmit": true,
-    "baseUrl": ".",
-    "jsx": "react",
-    "skipLibCheck": true,
-    "target": "ES6",
-    "lib": ["es6", "dom"],
-    "paths": {
-      "*": [
-        "*",
-        "node_modules/*",
-        "app/javascript/components/*",
-        "app/javascript/components/play/*",
-        "app/javascript/*"
-      ]
-    }
-  },
-  "compileOnSave": false
+  ]
 }

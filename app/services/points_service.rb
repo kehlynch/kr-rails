@@ -46,11 +46,4 @@ class PointsService
       acc + total
     end
   end
-
-  def record_game_points
-    @game.game_players.each do |gp|
-      game_points = game_point_for(gp)
-      gp.update(game_points: game_points)
-    end
-  end
 end

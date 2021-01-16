@@ -1,9 +1,35 @@
 class GamePlayerSerializer < ActiveModel::Serializer
-  attributes :id, :player_id, :name, :forehand, :declarer, :position, :viewed_bids, :viewed_kings, :viewed_talon, :viewed_announcements, :viewed_trick_index
+  attributes :id, :player_id, :name, :forehand, :declarer, :position, :viewed_bids, :viewed_kings, :viewed_talon, :viewed_announcements, :viewed_trick_index, :game_points, :team
 
   attribute :cards do
     ActiveModel::Serializer::CollectionSerializer.new(object.hand_cards, each_serializer: CardSerializer)
   end
+
+  attribute :won_tricks_count do
+    object.won_tricks.size
+  end
+
+  attribute :points do
+    object.card_points
+  end
+
+  attribute :team_points do
+    case object.team
+
+    when GamePlayer::DECLARERS
+      object.game.declarers.map(&:card_points).compact.sum
+    when GamePlayer::DEFENDERS
+      object.game.defenders.map(&:card_points).compact.sum
+    else
+      object.card_points
+    end
+  end
+
+  attribute :winner do
+    object.winner?
+  end
+
+
 
   # has_many :game_players
   # def initialize(game_player, game)

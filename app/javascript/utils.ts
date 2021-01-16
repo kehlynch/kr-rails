@@ -4,10 +4,11 @@ import {
   CompassName,
   WinningBidSlug,
   BidSlug,
+  DeclarableSlug,
   Position,
 } from "./types";
 
-export const bidName = (slug: BidSlug | AnnouncementSlug): string => {
+export const declarableName = (slug: DeclarableSlug): string => {
   return {
     [BidSlug.Pass]: "Pass",
     [BidSlug.Rufer]: "Rufer",

@@ -1,2 +1,2 @@
-export const container: string;
-export const innerContainer: string;
+export const container: string
+export const innerContainer: string

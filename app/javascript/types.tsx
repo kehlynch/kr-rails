@@ -36,7 +36,7 @@ export type DeclarableSlug = BidSlug | AnnouncementSlug;
 
 export enum Position {
   South = 0,
-  East = 1,
+  East= 1,
   North = 2,
   West = 3
 }
@@ -46,6 +46,17 @@ export enum CompassName {
   East = 'east',
   North = 'north',
   West = 'west'
+}
+
+export interface DeclarableResultType {
+  slug: DeclarableSlug;
+  made: boolean;
+  points: number;
+  gamePlayers: Array<{
+    id: number;
+    points: number;
+    name: string;
+  }>;
 }
 
 export type WinningBidSlug = BidSlug.Solo | BidSlug.Piccolo | BidSlug.Dreier | BidSlug.BesserRufer | BidSlug.SoloDreier | BidSlug.Bettel | BidSlug.CallKing | BidSlug.Trischaken | BidSlug.Sechserdreier
@@ -114,6 +125,11 @@ export interface GamePlayerType {
   viewedTalon: boolean,
   viewedAnnouncements: boolean,
     viewedTrickIndex: number | false,
+    gamePoints: number,
+    points: number,
+    teamPoints: number,
+    winner: boolean,
+    team: 'declarers' | 'defenders'
 }
 
 export interface TrickType {
@@ -139,7 +155,8 @@ export interface GameType {
   announcementsRequired: boolean,
   talonRequired: 3 | 6 | false,
   king: 'heart_8' | 'spade_8' | 'diamond_8' | 'club_8' | null,
-  wonBid: WinningBidSlug
+  wonBid: WinningBidSlug,
+  outcomes: Array<DeclarableResultType>
 }
 
 export interface GameListingType {

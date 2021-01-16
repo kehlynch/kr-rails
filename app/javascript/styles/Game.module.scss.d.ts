@@ -1,1 +1,1 @@
-export const gameContainer: string;
+export const gameContainer: string

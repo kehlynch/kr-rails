@@ -51,10 +51,11 @@ class Api::MatchesController < ApplicationController
   def set
     match = Match.find(match_params[:id])
     set_match_cookie(match)
+
     render(
-      json: @game,
+      json: match,
       root: 'data',
-      serializer: GameSerializer
+      serializer: MatchSerializer
     )
   end
 
@@ -64,7 +65,7 @@ class Api::MatchesController < ApplicationController
     game = match.games.reject(&:finished?).last || match.deal_game
     set_game_cookie(game)
     render(
-      json: @game,
+      json: game,
       serializer: GameSerializer,
       root: 'data'
       # include: {

@@ -2,7 +2,7 @@ import React from "react";
 
 import BidButton from "./BidButton";
 import styles from "../../styles/play/BidPicker.module.scss";
-import { bidName } from "../../utils";
+import { declarableName } from "../../utils";
 import { DeclarableSlug } from "../../types";
 
 export type BidPickerProps = {
@@ -15,7 +15,7 @@ export type BidPickerProps = {
 const BidPicker = ({ validBids, canBid, makeBid }: BidPickerProps): React.ReactElement => {
   return (
     <div className={styles.container}>
-      { validBids.map((slug) => (<BidButton name={bidName(slug)} key={slug} onclick={() => canBid && makeBid(slug)} />)) }
+      { validBids.map((slug) => (<BidButton name={declarableName(slug)} key={slug} onclick={() => canBid && makeBid(slug)} />)) }
     </div>
   );
 };
