@@ -29,3 +29,5 @@
 
 # notes
 notes*
+public/
+.DS_Store
