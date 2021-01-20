@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
   resources :matches, only: [:create, :new, :destroy, :update] do
     post :join, on: :member
+    post :add_bot, on: :member
     post :create_for_many_humans, on: :collection
     resources :games, only: [:create, :update] do
       post :next, on: :member

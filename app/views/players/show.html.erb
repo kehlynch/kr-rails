@@ -1,5 +1,4 @@
 <div class="container mb-5 mt-3">
-  <%= link_to '', create_for_many_humans_matches_path(), method: :post, class: 'btn btn-primary new-game-button humans-1', title: 'new single player game' %>
   <div class="d-flex justify-content-between align-items-center">
     <h2 class="mb-4"><%= @player.name %></h2>
     <%= link_to 'logout', logout_path, method: :post, class: 'btn btn-secondary' %>
@@ -13,6 +12,8 @@
     Played <%= @player.games.count %> hands
   </div>
 
+  <hr>
+  <%= link_to 'New Game', create_for_many_humans_matches_path(), method: :post, class: 'btn btn-primary', title: 'new single player game' %>
   <hr>
 
   <h2 class="mb-4">My games</h2>

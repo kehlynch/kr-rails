@@ -23,6 +23,14 @@ class MatchesController < ApplicationController
     play_if_full
   end
 
+  def add_bot
+    @match = Match.find(params[:id])
+    bot = Player.create(human: false)
+    @match.match_players.create(player: bot)
+
+    play_if_full
+  end
+
   def create
     match = Match.create
     match.match_players.create(match: match, player: @player)

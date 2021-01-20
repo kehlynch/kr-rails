@@ -62,7 +62,7 @@ class Match < ApplicationRecord
       return [0, 1, 2, 3]
     when 6
       return [0, 2, 3, 4]
-    when 7
+    else
       return [0, 2, 4, 5]
     end
   end

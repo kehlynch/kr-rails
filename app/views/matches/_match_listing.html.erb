@@ -19,15 +19,12 @@
     <% if joined %>
       <% if match.players.count < 4 %>
         <p class="card-text">Waiting for players</p>
+        <%= link_to "Add bot", add_bot_match_path(match), method: :post %>
       <% else %>
         <%= link_to "Go to game", play_match_path(match), method: :post, class: 'stretched-link' %>
       <% end %>
     <% else %>
-      <% if match.players.count < 7 %>
         <%= link_to "Join game", join_match_path(match), method: :post, class: 'stretched-link' %>
-      <% else %>
-        <div>full</div>
-      <% end %>
     <% end %>
   </div>
 </div>
