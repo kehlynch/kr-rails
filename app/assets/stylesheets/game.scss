@@ -17,6 +17,25 @@ $light-green: rgba(51, 102, 0, 0.2);
   justify-content: center;
 }
 
+.watching {
+    cursor: not-allowed; /* busy cursor feedback */
+}
+
+.read-only {
+  position: absolute;
+    color: white;
+    text-align: center;
+    width: 100%;
+    font-size: 5rem;
+    top: 25%;
+    opacity: 70%;
+}
+
+.watching * {
+    /* disable all mouse events on subElements */
+    pointer-events: none; 
+}
+
 .center-container {
   @include centre;
   align-self: center;

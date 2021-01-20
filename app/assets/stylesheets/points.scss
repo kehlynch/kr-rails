@@ -35,6 +35,9 @@
     &.winner {
       color: green;
     }
+    &.out {
+      color: gray;
+    }
   }
 
   .game-shorthands {

@@ -29,9 +29,9 @@ class Game < ApplicationRecord
     )
   }
 
-  def self.deal_game(match_id, _players)
+  def self.deal_game(match_id, match_players)
     game = Game.create(match_id: match_id)
-    create_players_for(game)
+    create_players_for(game, match_players)
     (0..11).each do |index|
       Trick.create(game_id: game.id, trick_index: index)
     end
@@ -40,10 +40,9 @@ class Game < ApplicationRecord
     return game
   end
 
-  def self.create_players_for(game)
-    game.match.match_players.map do |mp|
-      forehand = mp.position == forehand_position_for(game)
-      game.game_players.create(player: mp.player, position: mp.position, forehand: forehand, human: mp.human, name: mp.name)
+  def self.create_players_for(game, match_players)
+    match_players.each_with_index.map do |mp, i|
+      game.game_players.create(player: mp.player, position: i, forehand: i == 0, human: mp.human, name: mp.name)
     end
   end
 

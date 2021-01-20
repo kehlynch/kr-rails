@@ -12,8 +12,13 @@ class Points::GamePointsPresenter
   end
 
   def players_props
-    @game.game_players.each_with_index.map do |player, i|
-      Points::PlayerPointsPresenter.new(player, @game, @cumulative_points[i]).props
+    @game.match.players.each_with_index.map do |player, i|
+      Points::PlayerPointsPresenter.new(
+        @game.game_players.find_by(player_id: player.id),
+        @game,
+        @cumulative_points[i],
+        "js-points-#{@game.id}-#{i}"
+      ).props
     end
   end
 end

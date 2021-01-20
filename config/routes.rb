@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   resources :players, only: :index
 
   resources :matches, only: [:create, :new, :destroy, :update] do
+    post :join, on: :member
+    post :create_for_many_humans, on: :collection
     resources :games, only: [:create, :update] do
       post :next, on: :member
       post :reset, on: :member

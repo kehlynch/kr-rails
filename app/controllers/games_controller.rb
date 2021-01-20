@@ -28,9 +28,15 @@ class GamesController < ApplicationController
   end
 
   def play
-    game = GamePresenter.new(@game, @player.id)
+    if @game.players.include?(@player)
+      game = GamePresenter.new(@game, @player.id)
 
-    render locals: game.props
+      render locals: game.props.merge(read_only: false)
+    else
+      game = GamePresenter.new(@game, @game.forehand.player_id)
+
+      render locals: game.props.merge(read_only: true)
+    end
   end
 
   def update

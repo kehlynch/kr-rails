@@ -4,11 +4,11 @@
   </div>
 
   <div>
-    <%= button_tag 'Game points', type: 'button', class: 'btn btn-primary', onClick: 'showPoints()' %>
+    <%= button_tag 'Show talon', type: 'button', class: 'btn btn-primary', onClick: 'showTalonGameEnd()' %>
   </div>
 
   <div>
-    <%= button_tag 'Show talon', type: 'button', class: 'btn btn-primary', onClick: 'showTalonGameEnd()' %>
+    <%= link_to 'View scores', scores_path, method: :get, class: 'btn btn-success' %>
   </div>
 
   <div>

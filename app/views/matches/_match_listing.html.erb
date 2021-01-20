@@ -23,7 +23,7 @@
         <%= link_to "Go to game", play_match_path(match), method: :post, class: 'stretched-link' %>
       <% end %>
     <% else %>
-      <% if match.players.count < 4 %>
+      <% if match.players.count < 7 %>
         <%= link_to "Join game", join_match_path(match), method: :post, class: 'stretched-link' %>
       <% else %>
         <div>full</div>

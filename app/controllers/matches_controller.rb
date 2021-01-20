@@ -9,6 +9,20 @@ class MatchesController < ApplicationController
     redirect_to matches_path
   end
 
+  def create_for_many_humans
+    @match = Match.create
+    @match.match_players.create(player: @player)
+
+    play_if_full
+  end
+
+  def join
+    @match = Match.find(params[:id])
+    @match.match_players.create(player: @player)
+
+    play_if_full
+  end
+
   def create
     match = Match.create
     match.match_players.create(match: match, player: @player)
@@ -39,6 +53,20 @@ class MatchesController < ApplicationController
   end
 
   private
+
+  def play_if_full
+    @match.reload
+    if @match.match_players.count == 4
+      @match.deal_game
+
+      set_match_cookies(@match)
+
+      redirect_to play_path
+    else
+      redirect_to home_path
+    end
+  end
+
 
   def human_count_select
     [

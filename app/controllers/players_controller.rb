@@ -8,7 +8,7 @@ class PlayersController < ApplicationController
 
       redirect_to play_path
     else
-      redirect_to matches_path
+      redirect_to home_path
     end
   end
   

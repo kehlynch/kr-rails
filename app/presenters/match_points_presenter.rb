@@ -34,7 +34,9 @@ class MatchPointsPresenter
 
   def raw_points
     @games.map do |game|
-      game.game_players.map(&:game_points)
+      @match.players.map do |player|
+        game.game_players.find_by(player_id: player.id)&.game_points || 0
+      end
     end
   end
 end

@@ -1,5 +1,5 @@
 <div class="container mt-5" id="js-points">
-  <div class="points-container-grid">
+  <div class="points-container-grid" style="grid-template-columns: repeat(<%= player_names.size + 1 %>, minmax(1rem, 1fr))">
     <% player_names.each do |name| %>
       <div class="d-flex justify-content-center">
         <%= name %>

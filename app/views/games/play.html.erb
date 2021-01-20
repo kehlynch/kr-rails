@@ -1,4 +1,7 @@
-<div class="game">
+<div class="game <%= read_only && visible_stage != :finished ? "watching" : "" %>">
+  <% if read_only %>
+    <div class="read-only">You are sitting out of this hand</div>
+  <% end %>
   <%= form_with url: paths[:update_path], method: :patch, html: {id: "gameForm"}, class: 'game-container' do |form| %>
     <%= render 'contract', contract %>
 
